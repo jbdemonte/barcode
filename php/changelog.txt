@@ -1,0 +1,4 @@
+2.0.3 - 2013-01-06
+  remove useless code from datamatrix
+  add upc support (Niels Leenheer)
+  fix fpdf renderer

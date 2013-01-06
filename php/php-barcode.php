@@ -1,15 +1,15 @@
 <?php
 /*
  *  BarCode Coder Library (BCC Library)
- *  BCCL Version 2.0.1
- *  Porting : Barcode PHP
- *            DEMONTE Jean-Baptiste  
- *  Date    : September 25, 2010
- *  
- *  
- *  Author  : DEMONTE Jean-Baptiste (firejocker)
+ *  BCCL Version 2.0
+ *
+ *  Porting : PHP
+ *  Version : 2.0.3
+ *
+ *  Date    : 2013-01-06
+ *  Author  : DEMONTE Jean-Baptiste <jbdemonte@gmail.com>
  *            HOUREZ Jonathan
- *  Contact : jbdemonte @ gmail.com
+ *
  *  Web site: http://barcode-coder.com/
  *  dual licence :  http://www.cecill.info/licences/Licence_CeCILL_V2-fr.html
  *                  http://www.gnu.org/licenses/gpl.html
