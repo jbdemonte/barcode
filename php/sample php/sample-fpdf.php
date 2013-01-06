@@ -35,10 +35,10 @@
   $y        = 200;  // barcode center
   $height   = 50;   // barcode height in 1D ; module size in 2D
   $width    = 2;    // barcode height in 1D ; not use in 2D
-  $angle    = 0;   // rotation in degrees : nb : non horizontable barcode might not be usable because of pixelisation
+  $angle    = 45;   // rotation in degrees
   
   $code     = '123456789012'; // barcode, of course ;)
-  $type     = 'upc';
+  $type     = 'ean13';
   $black    = '000000'; // color in hexa
   
   
