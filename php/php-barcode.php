@@ -117,8 +117,7 @@ class Barcode {
         return(array($d));
     }
 
-    // GD barcode renderer
-    private static function digitToGDRenderer($gd, $color, $xi, $yi, $angle, $mw, $mh, $digit){
+    private static function digitToRenderer($fn, $xi, $yi, $angle, $mw, $mh, $digit){
         $lines = count($digit);
         $columns = count($digit[0]);
         $angle = deg2rad(-$angle);
@@ -128,72 +127,45 @@ class Barcode {
         self::_rotate($columns * $mw / 2, $lines * $mh / 2, $cos, $sin , $x, $y);
         $xi -=$x;
         $yi -=$y;
-
         for($y=0; $y<$lines; $y++){
-            $len = 0;
-            $current = $digit[$y][0];
-            for($x=0; $x<$columns; $x++){
-                if ($current == $digit[$y][$x]) {
-                    $len++;
-                } else {
-                    if ($current == '1'){
-                        $px = $len * $mw;
-                        $xt = $xi + ($x - $len) * $mw;
-                        if ($angle == 0){
-                            if ($px > 2){
-                                imagefilledrectangle($gd, $xt, $yi + $y * $mh, $xt + $px - 1, $yi + ($y + 1) * $mh, $color);
-                            } else {
-                                for($i = 0; $i < $px; $i++){
-                                    imageline($gd, $xt + $i, $yi + $y * $mh, $xt + $i, $yi + ($y + 1) * $mh, $color);
-                                }
-                            }
-                        } else {
-                            for($i = 0; $i < $px; $i++){
-                                self::_rotate($xt + $i - $xi, $y * $mh, $cos, $sin , $x1, $y1);
-                                self::_rotate($xt + $i - $xi, ($y + 1) * $mh, $cos, $sin , $x2, $y2);
-                                imageline($gd, $xi + $x1, $yi + $y1, $xi + $x2, $yi + $y2, $color);
-                            }
-                        }
+            $x = -1;
+            while($x <$columns) {
+                $x++;
+                if ($digit[$y][$x] == '1') {
+                    $z = $x;
+                    while(($z + 1 <$columns) && ($digit[$y][$z + 1] == '1')) {
+                        $z++;
                     }
-                    $current = $digit[$y][$x];
-                    $len=1;
+                    $x1 = $x * $mw;
+                    $y1 = $y * $mh;
+                    $x2 = ($z + 1) * $mw;
+                    $y2 = ($y + 1) * $mh;
+                    self::_rotate($x1, $y1, $cos, $sin, $xA, $yA);
+                    self::_rotate($x2, $y1, $cos, $sin, $xB, $yB);
+                    self::_rotate($x2, $y2, $cos, $sin, $xC, $yC);
+                    self::_rotate($x1, $y2, $cos, $sin, $xD, $yD);
+                    $fn(array(
+                        $xA + $xi, $yA + $yi,
+                        $xB + $xi, $yB + $yi,
+                        $xC + $xi, $yC + $yi,
+                        $xD + $xi, $yD + $yi
+                    ));
+                    $x = $z + 1;
                 }
-            }
-            if ( ($len > 0) && ($current == '1') ){
-                $px = $len * $mw;
-                $xt = $xi + ($columns - $len) * $mw;
-                $y = $lines - 1;
-                if ($angle == 0){
-                    if ($px > 2){
-                        imagefilledrectangle($gd, $xt, $yi + $y * $mh, $xt + $px - 1, $yi + ($y + 1) * $mh, $color);
-                    } else {
-                        for($i = 0; $i < $px; $i++){
-                            imageline($gd, $xt + $i, $yi + $y * $mh, $xt + $i, $yi + ($y + 1) * $mh, $color);
-                        }
-                    }
-                } else {
-                    for($i = 0; $i < $px; $i++){
-                        self::_rotate($xt + $i - $xi, $y * $mh, $cos, $sin , $x1, $y1);
-                        self::_rotate($xt + $i - $xi, ($y + 1) * $mh, $cos, $sin , $x2, $y2);
-                        imageline($gd, $xi + $x1, $yi + $y1, $xi + $x2, $yi + $y2, $color);
-                    }
-                }
-
             }
         }
         return self::result($xi, $yi, $columns, $lines, $mw, $mh, $cos, $sin);
     }
 
+    // GD barcode renderer
+    private static function digitToGDRenderer($gd, $color, $xi, $yi, $angle, $mw, $mh, $digit){
+        $fn = function($points) use ($gd, $color) {
+            imagefilledpolygon($gd, $points, 4, $color);
+        };
+        return self::digitToRenderer($fn, $xi, $yi, $angle, $mw, $mh, $digit);
+    }
     // FPDF barcode renderer
     private static function digitToFPDFRenderer($pdf, $color, $xi, $yi, $angle, $mw, $mh, $digit){
-        $lines = count($digit);
-        $columns = count($digit[0]);
-        $angle = deg2rad(-$angle);
-        $cos = cos($angle);
-        $sin = sin($angle);
-
-        $pdf->SetLineWidth($mw);
-
         if (!is_array($color)){
             if (preg_match('`([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})`i', $color, $m)){
                 $color = array(hexdec($m[1]),hexdec($m[2]),hexdec($m[3]));
@@ -205,84 +177,18 @@ class Barcode {
         $pdf->SetDrawColor($color[0],$color[1],$color[2]);
         $pdf->SetFillColor($color[0],$color[1],$color[2]);
 
-        self::_rotate($columns * $mw / 2, $lines * $mh / 2, $cos, $sin , $x, $y);
-        $xi -=$x;
-        $yi -=$y;
-
-        for($y=0; $y<$lines; $y++){
-            $len = 0;
-            $current = $digit[$y][0];
-            for($x=0; $x<$columns; $x++){
-                if ($current == $digit[$y][$x]) {
-                    $len++;
-                } else {
-                    if ($current == '1'){
-                        $x1 = $x * $mw;
-                        $y1 = $y * $mh;
-                        $x2 = ($x - $len) * $mw;
-                        $y2 = ($y + 1) * $mh;
-                        self::_rotate($x1, $y1, $cos, $sin, $xA, $yA);
-                        self::_rotate($x2, $y1, $cos, $sin, $xB, $yB);
-                        self::_rotate($x2, $y2, $cos, $sin, $xC, $yC);
-                        self::_rotate($x1, $y2, $cos, $sin, $xD, $yD);
-                        self::fpdfPolygon(  $pdf,
-                            array(
-                                $xA + $xi, $yA + $yi,
-                                $xB + $xi, $yB + $yi,
-                                $xC + $xi, $yC + $yi,
-                                $xD + $xi, $yD + $yi
-                            ),
-                            'F');
-                    }
-                    $current = $digit[$y][$x];
-                    $len=1;
-                }
-            }
-            if ( ($len > 0) && ($current == '1') ){
-                $y = $lines - 1;
-                $x1 = $x * $mw;
-                $y1 = $y * $mh;
-                $x2 = ($x - $len) * $mw;
-                $y2 = ($y + 1) * $mh;
-                self::_rotate($x1, $y1, $cos, $sin, $xA, $yA);
-                self::_rotate($x2, $y1, $cos, $sin, $xB, $yB);
-                self::_rotate($x2, $y2, $cos, $sin, $xC, $yC);
-                self::_rotate($x1, $y2, $cos, $sin, $xD, $yD);
-                self::fpdfPolygon(  $pdf,
-                    array(
-                        $xA + $xi, $yA + $yi,
-                        $xB + $xi, $yB + $yi,
-                        $xC + $xi, $yC + $yi,
-                        $xD + $xi, $yD + $yi
-                    ),
-                    'F');
-            }
-        }
-        return self::result($xi, $yi, $columns, $lines, $mw, $mh, $cos, $sin);
-    }
-
-    // http://fpdf.org/fr/script/script60.php
-    private static function fpdfPolygon($fpdf, $points, $style = 'D') {
-        //Draw a polygon
-        if($style=='F')
+        $fn = function($points) use ($pdf) {
             $op = 'f';
-        elseif($style=='FD' || $style=='DF')
-            $op = 'b';
-        else
-            $op = 's';
-
-        $h = $fpdf->h;
-        $k = $fpdf->k;
-
-        $points_string = '';
-        for($i=0; $i<count($points); $i+=2){
-            $points_string .= sprintf('%.2F %.2F', $points[$i]*$k, ($h-$points[$i+1])*$k);
-            if($i==0)
-                $points_string .= ' m ';
-            else
-                $points_string .= ' l ';
-        }
-        $fpdf->_out($points_string . $op);
+            $h = $pdf->h;
+            $k = $pdf->k;
+            $points_string = '';
+            for($i=0; $i < 8; $i+=2){
+                $points_string .= sprintf('%.2F %.2F', $points[$i]*$k, ($h-$points[$i+1])*$k);
+                $points_string .= $i ? ' l ' : ' m ';
+            }
+            $pdf->_out($points_string . $op);
+        };
+        return self::digitToRenderer($fn, $xi, $yi, $angle, $mw, $mh, $digit);
     }
 
     static private function result($xi, $yi, $columns, $lines, $mw, $mh, $cos, $sin){
