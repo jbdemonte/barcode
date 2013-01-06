@@ -518,24 +518,13 @@ var Barcode = {
       return(result);
     }
   },
-  datamatrix: {   
-    encoding:["101010011", "101011001", "101001011", "110010101",
-              "101101001", "110101001", "100101011", "100101101",
-              "100110101", "110100101", "101001101", "101100101",
-              "1101011011", "1101101011", "1101101101", "1011011011",
-              "1011001001", "1010010011", "1001001011", "1010011001"],
+  datamatrix: {
     lengthRows:       [ 10, 12, 14, 16, 18, 20, 22, 24, 26,  // 24 squares et 6 rectangular
                         32, 36, 40, 44, 48, 52, 64, 72, 80,  88, 96, 104, 120, 132, 144,
                         8, 8, 12, 12, 16, 16],
     lengthCols:       [ 10, 12, 14, 16, 18, 20, 22, 24, 26,  // Number of columns for the entire datamatrix
                         32, 36, 40, 44, 48, 52, 64, 72, 80, 88, 96, 104, 120, 132, 144,
                         18, 32, 26, 36, 36, 48],
-    mappingRows:      [ 8, 10, 12, 14, 16, 18, 20, 22, 24,  // Number of rows for the mapping matrix
-                        28, 32, 36, 40, 44, 48, 56, 64, 72, 80, 88, 96, 108, 120, 132,
-                        6, 6, 10, 10, 14, 14],
-    mappingCols:      [ 8, 10, 12, 14, 16, 18, 20, 22, 24,  // Number of columns for the mapping matrix
-                        28, 32, 36, 40, 44, 48, 56, 64, 72, 80, 88, 96, 108, 120, 132,
-                        16, 28, 24, 32, 32, 44],
     dataCWCount:      [ 3, 5, 8, 12,  18,  22,  30,  36,  // Number of data codewords for the datamatrix
                         44, 62, 86, 114, 144, 174, 204, 280, 368, 456, 576, 696, 816, 1050, 
                         1304, 1558, 5, 10, 16, 22, 32, 49],
@@ -862,8 +851,7 @@ var Barcode = {
       var rowsLengthMatrice = rowsTotal-2*rowsRegion; // Size of matrice data
       var colsLengthMatrice = colsTotal-2*colsRegion;
       var blocks = this.interleavedBlocks[index];  // Number of Reed Solomon blocks
-      var errorBlocks = (solomonCWCount / blocks); 
-      var dataBlocks = (totalDataCWCount / blocks);
+      var errorBlocks = (solomonCWCount / blocks);
       
       this.addPadCW(dataCodeWords, dataCWCount, totalDataCWCount); // Add codewords pads
       
@@ -1203,7 +1191,7 @@ var Barcode = {
     var y = Barcode.intval(settings.posY);
     this.digitToCanvasRenderer($container, settings, digit, hri, x, y, s, s);
   }
-}
+};
 
 
 var barcodeMethod = {
@@ -1256,7 +1244,7 @@ var barcodeMethod = {
       case "code128":
         digit = Barcode.code128.getDigit(code);
         hri = code;
-      break
+      break;
       case "codabar":
         digit = Barcode.codabar.getDigit(code);
         hri = code;

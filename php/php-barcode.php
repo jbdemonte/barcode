@@ -839,12 +839,6 @@ class BarcodeCodabar {
 }
 
 class BarcodeDatamatrix {
-    static private $encoding = array(
-        '101010011', '101011001', '101001011', '110010101',
-        '101101001', '110101001', '100101011', '100101101',
-        '100110101', '110100101', '101001101', '101100101',
-        '1101011011', '1101101011', '1101101101', '1011011011',
-        '1011001001', '1010010011', '1001001011', '1010011001');
     static private $lengthRows = array(
         10, 12, 14, 16, 18, 20, 22, 24, 26,  // 24 squares et 6 rectangular
         32, 36, 40, 44, 48, 52, 64, 72, 80,  88, 96, 104, 120, 132, 144,
@@ -853,14 +847,6 @@ class BarcodeDatamatrix {
         10, 12, 14, 16, 18, 20, 22, 24, 26,  // Number of columns for the entire datamatrix
         32, 36, 40, 44, 48, 52, 64, 72, 80, 88, 96, 104, 120, 132, 144,
         18, 32, 26, 36, 36, 48);
-    static private $mappingRows = array(
-        8, 10, 12, 14, 16, 18, 20, 22, 24,  // Number of rows for the mapping matrix
-        28, 32, 36, 40, 44, 48, 56, 64, 72, 80, 88, 96, 108, 120, 132,
-        6, 6, 10, 10, 14, 14);
-    static private $mappingCols = array(
-        8, 10, 12, 14, 16, 18, 20, 22, 24,  // Number of columns for the mapping matrix
-        28, 32, 36, 40, 44, 48, 56, 64, 72, 80, 88, 96, 108, 120, 132,
-        16, 28, 24, 32, 32, 44);
     static private $dataCWCount = array(
         3, 5, 8, 12,  18,  22,  30,  36,  // Number of data codewords for the datamatrix
         44, 62, 86, 114, 144, 174, 204, 280, 368, 456, 576, 696, 816, 1050,
@@ -987,7 +973,6 @@ class BarcodeDatamatrix {
         return $g;
     }
     static private function addReedSolomonCW($nSolomonCW, $coeffTab, $nDataCW, &$dataTab, $blocks){ // Add the Reed Solomon codewords
-        $temp = 0;
         $errorBlocks = $nSolomonCW / $blocks;
         $correctionCW = array();
 
@@ -1189,7 +1174,6 @@ class BarcodeDatamatrix {
         $colsLengthMatrice = $colsTotal-2*$colsRegion;
         $blocks = self::$interleavedBlocks[$index];  // Number of Reed Solomon blocks
         $errorBlocks = $solomonCWCount / $blocks;
-        $dataBlocks = $totalDataCWCount / $blocks;
 
         self::addPadCW($dataCodeWords, $dataCWCount, $totalDataCWCount); // Add codewords pads
 
