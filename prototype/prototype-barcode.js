@@ -182,6 +182,20 @@ var Barcode = {
       return(code + ((10 - sum % 10) % 10).toString());
     }
   },
+  upc: {
+    getDigit: function(code){
+      if (code.length < 12) {
+        code = '0' + code;
+      }
+      return Barcode.ean.getDigit(code, 'ean13');
+    },
+    compute: function (code){
+      if (code.length < 12) {
+        code = '0' + code;
+      }
+      return Barcode.ean.compute(code, 'ean13').substr(1);
+    }
+  },
   msi: {
     encoding:["100100100100", "100100100110", "100100110100", "100100110110",
               "100110100100", "100110100110", "100110110100", "100110110110",
@@ -1228,6 +1242,10 @@ var barcodeMethod = {
       case "ean13":
         digit = Barcode.ean.getDigit(code, type);
         hri = Barcode.ean.compute(code, type);
+      break;
+      case "upc":
+        digit = Barcode.upc.getDigit(code);
+        hri = Barcode.upc.compute(code);
       break;
       case "code11":
         digit = Barcode.code11.getDigit(code);
