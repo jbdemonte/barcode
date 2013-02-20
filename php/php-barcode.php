@@ -133,7 +133,7 @@ class Barcode {
         $yi -=$y;
         for($y=0; $y<$lines; $y++){
             $x = -1;
-            while($x <$columns) {
+            while($x < ($columns-1)) {
                 $x++;
                 if ($digit[$y][$x] == '1') {
                     $z = $x;
