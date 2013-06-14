@@ -34,3 +34,6 @@ Features
 - jQuery (js)
 - prototype (js)
 - PHP
+
+
+[Buy author a beer](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WCUX27CFV79S2)
