@@ -25,13 +25,12 @@ class Barcode {
         return self::_draw(__FUNCTION__, $res, $color, $x, $y, $angle, $type, $datas, $width, $height);
     }
 
-    static private function _draw($call, $res, $color, $x, $y, $angle, $type, $datas, $width, $height){
-        $digit = '';
+	static public function raw($type, $datas) {
+		$digit = '';
         $hri   = '';
         $code  = '';
         $crc   = true;
-        $rect  = false;
-        $b2d   = false;
+		$rect  = false;
 
         if (is_array($datas)){
             foreach(array('code' => '', 'crc' => true, 'rect' => false) as $v => $def){
@@ -88,13 +87,23 @@ class Barcode {
             case 'datamatrix':
                 $digit = BarcodeDatamatrix::getDigit($code, $rect);
                 $hri = $code;
-                $b2d = true;
                 break;
         }
 
+		return array($digit, $hri);
+	}
+
+    static private function _draw($call, $res, $color, $x, $y, $angle, $type, $datas, $width, $height){
+        $digit = '';
+        $hri   = '';
+
+		list($digit, $hri) = self::raw($type, $datas);
+
+        $type = strtolower($type);
+
         if ($digit == '') return false;
 
-        if ( $b2d ){
+        if ($type == 'datamatrix'){
             $width = is_null($width) ? 5 : $width;
             $height = $width;
         } else {
@@ -133,7 +142,7 @@ class Barcode {
         $yi -=$y;
         for($y=0; $y<$lines; $y++){
             $x = -1;
-            while($x < ($columns-1)) {
+            while($x <$columns) {
                 $x++;
                 if ($digit[$y][$x] == '1') {
                     $z = $x;
