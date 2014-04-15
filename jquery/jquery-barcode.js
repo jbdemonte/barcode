@@ -120,17 +120,19 @@
                   ["0110111", "0001001", "1001000"],
                   ["0001011", "0010111", "1110100"] ],
       first:  ["000000","001011","001101","001110","010011","011001","011100","010101","010110","011010"],
-	  encoding_addon2: ["00","01","10","11"],
-	  encoding_addon5: ["11000","10100","10010","10001","01100","00110","00011","01010","01001","00101"],
+	    encoding_addon2: ["00","01","10","11"],
+	    encoding_addon5: ["11000","10100","10010","10001","01100","00110","00011","01010","01001","00101"],
       getDigit: function(code, type){
         // Check len (12 for ean13, 7 for ean8)
-        var len = type == "ean8" ? 7 : 12;
-		fullcode = code;
+        var i, c, addon, checksum, result, seq, part_of_addon, a_or_b, partialencoding, odd,
+            x, y,
+            len = type == "ean8" ? 7 : 12,
+            fullcode = code;
         code = code.substring(0, len);
         if (code.length != len) return("");
+
         // Check each digit is numeric
-        var c;
-        for(var i=0; i<code.length; i++){
+        for(i = 0; i < code.length; i++){
           c = code.charAt(i);
           if ( (c < '0') || (c > '9') ) return("");
         }
@@ -138,12 +140,12 @@
         code = this.compute(code, type);
         
         // process analyse
-        var result = "101"; // start
+        result = "101"; // start
         
         if (type == "ean8"){
   
           // process left part
-          for(var i=0; i<4; i++){
+          for(i=0; i<4; i++){
             result += this.encoding[barcode.intval(code.charAt(i))][0];
           }
               
@@ -151,16 +153,16 @@
           result += "01010";
               
           // process right part
-          for(var i=4; i<8; i++){
+          for(i=4; i<8; i++){
             result += this.encoding[barcode.intval(code.charAt(i))][2];
           }
               
         } else { // ean13
           // extract first digit and get sequence
-          var seq = this.first[ barcode.intval(code.charAt(0)) ];
+          seq = this.first[ barcode.intval(code.charAt(0)) ];
           
           // process left part
-          for(var i=1; i<7; i++){
+          for(i=1; i<7; i++){
             result += this.encoding[barcode.intval(code.charAt(i))][ barcode.intval(seq.charAt(i-1)) ];
           }
           
@@ -168,73 +170,73 @@
           result += "01010";
               
           // process right part
-          for(var i=7; i<13; i++){
+          for(i=7; i<13; i++){
             result += this.encoding[barcode.intval(code.charAt(i))][ 2 ];
           }
         } // ean13
         
         result += "101"; // stop
 
-		result += "000000000";
+            // addon 13+2 / 13+5
+        if(type == "ean13"){
+          addon = fullcode.substring(13, fullcode.length);
 
-        // addon 13+2 / 13+5
-		if(type == "ean13"){
-			addon = fullcode.substring(13, fullcode.length);
+          if (addon.length == 2){
+            result += "0000000000";
+            // checksum addon
+            checksum = (parseInt(addon) % 4);
+            // binary encoding
+            for(i=0; i<2; i++){
+              part_of_addon 	 = barcode.intval(addon.charAt(i));
+              a_or_b 					 = barcode.intval(this.encoding_addon2[barcode.intval(checksum)][i]);
+              partialencoding  = this.encoding[part_of_addon][a_or_b];
+              result 					+= partialencoding;
+            }
+          } else if(addon.length == 5){
+            result += "0000000000";
+            // checksum addon
+            odd = true;
+            x = y = 0;
+            for (i=0; i<5; i++){
+              if (!odd){
+                  x += barcode.intval(addon.charAt(i));
+                }else{
+                  y += barcode.intval(addon.charAt(i));
+                }
+              odd = !odd;
+            }
+            checksum = ((9 * x) + (3 * y)) % 10;
+            // binary encoding
+            result += "1011"; // special delimiter
 
-			if (addon.length == 2){
-				// checksum addon
-				checksum = (parseInt(addon) % 4);
-				// binary encoding
-				for(var i=0; i<2; i++){
-					part_of_addon 	 = barcode.intval(addon.charAt(i));
-					a_or_b 					 = barcode.intval(this.encoding_addon2[barcode.intval(checksum)][i]);
-					partialencoding  = this.encoding[part_of_addon][a_or_b];
-					result 					+= partialencoding;
-				}
-			}else if(addon.length == 5){
-				// checksum addon
-				var sum = 0, odd = true;
-				x = 0;
-				y = 0;
-				z = 0;
-			for(var i=0; i<5; i++){
-			  if(odd == false){
-						x += barcode.intval(addon.charAt(i));
-					}else{
-						y += barcode.intval(addon.charAt(i));
-					}
-			  odd = ! odd;
-			}
-			checksum = (((9 * x) + (3 * y)) % 10);
-				// binary encoding
-				result += "1011"; // special delimiter
+            for(i=0; i<5; i++){
+              part_of_addon 	 = barcode.intval(addon.charAt(i));
+              a_or_b 					 = barcode.intval(this.encoding_addon5[barcode.intval(checksum)][i]);
+              partialencoding  = this.encoding[part_of_addon][a_or_b];
+              result 					+= partialencoding;
 
-				for(var i=0; i<5; i++){
-					part_of_addon 	 = barcode.intval(addon.charAt(i));
-					a_or_b 					 = barcode.intval(this.encoding_addon5[barcode.intval(checksum)][i]);
-					partialencoding  = this.encoding[part_of_addon][a_or_b];
-					result 					+= partialencoding;
-		
-					// séparateur de formule 01
-					if(i < 4){
-						result += "01";
-					}
-				}          	
-			}
-		}
+              // 01 separator
+              if(i < 4){
+                result += "01";
+              }
+            }
+          }
+        }
 
         return(result);
       },
       compute: function (code, type){
-        var len = type == "ean13" ? 12 : 7;
-		addon = code.substring(13, code.length);
+        var i,
+            len = type == "ean13" ? 12 : 7,
+            addon = code.substring(13, code.length),
+            sum = 0,
+          odd = true;
         code = code.substring(0, len);
-        var sum = 0, odd = true;
         for(i=code.length-1; i>-1; i--){
           sum += (odd ? 3 : 1) * barcode.intval(code.charAt(i));
           odd = ! odd;
         }
-        return(code + ((10 - sum % 10) % 10).toString() + " " + addon);
+        return(code + ((10 - sum % 10) % 10).toString() + (addon ? " " + addon : ""));
       }
     },
     upc: {
