@@ -1232,5 +1232,14 @@ class BarcodeDatamatrix {
 
         return $datamatrix;
     }
+    
+    static public function getLenghtColumn($text)
+    {
+        $dataCodeWords = self::encodeDataCodeWordsASCII($text);
+        $dataCWCount = count($dataCodeWords);
+        $index = self::selectIndex($dataCWCount, false);
+        
+        return self::$lengthCols[$index];
+    }
 }
 ?>
