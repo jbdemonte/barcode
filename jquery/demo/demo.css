@@ -1,0 +1,34 @@
+* {
+    color:#7F7F7F;
+    font-family:Arial, sans-serif;
+    font-size:12px;
+    font-weight:normal;
+}
+#config {
+    margin: 10px 0 10px 0px;
+}
+.config {
+    float: left;
+    width: 200px;
+    height: 250px;
+    border: 1px solid #000;
+    margin-left: 10px;
+}
+.config .title {
+    font-weight: bold;
+    text-align: center;
+}
+.config .barcode2D, #miscCanvas {
+    display: none;
+}
+#submit {
+    clear: both;
+}
+
+input[type="button"] {
+    margin: 10px 0 10px 0px;
+}
+
+#barcodeTarget, #canvasTarget {
+    margin-top: 20px;
+}
