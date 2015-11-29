@@ -4,7 +4,7 @@
  *  BCCL Version 2.0
  *
  *  Porting : PHP
- *  Version : 2.0.3.1
+ *  Version : 2.0.4
  *
  *  Date    : 2013-01-06
  *  Author  : DEMONTE Jean-Baptiste <jbdemonte@gmail.com>
