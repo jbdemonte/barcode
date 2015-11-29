@@ -1,5 +1,5 @@
 <?php
-  include('php-barcode.php');
+  include('../php-barcode.php');
   require('fpdf.php');
   
 /*
@@ -46,7 +46,7 @@
   $width    = 0.5;  // barcode height in 1D ; not use in 2D
   $angle    = 0;   // rotation in degrees
   
-  $code     = 'Test—¢ˆ¤¾«¦¸ÇÔáëý';     // barcode (CP852 encoding for Polish and other Central European languages)
+  $code     = 'Testï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';     // barcode (CP852 encoding for Polish and other Central European languages)
   $type     = 'code128';
   $black    = '000000'; // color in hex
   
