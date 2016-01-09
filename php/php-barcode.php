@@ -136,44 +136,98 @@ class Barcode {
         return(array($d));
     }
 
-    private static function digitToRenderer($fn, $xi, $yi, $angle, $mw, $mh, $digit){
-        $lines = count($digit);
-        $columns = count($digit[0]);
-        $angle = deg2rad(-$angle);
-        $cos = cos($angle);
-        $sin = sin($angle);
+    /**
+     * DEFAULT
+     *
+     * @since   2.0.3
+     * @access  private
+     * @static
+     * @param   integer/string/array $DEFAULT DEFAULT
+     * @return  integer/string/array $DEFAULT DEFAULT
+     */
+    private static function digitToRenderer( $fn, $xi, $yi, $angle, $mw, $mh, $digit )
+    {
+        $lines = count( $digit );
 
-        self::_rotate($columns * $mw / 2, $lines * $mh / 2, $cos, $sin , $x, $y);
-        $xi -=$x;
-        $yi -=$y;
-        for($y=0; $y<$lines; $y++){
-            $x = -1;
-            while($x < ($columns-1)) {
-                $x++;
-                if ($digit[$y][$x] == '1') {
-                    $z = $x;
-                    while(($z + 1 <$columns) && ($digit[$y][$z + 1] == '1')) {
-                        $z++;
-                    }
-                    $x1 = $x * $mw;
-                    $y1 = $y * $mh;
-                    $x2 = ($z + 1) * $mw;
-                    $y2 = ($y + 1) * $mh;
-                    self::_rotate($x1, $y1, $cos, $sin, $xA, $yA);
-                    self::_rotate($x2, $y1, $cos, $sin, $xB, $yB);
-                    self::_rotate($x2, $y2, $cos, $sin, $xC, $yC);
-                    self::_rotate($x1, $y2, $cos, $sin, $xD, $yD);
-                    $fn(array(
-                        $xA + $xi, $yA + $yi,
-                        $xB + $xi, $yB + $yi,
-                        $xC + $xi, $yC + $yi,
-                        $xD + $xi, $yD + $yi
-                    ));
-                    $x = $z + 1;
+        $columns = count( $digit[0] );
+
+        $angle = deg2rad( -$angle );
+
+        $cos = cos( $angle );
+
+        $sin = sin( $angle );
+
+        self::_rotate( $columns * $mw / 2, $lines * $mh / 2, $cos, $sin , $x, $y );
+
+        $xi -= $x;
+        $yi -= $y;
+
+        // ---> BUG FIX
+
+        foreach ( $digit as $y_index => $y_value )
+        {
+            foreach ( $y_value as $x_index => $x_value )
+            {
+                if ( $digit[$y_index][$x_index] == '1' )
+                {
+                    $x1 = $x_index * $mw;
+                    $y1 = $y_index * $mh;
+
+                    $x2 = ( $x_index + 1 ) * $mw;
+                    $y2 = ( $y_index + 1 ) * $mh;
+
+                    self::_rotate( $x1, $y1, $cos, $sin, $xA, $yA );
+                    self::_rotate( $x2, $y1, $cos, $sin, $xB, $yB );
+                    self::_rotate( $x2, $y2, $cos, $sin, $xC, $yC );
+                    self::_rotate( $x1, $y2, $cos, $sin, $xD, $yD );
+
+                    $fn( array( $xA + $xi, $yA + $yi, $xB + $xi, $yB + $yi, $xC + $xi, $yC + $yi, $xD + $xi, $yD + $yi ) );
                 }
+
             }
         }
-        return self::result($xi, $yi, $columns, $lines, $mw, $mh, $cos, $sin);
+
+        // ---> BUG FIX END
+        // ---> OFFSET BUG
+
+        // for ( $y = 0; $y < $lines; $y++ )
+        // {
+        //     $x = -1;
+
+        //     while ( $x < $columns )
+        //     {
+        //         $x++;
+
+        //         if ( $digit[$y][$x] == '1' ) // OFFSET ERROR
+        //         {
+        //             $z = $x;
+
+        //             while ( ( $z + 1 < $columns ) && ( $digit[$y][$z + 1] == '1' ) )
+        //             {
+        //                 $z++;
+        //             }
+
+        //             $x1 = $x * $mw;
+        //             $y1 = $y * $mh;
+
+        //             $x2 = ( $z + 1 ) * $mw;
+        //             $y2 = ( $y + 1 ) * $mh;
+
+        //             self::_rotate( $x1, $y1, $cos, $sin, $xA, $yA );
+        //             self::_rotate( $x2, $y1, $cos, $sin, $xB, $yB );
+        //             self::_rotate( $x2, $y2, $cos, $sin, $xC, $yC );
+        //             self::_rotate( $x1, $y2, $cos, $sin, $xD, $yD );
+
+        //             $fn( array( $xA + $xi, $yA + $yi, $xB + $xi, $yB + $yi, $xC + $xi, $yC + $yi, $xD + $xi, $yD + $yi ) );
+
+        //             $x = $z + 1;
+        //         }
+        //     }
+        // }
+
+        // ---> OFFSET BUG END
+
+        return self::result( $xi, $yi, $columns, $lines, $mw, $mh, $cos, $sin );
     }
 
     // GD barcode renderer
