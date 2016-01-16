@@ -3,7 +3,7 @@
  * Application: BarCode Coder Library (BCCL)
  *
  * @package BCCL
- * @version 2.0.6
+ * @version 2.0.7
  * @porting PHP
  *
  * @date    2013-01-06
@@ -31,74 +31,275 @@
 class Barcode
 {
     /**
-     * Contains the list of messages which occur during the data processing.
+     * Contains the barcode type.
      *
-     * @since   2.0.6
-     * @access  public
-     * @static
-     * @var     array
+     * @since   2.0.7
+     * @access  protected
+     * @var     string
      */
-    public static $LIST_OF_MESSAGES = array();
+    protected $barcode_type = 'datamatrix';
 
     /**
-     * Contains the allowed file extensions.
+     * Contains the barcode content.
      *
-     * @since   2.0.6
-     * @access  private
-     * @static
-     * @var     array
+     * @since   2.0.7
+     * @access  protected
+     * @var     string
      */
-    private static $ALLOWED_FILE_EXTENSIONS = array( 'gif', 'jpg', 'jpeg', 'png' );
+    protected $barcode_content = 'BarCode Coder Library';
+
+    /**
+     * Contains the value that should have the barcode frame.
+     *
+     * @since   2.0.7
+     * @access  protected
+     * @var     integer
+     */
+    protected $barcode_margin = 0;
+
+    /**
+     * Contains the image resource.
+     *
+     * @since   2.0.7
+     * @access  protected
+     * @var     null
+     */
+    protected $image_resource = null;
 
     /**
      * Contains the standard file format, after which the bar code is to be output.
      *
-     * @since   2.0.6
-     * @access  private
-     * @static
+     * @since   2.0.7
+     * @access  protected
      * @var     string
      */
-    private static $CONTENT_TYPE = 'image/gif';
+    protected $content_type = 'image/gif';
 
     /**
-     * Can be called to set a new File output format.
+     * Contains the allowed file extensions.
      *
-     * @since   2.0.6
-     * @access  public
-     * @static
-     * @param   string $file_extensions Contains the desired file extensions.
+     * @since   2.0.7
+     * @access  protected
+     * @var     array
      */
-    public static function set_file_extensions( $file_extensions = '' )
-    {
-        if ( empty( $file_extensions ) )
-        {
-            self::$LIST_OF_MESSAGES[] = __FUNCTION__ . ' -> Error: The requested file extension is empty.';
-        }
-        else if ( in_array( $file_extensions, self::$ALLOWED_FILE_EXTENSIONS ) )
-        {
-            self::$CONTENT_TYPE = 'image/' . $file_extensions;
+    protected $allowed_file_extensions = array( 'gif', 'jpg', 'jpeg', 'png' );
 
-            self::$LIST_OF_MESSAGES[] = __FUNCTION__ . ' -> Success: A new file format (' . self::$CONTENT_TYPE . ') was passed.';
-        }
-        else
+    /**
+     * The check code for error detection and correction is as CRC, using polynomial division. Is uses 2 characters, or 8 bits.
+     *
+     * @since   2.0.7
+     * @access  protected
+     * @var     boolean
+     */
+    protected $checkcode = true;
+
+    /**
+     * Sets in the data matrix whether this rectangle to display.
+     *
+     * @since   2.0.7
+     * @access  protected
+     * @var     boolean
+     */
+    protected $rectangular = false;
+
+    /**
+     * Barcode constructor.
+     *
+     * @since   2.0.7
+     * @access  public
+     *
+     * @return  Barcode
+     */
+    public function __construct()
+    {
+        $get_args = func_get_args();
+
+        if ( count( $get_args ) == 1 )
         {
-            self::$LIST_OF_MESSAGES[] = __FUNCTION__ . ' -> Error: It was passed an invalid file extension. Allowed are: ' . implode( ', ', self::$ALLOWED_FILE_EXTENSIONS );
+            foreach ( $get_args[0] as $arg_index => $arg_value )
+            {
+                if ( $arg_index == 'type' ): $this->barcode_type = $arg_value; endif;
+                if ( $arg_index == 'content' ): $this->barcode_content = $arg_value; endif;
+
+                if ( $arg_index == 'crc'  || $arg_index == 'checkcode' ): $this->checkcode = $arg_value; endif;
+                if ( $arg_index == 'rect' || $arg_index == 'rectangular' ): $this->rectangular = $arg_value; endif;
+
+                if ( $arg_index == 'format' ): $this->content_type = in_array( $arg_value, $this->allowed_file_extensions ) ? 'image/' . $arg_value : $this->content_type; endif;
+                if ( $arg_index == 'margin' ): $this->barcode_margin = $arg_value; endif;
+            }
+        }
+        else if ( count( $get_args ) == 2 )
+        {
+            $this->barcode_type = $get_args[0];
+            $this->barcode_content = $get_args[1];
+        }
+
+        return $this;
+    }
+
+    /**
+     * Destroy image resource.
+     *
+     * @since   2.0.7
+     * @access  public
+     */
+    public function __destruct() 
+    {
+        if ( $this->image_resource !== null && get_resource_type( $this->image_resource ) === 'gd' )
+        {
+            imagedestroy( $this->image_resource );
         }
     }
 
     /**
-     * Created on the basis of the bar code data an image.
+     * Can be called to define the barcode type.
      *
-     * @since   2.0.6
+     * @since   2.0.7
      * @access  public
-     * @static
-     * @param   integer $dots_per_inch  Indicates is produced at what resolution the barcode.
-     * @param   integer $barcode_margin Considering the DPI, the barcode a white frame is added.
-     * @return  string Provides as a return the binary image.
+     *
+     * @param   string $value Contains the barcode type.
+     *
+     * @return  Barcode
      */
-    public static function image( $dots_per_inch = 90, $barcode_margin = 0 )
+    public function type( $value = '' )
     {
-        return self::$CONTENT_TYPE;
+        $this->barcode_type = empty( $value ) ? $this->barcode_type : $value;
+
+        return $this;
+    }
+
+    /**
+     * Can be called to define the barcode content.
+     *
+     * @since   2.0.7
+     * @access  public
+     *
+     * @param   string $value Contains the barcode content.
+     *
+     * @return  Barcode
+     */
+    public function content( $value = '' )
+    {
+        $this->barcode_content = empty( $value ) ? $this->barcode_content : $value;
+
+        return $this;
+    }
+
+    /**
+     * Can be called to set a new file output format.
+     *
+     * @since   2.0.7
+     * @access  public
+     *
+     * @param   string $value Contains the desired file extensions.
+     *
+     * @return  Barcode
+     */
+    public function format( $value = '' )
+    {
+        $this->content_type = in_array( $value, $this->allowed_file_extensions ) ? 'image/' . $value : $this->content_type;
+
+        return $this;
+    }
+
+    /**
+     * Can be called to paint the barcode a white frame.
+     *
+     * @since   2.0.7
+     * @access  public
+     *
+     * @param   integer $value Considering the DPI, the barcode a white frame is added.
+     *
+     * @return  Barcode
+     */
+    public function margin( $value = 0 )
+    {
+        $this->barcode_margin = is_numeric( $value ) ? $value : $this->barcode_margin;
+
+        return $this;
+    }
+
+    /**
+     * Created on the basis of the barcode data an image.
+     *
+     * @since   2.0.7
+     * @access  public
+     *
+     * @param   integer $dots_per_inch Indicates is produced at what resolution the barcode.
+     *
+     * @return  Barcode
+     */
+    public function create( $dots_per_inch = 90 )
+    {
+        $this->image_resource = imagecreatetruecolor( 600, 600 );
+
+        $white  = imagecolorallocate( $this->image_resource, 0xff, 0xff, 0xff );
+
+        imagefilledrectangle( $this->image_resource, 0, 0, 600, 600, $white );
+
+        $x = 300;
+        $y = 300;
+
+        $angle = 0;
+
+        $width = null;
+        $height = null;
+
+        $black = imagecolorallocate( $this->image_resource, 0x00, 0x00, 0x00 );
+
+        //-------------------------------------------------
+        // DRAW
+        //-------------------------------------------------
+
+        $data = self::_draw( 'gd', $this->image_resource, $black, $x, $y, $angle, $this->barcode_type, $this->barcode_content, $width, $height );
+
+        // header('Content-type: text/plain');
+
+        // echo var_dump( $data );
+
+        return $this;
+    }
+
+    /**
+     * Change the header and return the image content.
+     *
+     * @since   2.0.7
+     * @access  public
+     */
+    public function image()
+    {
+        header( 'Content-type: ' . $this->content_type );
+
+        if ( $this->content_type == 'image/gif' && function_exists( 'imagegif' ) )
+        {
+            imagegif( $this->image_resource );
+        }
+        else if ( $this->content_type == 'image/jpg' || $this->content_type == 'image/jpeg' && function_exists( 'imagejpeg' ) )
+        {
+            imagejpeg( $this->image_resource, null, 100 );
+        }
+        else if ( $this->content_type == 'image/png' && function_exists( 'imagepng' ) )
+        {
+            imagepng( $this->image_resource, null, 9 );
+        }
+    }
+
+    /**
+     * @since   2.0.7
+     * @access  public
+     */
+    public function get_image_resource()
+    {
+        return $this->image_resource;
+    }
+
+    /**
+     * @since   2.0.7
+     * @access  public
+     */
+    public function set_image_resource( $image_resource )
+    {
+        $this->image_resource = $image_resource;
     }
 
     /**
