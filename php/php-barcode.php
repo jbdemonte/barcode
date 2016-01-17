@@ -3,7 +3,7 @@
  * Application: BarCode Coder Library (BCCL)
  *
  * @package BCCL
- * @version 2.0.7
+ * @version 2.0.8
  * @porting PHP
  *
  * @date    2013-01-06
@@ -62,9 +62,27 @@ class Barcode
      *
      * @since   2.0.7
      * @access  protected
-     * @var     null
+     * @var     null|resource
      */
     protected $image_resource = null;
+
+    /**
+     * If the value is changed, the issuing image is rotated. The value can vary from 0 to 360.
+     *
+     * @since   2.0.8
+     * @access  protected
+     * @var     integer
+     */
+    protected $image_angle = 0;
+
+    /**
+     * With this value, the output quality is determined. The value can vary from 0 to 100.
+     *
+     * @since   2.0.8
+     * @access  protected
+     * @var     integer
+     */
+    protected $image_quality = 80;
 
     /**
      * Contains the standard file format, after which the bar code is to be output.
@@ -85,7 +103,7 @@ class Barcode
     protected $allowed_file_extensions = array( 'gif', 'jpg', 'jpeg', 'png' );
 
     /**
-     * The check code for error detection and correction is as CRC, using polynomial division. Is uses 2 characters, or 8 bits.
+     * The check code for error detection and correction is as CRC, using polynomial division.
      *
      * @since   2.0.7
      * @access  protected
@@ -94,7 +112,7 @@ class Barcode
     protected $checkcode = true;
 
     /**
-     * Sets in the data matrix whether this rectangle to display.
+     * Determines whether the data matrix to display rectangle. (DIN 16587 Rectangular Extension of Data Matrix)
      *
      * @since   2.0.7
      * @access  protected
@@ -103,11 +121,11 @@ class Barcode
     protected $rectangular = false;
 
     /**
-     * Barcode constructor.
+     * Create an instance and processed the incoming arguments.
      *
      * @since   2.0.7
      * @access  public
-     *
+     * 
      * @return  Barcode
      */
     public function __construct()
@@ -118,27 +136,30 @@ class Barcode
         {
             foreach ( $get_args[0] as $arg_index => $arg_value )
             {
-                if ( $arg_index == 'type' ): $this->barcode_type = $arg_value; endif;
-                if ( $arg_index == 'content' ): $this->barcode_content = $arg_value; endif;
+                if ( $arg_index == 'type' ): $this->type( $arg_value ); endif;
+                if ( $arg_index == 'content' ): $this->content( $arg_value ); endif;
 
-                if ( $arg_index == 'crc'  || $arg_index == 'checkcode' ): $this->checkcode = $arg_value; endif;
-                if ( $arg_index == 'rect' || $arg_index == 'rectangular' ): $this->rectangular = $arg_value; endif;
+                if ( $arg_index == 'format' ): $this->format( $arg_value ); endif;
+                if ( $arg_index == 'margin' ): $this->margin( $arg_value ); endif;
 
-                if ( $arg_index == 'format' ): $this->content_type = in_array( $arg_value, $this->allowed_file_extensions ) ? 'image/' . $arg_value : $this->content_type; endif;
-                if ( $arg_index == 'margin' ): $this->barcode_margin = $arg_value; endif;
+                if ( $arg_index == 'angle' ): $this->angle( $arg_value ); endif;
+                if ( $arg_index == 'quality' ): $this->quality( $arg_value ); endif;
+
+                if ( $arg_index == 'crc'  || $arg_index == 'checkcode' ): $this->checkcode = is_bool( $arg_value ) ? $arg_value : $this->checkcode; endif;
+                if ( $arg_index == 'rect' || $arg_index == 'rectangular' ): $this->rectangular = is_bool( $arg_value ) ? $arg_value : $this->rectangular; endif;
             }
         }
         else if ( count( $get_args ) == 2 )
         {
-            $this->barcode_type = $get_args[0];
-            $this->barcode_content = $get_args[1];
+            $this->type( $get_args[0] );
+            $this->content( $get_args[1] );
         }
 
         return $this;
     }
 
     /**
-     * Destroy image resource.
+     * Destroy the image resource.
      *
      * @since   2.0.7
      * @access  public
@@ -163,7 +184,7 @@ class Barcode
      */
     public function type( $value = '' )
     {
-        $this->barcode_type = empty( $value ) ? $this->barcode_type : $value;
+        $this->barcode_type = is_string( $value ) && empty( $value ) == false ? $value : $this->barcode_type;
 
         return $this;
     }
@@ -180,7 +201,7 @@ class Barcode
      */
     public function content( $value = '' )
     {
-        $this->barcode_content = empty( $value ) ? $this->barcode_content : $value;
+        $this->barcode_content = is_string( $value ) && empty( $value ) == false ? $value : $this->barcode_content;
 
         return $this;
     }
@@ -212,9 +233,43 @@ class Barcode
      *
      * @return  Barcode
      */
-    public function margin( $value = 0 )
+    public function margin( $value = null )
     {
-        $this->barcode_margin = is_numeric( $value ) ? $value : $this->barcode_margin;
+        $this->barcode_margin = is_numeric( $value ) ? $value * 2 : $this->barcode_margin;
+
+        return $this;
+    }
+
+    /**
+     * Can be called to change the image angle.
+     *
+     * @since   2.0.8
+     * @access  public
+     *
+     * @param   integer $value Contains the value of the angle.
+     *
+     * @return  Barcode
+     */
+    public function angle( $value = null )
+    {
+        $this->image_angle = is_numeric( $value ) ? $value : $this->image_angle;
+
+        return $this;
+    }
+
+    /**
+     * Can be called to change the image quality.
+     *
+     * @since   2.0.8
+     * @access  public
+     *
+     * @param   integer $value Contains the value of the quality.
+     *
+     * @return  Barcode
+     */
+    public function quality( $value = null )
+    {
+        $this->image_quality = is_numeric( $value ) ? $value : $this->image_quality;
 
         return $this;
     }
@@ -228,78 +283,209 @@ class Barcode
      * @param   integer $dots_per_inch Indicates is produced at what resolution the barcode.
      *
      * @return  Barcode
+     * @throws  Exception
      */
     public function create( $dots_per_inch = 90 )
     {
-        $this->image_resource = imagecreatetruecolor( 600, 600 );
+        if ( extension_loaded( 'gd' ) == false ): throw new Exception( 'The required extension GD is not loaded.' ); endif;
+
+        switch ( $this->barcode_type )
+        {
+            case 'std25': case 'int25': $digit = BarcodeI25::getDigit( $this->barcode_content, $this->checkcode, $this->barcode_type ); break;
+            case 'ean8': case 'ean13': $digit = BarcodeEAN::getDigit( $this->barcode_content, $this->barcode_type ); break;
+            case 'upc': $digit = BarcodeUPC::getDigit( $this->barcode_content ); break;
+            case 'code11': $digit = Barcode11::getDigit( $this->barcode_content ); break;
+            case 'code39': $digit = Barcode39::getDigit( $this->barcode_content ); break;
+            case 'code93': $digit = Barcode93::getDigit( $this->barcode_content, $this->checkcode ); break;
+            case 'code128': $digit = Barcode128::getDigit( $this->barcode_content ); break;
+            case 'codabar': $digit = BarcodeCodabar::getDigit( $this->barcode_content ); break;
+            case 'msi': $digit = BarcodeMSI::getDigit( $this->barcode_content, $this->checkcode ); break;
+            case 'datamatrix': $digit = BarcodeDatamatrix::getDigit( $this->barcode_content, $this->rectangular ); break;
+            default: throw new Exception( 'The required barcode class were not found.' ); break;
+        }
+
+        if ( empty( $digit ) ): throw new Exception( 'The contents could not be processed.' ); endif;
+
+        if ( $this->barcode_type != 'datamatrix' )
+        {
+            $d = array();
+
+            for ( $i = 0; $i < strlen( $digit ); $i++ )
+            {
+                $d[$i] = $digit[$i];
+            }
+
+            $digit = array( $d );
+        }
+
+        if ( $this->barcode_type == 'datamatrix' )
+        {
+            $width = 5;
+            $height = 5;
+        }
+        else
+        {
+            $width = 2;
+            $height = 50;
+        }
+
+        $columns = count( $digit[0] );
+        $lines = count( $digit );
+
+        $barcode_width = $columns * $width;
+        $barcode_height = $lines * $height;
+
+        $barcode_center_x = $barcode_width / 2;
+        $barcode_center_y = $barcode_height / 2;
+
+        $image_width = $barcode_width + $this->barcode_margin;
+        $image_height = $barcode_height + $this->barcode_margin;
+
+        $image_center_x = $image_width / 2;
+        $image_center_y = $image_height / 2;
+
+        //-------------------------------------------------
+        // IMAGE ANGLE
+        //-------------------------------------------------
+
+        $this->image_angle = deg2rad( -$this->image_angle );
+
+        $cos = cos( $this->image_angle );
+        $sin = sin( $this->image_angle );
+
+        //-------------------------------------------------
+        // BARCODE START COORDINATES
+        //-------------------------------------------------
+
+        $barcode_start_x = $image_center_x;
+        $barcode_start_y = $image_center_y;
+
+        self::_rotate( $barcode_center_x, $barcode_center_y, $cos, $sin, $image_center_x, $image_center_y );
+
+        $barcode_start_x -= $image_center_x;
+        $barcode_start_y -= $image_center_y;
+
+        //-------------------------------------------------
+        // GENERATE IMAGE RESOURCE
+        //-------------------------------------------------
+
+        $this->image_resource = imagecreatetruecolor( $image_width, $image_height );
 
         $white  = imagecolorallocate( $this->image_resource, 0xff, 0xff, 0xff );
-
-        imagefilledrectangle( $this->image_resource, 0, 0, 600, 600, $white );
-
-        $x = 300;
-        $y = 300;
-
-        $angle = 0;
-
-        $width = null;
-        $height = null;
-
         $black = imagecolorallocate( $this->image_resource, 0x00, 0x00, 0x00 );
 
-        //-------------------------------------------------
-        // DRAW
-        //-------------------------------------------------
+        imagefilledrectangle( $this->image_resource, 0, 0, $image_width, $image_height, $white );
 
-        $data = self::_draw( 'gd', $this->image_resource, $black, $x, $y, $angle, $this->barcode_type, $this->barcode_content, $width, $height );
+        foreach ( $digit as $y_index => $y_value )
+        {
+            foreach ( $y_value as $x_index => $x_value )
+            {
+                if ( $digit[$y_index][$x_index] == '1' )
+                {
+                    $rectangle_start_x = $x_index * $width;
+                    $rectangle_start_y = $y_index * $height;
 
-        // header('Content-type: text/plain');
+                    $rectangle_end_x = ( $x_index + 1 ) * $width;
+                    $rectangle_end_y = ( $y_index + 1 ) * $height;
 
-        // echo var_dump( $data );
+                    self::_rotate( $rectangle_start_x, $rectangle_start_y, $cos, $sin, $point_a_x, $point_a_y );
+                    self::_rotate( $rectangle_end_x,   $rectangle_start_y, $cos, $sin, $point_b_x, $point_b_y );
+                    self::_rotate( $rectangle_end_x,   $rectangle_end_y,   $cos, $sin, $point_c_x, $point_c_y );
+                    self::_rotate( $rectangle_start_x, $rectangle_end_y,   $cos, $sin, $point_d_x, $point_d_y );
+
+                    $array_of_coordinates = array();
+
+                    array_push( $array_of_coordinates, $barcode_start_x + $point_a_x, $barcode_start_y + $point_a_y );
+                    array_push( $array_of_coordinates, $barcode_start_x + $point_b_x, $barcode_start_y + $point_b_y );
+                    array_push( $array_of_coordinates, $barcode_start_x + $point_c_x, $barcode_start_y + $point_c_y );
+                    array_push( $array_of_coordinates, $barcode_start_x + $point_d_x, $barcode_start_y + $point_d_y );
+
+                    imagefilledpolygon( $this->image_resource, $array_of_coordinates, 4, $black );
+                }
+
+            }
+        }
 
         return $this;
     }
 
     /**
-     * Change the header and return the image content.
+     * Can be called to change the image from outside the class.
+     *
+     * Checks the modified resource and processes them.
+     *
+     * @since   2.0.8
+     * @access  public
+     *
+     * @param   null|resource
+     *
+     * @return  Barcode|resource
+     */
+    public function resource( $image_resource = null )
+    {
+        if ( is_resource( $image_resource ) )
+        {
+            $this->image_resource = $image_resource;
+
+            return $this;
+        }
+        else
+        {
+            if ( is_resource( $this->image_resource ) == false ): $this->create(); endif;
+
+            return $this->image_resource;
+        }
+    }
+
+    /**
+     * Check if the function "create" has been called, if not, then call.
+     *
+     * Say to the header, that the following data, will be an image and paint the image.
      *
      * @since   2.0.7
      * @access  public
+     *
+     * @param   boolean|string $value If the value is true, then deliver the image data to a variable. If the value is a string, then save the image to a file.
+     *
+     * @return  string Does the image data, if the variable "$value" is true.
      */
-    public function image()
+    public function image( $value = null )
     {
-        header( 'Content-type: ' . $this->content_type );
+        if ( is_resource( $this->image_resource ) == false ): $this->create(); endif;
+
+        if ( $value === null ): header( 'Content-type: ' . $this->content_type ); endif;
+
+        if ( $value === true ): ob_start(); endif;
+
+        if ( is_string( $value ) && is_writeable( dirname( $value ) ) == false ): throw new Exception( 'The specified file path (' . $value . ') is not writable.' ); endif;
 
         if ( $this->content_type == 'image/gif' && function_exists( 'imagegif' ) )
         {
-            imagegif( $this->image_resource );
+            imagegif( $this->image_resource, is_string( $value ) ? $value : null );
         }
         else if ( $this->content_type == 'image/jpg' || $this->content_type == 'image/jpeg' && function_exists( 'imagejpeg' ) )
         {
-            imagejpeg( $this->image_resource, null, 100 );
+            imageinterlace( $this->image_resource, true );
+
+            imagejpeg( $this->image_resource, is_string( $value ) ? $value : null, round( $this->image_quality ) );
         }
         else if ( $this->content_type == 'image/png' && function_exists( 'imagepng' ) )
         {
-            imagepng( $this->image_resource, null, 9 );
+            imagepng( $this->image_resource, is_string( $value ) ? $value : null, round( 9 * $this->image_quality / 100 ) );
         }
-    }
+        else
+        {
+            throw new Exception( 'On this server, there is no supported image formats.' );
+        }
 
-    /**
-     * @since   2.0.7
-     * @access  public
-     */
-    public function get_image_resource()
-    {
-        return $this->image_resource;
-    }
+        if ( $value === true )
+        {
+            $image_data = ob_get_contents();
 
-    /**
-     * @since   2.0.7
-     * @access  public
-     */
-    public function set_image_resource( $image_resource )
-    {
-        $this->image_resource = $image_resource;
+            ob_end_clean();
+
+            return $image_data;
+        }
     }
 
     /**
@@ -367,7 +553,7 @@ class Barcode
 
         $type = strtolower( $type );
 
-        switch( $type )
+        switch ( $type )
         {
             case 'std25':
             case 'int25':
@@ -446,7 +632,7 @@ class Barcode
             $width = is_null( $width ) ? 1 : $width;
             $height = is_null( $height ) ? 50 : $height;
 
-            $digit = self::bitStringTo2DArray($digit);
+            $digit = self::bitStringTo2DArray( $digit );
         }
 
         if ( $call == 'gd' )
@@ -483,7 +669,7 @@ class Barcode
             $d[$i] = $digit[$i];
         }
 
-        return ( array( $d ) );
+        return array( $d );
     }
 
     /**
@@ -570,9 +756,9 @@ class Barcode
     {
         if ( ! is_array( $color ) )
         {
-            if ( preg_match( '`([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})`i', $color, $m ) )
+            if ( preg_match( '`([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})`i', $color, $match ) )
             {
-                $color = array( hexdec( $m[1] ), hexdec( $m[2] ), hexdec( $m[3] ) );
+                $color = array( hexdec( $match[1] ), hexdec( $match[2] ), hexdec( $match[3] ) );
             }
             else
             {
@@ -714,7 +900,7 @@ class BarcodeI25
             $code .= (string) ( ( 10 - $sum % 10 ) % 10 );
         }
 
-        return ( $code );
+        return $code;
     }
 
     /**
@@ -730,7 +916,7 @@ class BarcodeI25
     {
         $code = self::compute( $code, $crc, $type );
 
-        if ( $code == '' ) return ( $code );
+        if ( $code == '' ) return $code;
 
         $result = '';
 
@@ -814,7 +1000,7 @@ class BarcodeI25
             $result .= '11010110';
         }
 
-        return ( $result );
+        return $result;
     }
 }
 
@@ -865,7 +1051,7 @@ class BarcodeEAN
 
         $code = substr( $code, 0, $len );
 
-        if ( !preg_match( '`[0-9]{'.$len.'}`', $code ) ) return ( '' );
+        if ( ! preg_match( '`[0-9]{' . $len . '}`', $code ) ) return '';
 
         //-------------------------------------------------
         // get checksum
@@ -956,7 +1142,7 @@ class BarcodeEAN
 
         $result .= '101';
 
-        return ( $result );
+        return $result;
     }
 
     /**
@@ -974,7 +1160,7 @@ class BarcodeEAN
 
         $code = substr( $code, 0, $len );
 
-        if ( !preg_match( '`[0-9]{'.$len.'}`', $code ) ) return ( '' );
+        if ( ! preg_match( '`[0-9]{' . $len . '}`', $code ) ) return '';
 
         $sum = 0;
 
@@ -987,7 +1173,7 @@ class BarcodeEAN
             $odd = ! $odd;
         }
 
-        return ( $code . ( (string) ( ( 10 - $sum % 10 ) % 10 ) ) );
+        return $code . ( (string) ( ( 10 - $sum % 10 ) % 10 ) );
     }
 }
 
@@ -1090,7 +1276,8 @@ class BarcodeMSI
         {
             $code = self::computeMod10( $code );
         }
-        return ( $code );
+
+        return $code;
     }
 
     /**
@@ -1135,7 +1322,7 @@ class BarcodeMSI
             $sum += intval( $s1[$i] );
         }
 
-        return ( $code . ( (string) ( 10 - $sum % 10 ) % 10 ) );
+        return $code . ( (string) ( 10 - $sum % 10 ) % 10 );
     }
 
     /**
@@ -1160,7 +1347,7 @@ class BarcodeMSI
             $weight = $weight == 7 ? 2 : $weight + 1;
         }
 
-        return ( $code . ( (string) ( 11 - $sum % 11 ) % 11 ) );
+        return $code . ( (string) ( 11 - $sum % 11 ) % 11 );
     }
 
     /**
@@ -1205,7 +1392,7 @@ class BarcodeMSI
 
         $result .= '1001';
 
-        return ( $result );
+        return $result;
     }
 }
 
@@ -1305,7 +1492,7 @@ class Barcode11
 
         $result .= '1011001';
 
-        return ( $result );
+        return $result;
     }
 }
 
@@ -1344,7 +1531,7 @@ class Barcode39
 
         $intercharacter = '0';
 
-        if ( strpos( $code, '*' ) !== false ) return ( '' );
+        if ( strpos( $code, '*' ) !== false ) return '';
 
         //-------------------------------------------------
         // Add Start and Stop charactere : *
@@ -1358,14 +1545,14 @@ class Barcode39
         {
             $index = strpos( $table, $code[$i] );
 
-            if ( $index === false ) return ( '' );
+            if ( $index === false ) return '';
 
             if ( $i > 0 ) $result .= $intercharacter;
 
             $result .= self::$encoding[$index];
         }
 
-        return ( $result );
+        return $result;
     }
 }
 
@@ -1402,7 +1589,7 @@ class Barcode93
 
         $result = '';
 
-        if ( strpos( $code, '*' ) !== false ) return ( '' );
+        if ( strpos( $code, '*' ) !== false ) return '';
 
         $code = strtoupper( $code );
 
@@ -1424,7 +1611,7 @@ class Barcode93
 
             $index = strpos( $table, $c );
 
-            if ( ( $c == '_' ) || ( $index === false ) ) return ( '' );
+            if ( ( $c == '_' ) || ( $index === false ) ) return '';
 
             $result .= self::$encoding[$index];
         }
@@ -1476,7 +1663,7 @@ class Barcode93
 
         $result .= '1';
 
-        return ( $result );
+        return $result;
     }
 }
 
@@ -1606,7 +1793,7 @@ class Barcode128
         '11010000100', //  103  Start A Start A Start A 0208    D   11010000100
         '11010010000', //  104  Start B Start B Start B 0209    N   11010010000
         '11010011100', //  105  Start C Start C Start C 0210    O   11010011100
-        '11000111010'  //  106  Stop    Stop    Stop    0211    O   1100011101011
+        '11000111010'  //  106  Stop    Stop    Stop    0211    O   11000111010
     );
 
     /**
@@ -1621,11 +1808,17 @@ class Barcode128
     public static function getDigit( $code )
     {
         $tableB = " !\"#$%&'()*+, -./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+
         $result = '';
+
         $sum = 0;
+
         $isum = 0;
+
         $i = 0;
+
         $j = 0;
+
         $value = 0;
 
         //-------------------------------------------------
@@ -1638,7 +1831,7 @@ class Barcode128
 
         // for ( $i = 0; $i < $len; $i++ )
         // {
-        //     if ( strpos( $tableB, $code[$i] ) === false ) return ( '' );
+        //     if ( strpos( $tableB, $code[$i] ) === false ) return '';
         // }
 
         //-------------------------------------------------
@@ -1736,6 +1929,7 @@ class Barcode128
                 if ( ord( $code[$i] ) > 126 )
                 {
                     $result .= self::$encoding[ 100 ];
+
                     $sum += ++$isum * 100;
 
                     //-------------------------------------------------
@@ -1779,7 +1973,7 @@ class Barcode128
 
         $result .= '11';
 
-        return ( $result );
+        return $result;
     }
 }
 
@@ -1813,11 +2007,13 @@ class BarcodeCodabar
     public static function getDigit( $code )
     {
         $table = '0123456789-$:/.+';
+
         $result = '';
+
         $intercharacter = '0';
 
         //-------------------------------------------------
-        // add start : A->D : arbitrary choose A
+        // add start : A -> D : arbitrary choose A
         //-------------------------------------------------
 
         $result .= self::$encoding[16] . $intercharacter;
@@ -1828,18 +2024,18 @@ class BarcodeCodabar
         {
             $index = strpos( $table, $code[$i] );
 
-            if ( $index === false ) return ( '' );
+            if ( $index === false ) return '';
 
             $result .= self::$encoding[$index] . $intercharacter;
         }
 
         //-------------------------------------------------
-        // add stop : A->D : arbitrary choose A
+        // add stop : A -> D : arbitrary choose A
         //-------------------------------------------------
 
         $result .= self::$encoding[16];
 
-        return ( $result );
+        return $result;
     }
 }
 
@@ -2043,7 +2239,9 @@ class BarcodeDatamatrix
     private static function encodeDataCodeWordsASCII( $text )
     {
         $dataCodeWords = array();
+
         $n = 0;
+
         $len = strlen( $text );
 
         for ( $i = 0; $i < $len; $i++ )
@@ -2140,6 +2338,7 @@ class BarcodeDatamatrix
     private static function addReedSolomonCW( $nSolomonCW, $coeffTab, $nDataCW, &$dataTab, $blocks )
     {
         $errorBlocks = $nSolomonCW / $blocks;
+
         $correctionCW = array();
 
         for ( $k = 0; $k < $blocks; $k++ )
@@ -2226,7 +2425,9 @@ class BarcodeDatamatrix
         //-------------------------------------------------
 
         $chr = 0;
+
         $row = 4;
+        
         $col = 0;
 
         do
