@@ -3,7 +3,7 @@
  * Application: BarCode Coder Library (BCCL)
  *
  * @package BCCL
- * @version 2.0.8
+ * @version 2.0.9
  * @porting PHP
  *
  * @date    2013-01-06
@@ -306,34 +306,24 @@ class Barcode
 
         if ( empty( $digit ) ): throw new Exception( 'The contents could not be processed.' ); endif;
 
-        if ( $this->barcode_type != 'datamatrix' )
-        {
-            $d = array();
-
-            for ( $i = 0; $i < strlen( $digit ); $i++ )
-            {
-                $d[$i] = $digit[$i];
-            }
-
-            $digit = array( $d );
-        }
+        if ( is_array( $digit ) == false ): $digit = array( str_split( $digit ) ); endif;
 
         if ( $this->barcode_type == 'datamatrix' )
         {
-            $width = 5;
-            $height = 5;
+            $width = 14;
+            $height = 14;
         }
         else
         {
-            $width = 2;
+            $width = 3;
             $height = 50;
         }
 
-        $columns = count( $digit[0] );
-        $lines = count( $digit );
+        $module_count = count( $digit[0] );
+        $line_count = count( $digit );
 
-        $barcode_width = $columns * $width;
-        $barcode_height = $lines * $height;
+        $barcode_width = $module_count * $width;
+        $barcode_height = $line_count * $height;
 
         $barcode_center_x = $barcode_width / 2;
         $barcode_center_y = $barcode_height / 2;
@@ -380,29 +370,55 @@ class Barcode
         {
             foreach ( $y_value as $x_index => $x_value )
             {
-                if ( $digit[$y_index][$x_index] == '1' )
+                if ( $digit[ $y_index ][ $x_index ] == '1' )
                 {
-                    $rectangle_start_x = $x_index * $width;
-                    $rectangle_start_y = $y_index * $height;
+                    //-------------------------------------------------
+                    // If the last module does not exist or is "0",
+                    // then try the modules to group and start the
+                    // calculation of the rectangle.
+                    //-------------------------------------------------
 
-                    $rectangle_end_x = ( $x_index + 1 ) * $width;
-                    $rectangle_end_y = ( $y_index + 1 ) * $height;
+                    if ( isset( $digit[ $y_index ][ $x_index - 1 ] ) == false || $digit[ $y_index ][ $x_index - 1 ] == '0' )
+                    {
+                        for ( $module_index = $x_index + 1; $module_index <= $module_count; $module_index++ )
+                        {
+                            if ( isset( $digit[ $y_index ][ $module_index ] ) && $digit[ $y_index ][ $module_index ] == '0' || $module_index == $module_count )
+                            {
+                                break;
+                            }
+                        }
 
-                    self::_rotate( $rectangle_start_x, $rectangle_start_y, $cos, $sin, $point_a_x, $point_a_y );
-                    self::_rotate( $rectangle_end_x,   $rectangle_start_y, $cos, $sin, $point_b_x, $point_b_y );
-                    self::_rotate( $rectangle_end_x,   $rectangle_end_y,   $cos, $sin, $point_c_x, $point_c_y );
-                    self::_rotate( $rectangle_start_x, $rectangle_end_y,   $cos, $sin, $point_d_x, $point_d_y );
+                        $rectangle_start_x = $x_index * $width;
+                        $rectangle_start_y = $y_index * $height;
 
-                    $array_of_coordinates = array();
+                        $rectangle_end_x = $module_index * $width;
+                        $rectangle_end_y = ( $y_index + 1 ) * $height;
 
-                    array_push( $array_of_coordinates, $barcode_start_x + $point_a_x, $barcode_start_y + $point_a_y );
-                    array_push( $array_of_coordinates, $barcode_start_x + $point_b_x, $barcode_start_y + $point_b_y );
-                    array_push( $array_of_coordinates, $barcode_start_x + $point_c_x, $barcode_start_y + $point_c_y );
-                    array_push( $array_of_coordinates, $barcode_start_x + $point_d_x, $barcode_start_y + $point_d_y );
+                        self::_rotate( $rectangle_start_x, $rectangle_start_y, $cos, $sin, $point_a_x, $point_a_y );
+                        self::_rotate( $rectangle_end_x,   $rectangle_start_y, $cos, $sin, $point_b_x, $point_b_y );
+                        self::_rotate( $rectangle_end_x,   $rectangle_end_y,   $cos, $sin, $point_c_x, $point_c_y );
+                        self::_rotate( $rectangle_start_x, $rectangle_end_y,   $cos, $sin, $point_d_x, $point_d_y );
 
-                    imagefilledpolygon( $this->image_resource, $array_of_coordinates, 4, $black );
+                        $array_of_coordinates = array();
+
+                        array_push( $array_of_coordinates, $barcode_start_x + $point_a_x, $barcode_start_y + $point_a_y );
+                        array_push( $array_of_coordinates, $barcode_start_x + $point_b_x, $barcode_start_y + $point_b_y );
+                        array_push( $array_of_coordinates, $barcode_start_x + $point_c_x, $barcode_start_y + $point_c_y );
+                        array_push( $array_of_coordinates, $barcode_start_x + $point_d_x, $barcode_start_y + $point_d_y );
+
+                        imagefilledpolygon( $this->image_resource, $array_of_coordinates, 4, $black );
+                    }
+
+                    //-------------------------------------------------
+                    // All other modules can be skipped, because
+                    // these have already been calculated.
+                    //-------------------------------------------------
+
+                    if ( isset( $digit[ $y_index ][ $x_index + 1 ] ) && $digit[ $y_index ][ $x_index + 1 ] == '1' )
+                    {
+                        continue;
+                    }  
                 }
-
             }
         }
 
@@ -448,6 +464,7 @@ class Barcode
      * @param   boolean|string $value If the value is true, then deliver the image data to a variable. If the value is a string, then save the image to a file.
      *
      * @return  string Does the image data, if the variable "$value" is true.
+     * @throws  Exception
      */
     public function image( $value = null )
     {
@@ -698,17 +715,28 @@ class Barcode
         $xi -= $x;
         $yi -= $y;
 
-        foreach ( $digit as $y_index => $y_value )
+        for ( $y = 0; $y < $lines; $y++ )
         {
-            foreach ( $y_value as $x_index => $x_value )
-            {
-                if ( $digit[$y_index][$x_index] == '1' )
-                {
-                    $x1 = $x_index * $mw;
-                    $y1 = $y_index * $mh;
+            $x = -1;
 
-                    $x2 = ( $x_index + 1 ) * $mw;
-                    $y2 = ( $y_index + 1 ) * $mh;
+            while ( $x < $columns )
+            {
+                $x++;
+
+                if ( isset( $digit[$y][$x] ) && $digit[$y][$x] == '1' )
+                {
+                    $z = $x;
+
+                    while ( ( $z + 1 < $columns ) && ( $digit[$y][$z + 1] == '1' ) )
+                    {
+                        $z++;
+                    }
+
+                    $x1 = $x * $mw;
+                    $y1 = $y * $mh;
+
+                    $x2 = ( $z + 1 ) * $mw;
+                    $y2 = ( $y + 1 ) * $mh;
 
                     self::_rotate( $x1, $y1, $cos, $sin, $xA, $yA );
                     self::_rotate( $x2, $y1, $cos, $sin, $xB, $yB );
@@ -716,8 +744,9 @@ class Barcode
                     self::_rotate( $x1, $y2, $cos, $sin, $xD, $yD );
 
                     $fn( array( $xA + $xi, $yA + $yi, $xB + $xi, $yB + $yi, $xC + $xi, $yC + $yi, $xD + $xi, $yD + $yi ) );
-                }
 
+                    $x = $z + 1;
+                }
             }
         }
 
