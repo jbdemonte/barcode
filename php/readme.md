@@ -1,33 +1,65 @@
 php-barcode
 ===========
 
-Presentation
+PRESENTATION
 ------------
-
 This plugin allows you to create barcodes thanks to php.
 
-Licence
+LICENCE
 -------
-[GPL v3](http://www.gnu.org/licenses/gpl.html)
+[GPLv3](http://www.gnu.org/licenses/gpl.html)
 [CeCILL](http://www.cecill.info/licences/Licence_CeCILL_V2-fr.html)
 
-Features
+FEATURES
 --------
 
-### Symbologies
- - standard 2 of 5 (std25)
- - interleaved 2 of 5 (int25)
- - ean 8 (ean8)
- - ean 13 (ean13)
- - upc (upc)
- - code 11 (code11)
- - code 39 (code39)
- - code 93 (code93)
- - code 128 (code128)  
- - codabar (codabar)
- - msi (msi)
- - datamatrix (datamatrix)
-  
-### Output : 
- - GD
- - FPDF
+SYMBOLOGIES
+-----------
+* Standard 2 of 5 (STD25)
+* Interleaved 2 of 5 (INT25)
+* EAN 8
+* EAN 13
+* UPC
+* CODE 11
+* CODE 39
+* CODE 93
+* CODE 128
+* CODABAR
+* MSI
+* Data Matrix
+
+OUTPUT
+------
+* GD
+* FPDF
+
+REQUIREMENTS
+------------
+* PHP 5.0+
+
+USAGE
+-----
+```php
+$barcode = new Barcode( array( 'type' => 'datamatrix', 'content' => 'test', 'format' => 'png', 'margin' => 10 ) );
+$barcode->image();
+
+$barcode = new Barcode( 'datamatrix', 'test' );
+$barcode->image();
+
+$barcode = new Barcode( 'datamatrix', 'test' );
+$image_data = $barcode->image( true );
+
+$barcode = new Barcode( 'datamatrix', 'test' );
+$barcode->image( './barcode.gif' );
+
+$barcode = new Barcode();
+$barcode->type( 'datamatrix' );
+$barcode->content( 'test' );
+$barcode->format( 'jpg' );
+$barcode->margin( 50 );
+$barcode->create();
+$image_resource = $barcode->resource();
+imagettftext( $image_resource, 10, 0, 20, 30, 0x000000, 'font file path', 'text label' );
+$barcode->resource( $image_resource );
+$barcode->image();
+```
