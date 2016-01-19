@@ -3,7 +3,7 @@
  * Application: BarCode Coder Library (BCCL)
  *
  * @package BCCL
- * @version 2.0.9
+ * @version 2.0.10
  * @porting PHP
  *
  * @date    2013-01-06
@@ -49,42 +49,6 @@ class Barcode
     protected $barcode_content = 'BarCode Coder Library';
 
     /**
-     * Contains the value that should have the barcode frame.
-     *
-     * @since   2.0.7
-     * @access  protected
-     * @var     integer
-     */
-    protected $barcode_margin = 0;
-
-    /**
-     * Contains the image resource.
-     *
-     * @since   2.0.7
-     * @access  protected
-     * @var     null|resource
-     */
-    protected $image_resource = null;
-
-    /**
-     * If the value is changed, the issuing image is rotated. The value can vary from 0 to 360.
-     *
-     * @since   2.0.8
-     * @access  protected
-     * @var     integer
-     */
-    protected $image_angle = 0;
-
-    /**
-     * With this value, the output quality is determined. The value can vary from 0 to 100.
-     *
-     * @since   2.0.8
-     * @access  protected
-     * @var     integer
-     */
-    protected $image_quality = 80;
-
-    /**
      * Contains the standard file format, after which the bar code is to be output.
      *
      * @since   2.0.7
@@ -103,13 +67,67 @@ class Barcode
     protected $allowed_file_extensions = array( 'gif', 'jpg', 'jpeg', 'png' );
 
     /**
-     * The check code for error detection and correction is as CRC, using polynomial division.
+     * Contains the image resource.
+     *
+     * @since   2.0.7
+     * @access  protected
+     * @var     null|resource
+     */
+    protected $image_resource = null;
+
+    /**
+     * With this value, the output quality is determined. The value can vary from 0 to 100.
+     *
+     * @since   2.0.8
+     * @access  protected
+     * @var     integer
+     */
+    protected $image_quality = 80;
+
+    /**
+     * If the value is changed, the issuing image is rotated. The value can vary from 0 to 360.
+     *
+     * @since   2.0.8
+     * @access  protected
+     * @var     integer
+     */
+    protected $image_angle = 0;
+
+    /**
+     * Cosine, in mathematics, is a trigonometric function of an angle.
+     *
+     * @since   2.0.9
+     * @access  protected
+     * @var     integer
+     */
+    protected $image_cos = 0;
+
+    /**
+     * Sine, in mathematics, is a trigonometric function of an angle.
+     *
+     * @since   2.0.9
+     * @access  protected
+     * @var     integer
+     */
+    protected $image_sin = 0;
+
+    /**
+     * Contains the value that should have the barcode frame.
+     *
+     * @since   2.0.7
+     * @access  protected
+     * @var     integer
+     */
+    protected $barcode_margin = 0;
+
+    /**
+     * The check code for error detection and correction is as CRC, using polynomial division. (https://wikipedia.org/wiki/Cyclic_redundancy_check)
      *
      * @since   2.0.7
      * @access  protected
      * @var     boolean
      */
-    protected $checkcode = true;
+    protected $cyclic_redundancy_check = true;
 
     /**
      * Determines whether the data matrix to display rectangle. (DIN 16587 Rectangular Extension of Data Matrix)
@@ -131,25 +149,62 @@ class Barcode
     public function __construct()
     {
         $get_args = func_get_args();
+        $num_args = func_num_args();
 
-        if ( count( $get_args ) == 1 )
+        $this->angle();
+
+        if ( $num_args == 1 )
         {
             foreach ( $get_args[0] as $arg_index => $arg_value )
             {
-                if ( $arg_index == 'type' ): $this->type( $arg_value ); endif;
-                if ( $arg_index == 'content' ): $this->content( $arg_value ); endif;
-
-                if ( $arg_index == 'format' ): $this->format( $arg_value ); endif;
-                if ( $arg_index == 'margin' ): $this->margin( $arg_value ); endif;
-
-                if ( $arg_index == 'angle' ): $this->angle( $arg_value ); endif;
-                if ( $arg_index == 'quality' ): $this->quality( $arg_value ); endif;
-
-                if ( $arg_index == 'crc'  || $arg_index == 'checkcode' ): $this->checkcode = is_bool( $arg_value ) ? $arg_value : $this->checkcode; endif;
-                if ( $arg_index == 'rect' || $arg_index == 'rectangular' ): $this->rectangular = is_bool( $arg_value ) ? $arg_value : $this->rectangular; endif;
+                switch ( $arg_value )
+                {
+                    case 'type':
+                    {
+                        $this->type( $arg_value );
+                        break;
+                    }
+                    case 'content':
+                    {
+                        $this->content( $arg_value );
+                        break;
+                    }
+                    case 'format':
+                    {
+                        $this->format( $arg_value );
+                        break;
+                    }
+                    case 'quality':
+                    {
+                        $this->quality( $arg_value );
+                        break;
+                    }
+                    case 'angle':
+                    {
+                        $this->angle( $arg_value );
+                        break;
+                    }
+                    case 'margin':
+                    {
+                        $this->margin( $arg_value );
+                        break;
+                    }
+                    case 'crc':
+                    case 'cyclic_redundancy_check':
+                    {
+                        $this->cyclic_redundancy_check = is_bool( $arg_value ) ? $arg_value : $this->cyclic_redundancy_check;
+                        break;
+                    }
+                    case 'rect':
+                    case 'rectangular':
+                    {
+                        $this->rectangular = is_bool( $arg_value ) ? $arg_value : $this->rectangular;
+                        break;
+                    }
+                }
             }
         }
-        else if ( count( $get_args ) == 2 )
+        else if ( $num_args == 2 )
         {
             $this->type( $get_args[0] );
             $this->content( $get_args[1] );
@@ -170,6 +225,29 @@ class Barcode
         {
             imagedestroy( $this->image_resource );
         }
+    }
+
+    /**
+     * Can be called to change the image angle.
+     *
+     * @since   2.0.8
+     * @access  public
+     *
+     * @param   integer $value Contains the value of the angle.
+     *
+     * @return  Barcode
+     */
+    public function angle( $value = null )
+    {
+        $this->image_angle = is_numeric( $value ) ? $value : $this->image_angle;
+
+        $this->image_angle = deg2rad( -$this->image_angle );
+
+        $this->image_cos = cos( $this->image_angle );
+
+        $this->image_sin = sin( $this->image_angle );
+
+        return $this;
     }
 
     /**
@@ -224,40 +302,6 @@ class Barcode
     }
 
     /**
-     * Can be called to paint the barcode a white frame.
-     *
-     * @since   2.0.7
-     * @access  public
-     *
-     * @param   integer $value Considering the DPI, the barcode a white frame is added.
-     *
-     * @return  Barcode
-     */
-    public function margin( $value = null )
-    {
-        $this->barcode_margin = is_numeric( $value ) ? $value * 2 : $this->barcode_margin;
-
-        return $this;
-    }
-
-    /**
-     * Can be called to change the image angle.
-     *
-     * @since   2.0.8
-     * @access  public
-     *
-     * @param   integer $value Contains the value of the angle.
-     *
-     * @return  Barcode
-     */
-    public function angle( $value = null )
-    {
-        $this->image_angle = is_numeric( $value ) ? $value : $this->image_angle;
-
-        return $this;
-    }
-
-    /**
      * Can be called to change the image quality.
      *
      * @since   2.0.8
@@ -270,6 +314,61 @@ class Barcode
     public function quality( $value = null )
     {
         $this->image_quality = is_numeric( $value ) ? $value : $this->image_quality;
+
+        return $this;
+    }
+
+    /**
+     * Can be called to paint the barcode a white frame.
+     *
+     * @since   2.0.7
+     * @access  public
+     *
+     * @param   integer $value Considering the DPI, the barcode a white frame is added.
+     *
+     * @return  Barcode
+     */
+    public function margin( $value = null )
+    {
+        // Is used to prepare a perfect margin.
+
+        // $get_args = func_get_args();
+        // $num_args = func_num_args();
+
+        // $barcode_margin_top    = 0;
+        // $barcode_margin_right  = 0;
+        // $barcode_margin_bottom = 0;
+        // $barcode_margin_left   = 0;
+
+        // switch ( $num_args )
+        // {
+        //     case 1:
+        //     {
+        //         $barcode_margin_top    = $get_args[0];
+        //         $barcode_margin_right  = $get_args[0];
+        //         $barcode_margin_bottom = $get_args[0];
+        //         $barcode_margin_left   = $get_args[0];
+        //         break;
+        //     }
+        //     case 2:
+        //     {
+        //         $barcode_margin_top    = $get_args[0];
+        //         $barcode_margin_right  = $get_args[1];
+        //         $barcode_margin_bottom = $get_args[0];
+        //         $barcode_margin_left   = $get_args[1];
+        //         break;
+        //     }
+        //     case 4:
+        //     {
+        //         $barcode_margin_top    = $get_args[0];
+        //         $barcode_margin_right  = $get_args[1];
+        //         $barcode_margin_bottom = $get_args[2];
+        //         $barcode_margin_left   = $get_args[3];
+        //         break;
+        //     }
+        // }
+
+        $this->barcode_margin = is_numeric( $value ) ? $value * 2 : $this->barcode_margin;
 
         return $this;
     }
@@ -289,41 +388,82 @@ class Barcode
     {
         if ( extension_loaded( 'gd' ) == false ): throw new Exception( 'The required extension GD is not loaded.' ); endif;
 
-        switch ( $this->barcode_type )
+        switch ( strtoupper( $this->barcode_type ) )
         {
-            case 'std25': case 'int25': $digit = BarcodeI25::getDigit( $this->barcode_content, $this->checkcode, $this->barcode_type ); break;
-            case 'ean8': case 'ean13': $digit = BarcodeEAN::getDigit( $this->barcode_content, $this->barcode_type ); break;
-            case 'upc': $digit = BarcodeUPC::getDigit( $this->barcode_content ); break;
-            case 'code11': $digit = Barcode11::getDigit( $this->barcode_content ); break;
-            case 'code39': $digit = Barcode39::getDigit( $this->barcode_content ); break;
-            case 'code93': $digit = Barcode93::getDigit( $this->barcode_content, $this->checkcode ); break;
-            case 'code128': $digit = Barcode128::getDigit( $this->barcode_content ); break;
-            case 'codabar': $digit = BarcodeCodabar::getDigit( $this->barcode_content ); break;
-            case 'msi': $digit = BarcodeMSI::getDigit( $this->barcode_content, $this->checkcode ); break;
-            case 'datamatrix': $digit = BarcodeDatamatrix::getDigit( $this->barcode_content, $this->rectangular ); break;
-            default: throw new Exception( 'The required barcode class were not found.' ); break;
+            case 'STD25':
+            case 'INT25':
+            {
+                $array_of_modules = BarcodeI25::getDigit( $this->barcode_content, $this->cyclic_redundancy_check, $this->barcode_type );
+                break;
+            }
+            case 'EAN8':
+            case 'EAN13':
+            {
+                $array_of_modules = BarcodeEAN::getDigit( $this->barcode_content, $this->barcode_type );
+                break;
+            }
+            case 'UPC':
+            {
+                $array_of_modules = BarcodeUPC::getDigit( $this->barcode_content );
+                break;
+            }
+            case 'CODE11':
+            {
+                $array_of_modules = Barcode11::getDigit( $this->barcode_content );
+                break;
+            }
+            case 'CODE39':
+            {
+                $array_of_modules = Barcode39::getDigit( $this->barcode_content );
+                break;
+            }
+            case 'CODE93':
+            {
+                $array_of_modules = Barcode93::getDigit( $this->barcode_content, $this->cyclic_redundancy_check );
+                break;
+            }
+            case 'CODE128':
+            {
+                $array_of_modules = Barcode128::getDigit( $this->barcode_content );
+                break;
+            }
+            case 'CODABAR':
+            {
+                $array_of_modules = BarcodeCodabar::getDigit( $this->barcode_content );
+                break;
+            }
+            case 'MSI':
+            {
+                $array_of_modules = BarcodeMSI::getDigit( $this->barcode_content, $this->cyclic_redundancy_check );
+                break;
+            }
+            case 'DATAMATRIX':
+            {
+                $array_of_modules = BarcodeDatamatrix::getDigit( $this->barcode_content, $this->rectangular );
+                break;
+            }
+            default:
+            {
+                throw new Exception( 'The required barcode class were not found.' );
+            }
         }
 
-        if ( empty( $digit ) ): throw new Exception( 'The contents could not be processed.' ); endif;
+        if ( empty( $array_of_modules ) ): throw new Exception( 'The contents could not be processed.' ); endif;
 
-        if ( is_array( $digit ) == false ): $digit = array( str_split( $digit ) ); endif;
+        if ( is_array( $array_of_modules ) == false ): $array_of_modules = array( str_split( $array_of_modules ) ); endif;
 
-        if ( $this->barcode_type == 'datamatrix' )
-        {
-            $width = 14;
-            $height = 14;
-        }
-        else
-        {
-            $width = 3;
-            $height = 50;
-        }
+        //-------------------------------------------------
+        // Generate widths, heights and coordinates.
+        //-------------------------------------------------
 
-        $module_count = count( $digit[0] );
-        $line_count = count( $digit );
+        $module_x_count = count( $array_of_modules[0] );
+        $module_y_count = count( $array_of_modules );
 
-        $barcode_width = $module_count * $width;
-        $barcode_height = $line_count * $height;
+        $module_width = $this->barcode_type == 'datamatrix' ? 2 : 1;
+        $module_height = $this->barcode_type == 'datamatrix' ? 2 : 40;
+
+        $barcode_width = $module_x_count * $module_width;
+        $barcode_height = $module_y_count * $module_height;
 
         $barcode_center_x = $barcode_width / 2;
         $barcode_center_y = $barcode_height / 2;
@@ -334,90 +474,48 @@ class Barcode
         $image_center_x = $image_width / 2;
         $image_center_y = $image_height / 2;
 
-        //-------------------------------------------------
-        // IMAGE ANGLE
-        //-------------------------------------------------
-
-        $this->image_angle = deg2rad( -$this->image_angle );
-
-        $cos = cos( $this->image_angle );
-        $sin = sin( $this->image_angle );
-
-        //-------------------------------------------------
-        // BARCODE START COORDINATES
-        //-------------------------------------------------
-
         $barcode_start_x = $image_center_x;
         $barcode_start_y = $image_center_y;
 
-        self::_rotate( $barcode_center_x, $barcode_center_y, $cos, $sin, $image_center_x, $image_center_y );
+        self::_rotate( $barcode_center_x, $barcode_center_y, $this->image_cos, $this->image_sin, $image_center_x, $image_center_y );
 
         $barcode_start_x -= $image_center_x;
         $barcode_start_y -= $image_center_y;
 
         //-------------------------------------------------
-        // GENERATE IMAGE RESOURCE
+        // Generate the image resource and calculate
+        // the rectangles based on the module data.
         //-------------------------------------------------
 
         $this->image_resource = imagecreatetruecolor( $image_width, $image_height );
 
-        $white  = imagecolorallocate( $this->image_resource, 0xff, 0xff, 0xff );
-        $black = imagecolorallocate( $this->image_resource, 0x00, 0x00, 0x00 );
+        imagefilledrectangle( $this->image_resource, 0, 0, $image_width, $image_height, 0xFFFFFF );
 
-        imagefilledrectangle( $this->image_resource, 0, 0, $image_width, $image_height, $white );
-
-        foreach ( $digit as $y_index => $y_value )
+        foreach ( $array_of_modules as $module_y_index => $module_y_value )
         {
-            foreach ( $y_value as $x_index => $x_value )
+            foreach ( $module_y_value as $module_x_index => $module_x_value )
             {
-                if ( $digit[ $y_index ][ $x_index ] == '1' )
+                if ( $array_of_modules[ $module_y_index ][ $module_x_index ] == '1' )
                 {
-                    //-------------------------------------------------
-                    // If the last module does not exist or is "0",
-                    // then try the modules to group and start the
-                    // calculation of the rectangle.
-                    //-------------------------------------------------
+                    $rectangle_x_start = $module_x_index * $module_width;
+                    $rectangle_y_start = $module_y_index * $module_height;
 
-                    if ( isset( $digit[ $y_index ][ $x_index - 1 ] ) == false || $digit[ $y_index ][ $x_index - 1 ] == '0' )
-                    {
-                        for ( $module_index = $x_index + 1; $module_index <= $module_count; $module_index++ )
-                        {
-                            if ( isset( $digit[ $y_index ][ $module_index ] ) && $digit[ $y_index ][ $module_index ] == '0' || $module_index == $module_count )
-                            {
-                                break;
-                            }
-                        }
+                    $rectangle_x_end = ( $module_x_index + 0.999 ) * $module_width;
+                    $rectangle_y_end = ( $module_y_index + 0.999 ) * $module_height;
 
-                        $rectangle_start_x = $x_index * $width;
-                        $rectangle_start_y = $y_index * $height;
+                    self::_rotate( $rectangle_x_start, $rectangle_y_start, $this->image_cos, $this->image_sin, $point_a_x, $point_a_y );
+                    self::_rotate( $rectangle_x_end,   $rectangle_y_start, $this->image_cos, $this->image_sin, $point_b_x, $point_b_y );
+                    self::_rotate( $rectangle_x_end,   $rectangle_y_end,   $this->image_cos, $this->image_sin, $point_c_x, $point_c_y );
+                    self::_rotate( $rectangle_x_start, $rectangle_y_end,   $this->image_cos, $this->image_sin, $point_d_x, $point_d_y );
 
-                        $rectangle_end_x = $module_index * $width;
-                        $rectangle_end_y = ( $y_index + 1 ) * $height;
+                    $array_of_coordinates = array();
 
-                        self::_rotate( $rectangle_start_x, $rectangle_start_y, $cos, $sin, $point_a_x, $point_a_y );
-                        self::_rotate( $rectangle_end_x,   $rectangle_start_y, $cos, $sin, $point_b_x, $point_b_y );
-                        self::_rotate( $rectangle_end_x,   $rectangle_end_y,   $cos, $sin, $point_c_x, $point_c_y );
-                        self::_rotate( $rectangle_start_x, $rectangle_end_y,   $cos, $sin, $point_d_x, $point_d_y );
+                    array_push( $array_of_coordinates, $barcode_start_x + $point_a_x, $barcode_start_y + $point_a_y );
+                    array_push( $array_of_coordinates, $barcode_start_x + $point_b_x, $barcode_start_y + $point_b_y );
+                    array_push( $array_of_coordinates, $barcode_start_x + $point_c_x, $barcode_start_y + $point_c_y );
+                    array_push( $array_of_coordinates, $barcode_start_x + $point_d_x, $barcode_start_y + $point_d_y );
 
-                        $array_of_coordinates = array();
-
-                        array_push( $array_of_coordinates, $barcode_start_x + $point_a_x, $barcode_start_y + $point_a_y );
-                        array_push( $array_of_coordinates, $barcode_start_x + $point_b_x, $barcode_start_y + $point_b_y );
-                        array_push( $array_of_coordinates, $barcode_start_x + $point_c_x, $barcode_start_y + $point_c_y );
-                        array_push( $array_of_coordinates, $barcode_start_x + $point_d_x, $barcode_start_y + $point_d_y );
-
-                        imagefilledpolygon( $this->image_resource, $array_of_coordinates, 4, $black );
-                    }
-
-                    //-------------------------------------------------
-                    // All other modules can be skipped, because
-                    // these have already been calculated.
-                    //-------------------------------------------------
-
-                    if ( isset( $digit[ $y_index ][ $x_index + 1 ] ) && $digit[ $y_index ][ $x_index + 1 ] == '1' )
-                    {
-                        continue;
-                    }  
+                    imagefilledpolygon( $this->image_resource, $array_of_coordinates, 4, 0x000000 );
                 }
             }
         }
