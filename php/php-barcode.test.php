@@ -21,20 +21,6 @@
         if ( isset( $_REQUEST['type'] ) ): $type = urldecode( $_REQUEST['type'] ); endif;
         if ( isset( $_REQUEST['code'] ) ): $code = urldecode( $_REQUEST['code'] ); endif;
 
-        // $x = 100;
-        // $y = 100;
-        // $width = 2;
-        // $height = null;
-        // $angle = 0;   
-        // $IMAGE_RESOURCE = imagecreatetruecolor( 200, 200 );
-        // $black  = imagecolorallocate( $IMAGE_RESOURCE, 0x00, 0x00, 0x00 );
-        // $white  = imagecolorallocate( $IMAGE_RESOURCE, 0xff, 0xff, 0xff );
-        // imagefilledrectangle( $IMAGE_RESOURCE, 0, 0, 200, 200, $white );
-        // $data = Barcode::gd( $IMAGE_RESOURCE, $black, $x, $y, $angle, $type, array( 'code' => $code ), $width, $height );
-        // header( 'Content-type: image/gif' );
-        // imagegif( $IMAGE_RESOURCE );
-        // imagedestroy( $IMAGE_RESOURCE );
-
         try
         {
             $barcode = new Barcode( $type, $code );
@@ -84,15 +70,74 @@
 
 </style>
 
-<div class="BARCODE_CONTAINER"><?php $code = '111222333'; ?><h1>STD25 -> <?php echo $code; ?></h1><img src="?type=std25&code=<?php echo urlencode( $code ); ?>"></div>
-<div class="BARCODE_CONTAINER"><?php $code = '111222333'; ?><h1>INT25 -> <?php echo $code; ?></h1><img src="?type=int25&code=<?php echo urlencode( $code ); ?>"></div>
-<div class="BARCODE_CONTAINER"><?php $code = '65833254'; ?><h1>EAN8 -> <?php echo $code; ?></h1><img src="?type=ean8&code=<?php echo urlencode( $code ); ?>"></div>
-<div class="BARCODE_CONTAINER"><?php $code = '5901234123457'; ?><h1>EAN13 -> <?php echo $code; ?></h1><img src="?type=ean13&code=<?php echo urlencode( $code ); ?>"></div>
-<div class="BARCODE_CONTAINER"><?php $code = '111222333444'; ?><h1>UPC -> <?php echo $code; ?></h1><img src="?type=upc&code=<?php echo urlencode( $code ); ?>"></div>
-<div class="BARCODE_CONTAINER"><?php $code = '111222333'; ?><h1>CODE11 -> <?php echo $code; ?></h1><img src="?type=code11&code=<?php echo urlencode( $code ); ?>"></div>
-<div class="BARCODE_CONTAINER"><?php $code = '111222333'; ?><h1>CODE39 -> <?php echo $code; ?></h1><img src="?type=code39&code=<?php echo urlencode( $code ); ?>"></div>
-<div class="BARCODE_CONTAINER"><?php $code = 'ABC-1234-/+'; ?><h1>CODE93 -> <?php echo $code; ?></h1><img src="?type=code93&code=<?php echo urlencode( $code ); ?>"></div>
-<div class="BARCODE_CONTAINER"><?php $code = 'AABBCCDDEE 128-B'; ?><h1>CODE128 -> <?php echo $code; ?></h1><img src="?type=code128&code=<?php echo urlencode( $code ); ?>"></div>
-<div class="BARCODE_CONTAINER"><?php $code = '123456789'; ?><h1>CODABAR -> <?php echo $code; ?></h1><img src="?type=codabar&code=<?php echo urlencode( $code ); ?>"></div>
-<div class="BARCODE_CONTAINER"><?php $code = '111222333'; ?><h1>MSI -> <?php echo $code; ?></h1><img src="?type=msi&code=<?php echo urlencode( $code ); ?>"></div>
-<div class="BARCODE_CONTAINER"><?php $code = md5( time() ); ?><h1>DATAMATRIX -> <?php echo $code; ?></h1><img src="?type=datamatrix&code=<?php echo urlencode( $code ); ?>"></div>
+<div class="BARCODE_CONTAINER">
+<?php $code = '111222333'; ?>
+<h1>STD25 -> <?php echo $code; ?></h1>
+<img src="?type=std25&code=<?php echo urlencode( $code ); ?>">
+</div>
+
+<div class="BARCODE_CONTAINER">
+<?php $code = '111222333'; ?>
+<h1>INT25 -> <?php echo $code; ?></h1>
+<img src="?type=int25&code=<?php echo urlencode( $code ); ?>">
+</div>
+
+<div class="BARCODE_CONTAINER">
+<?php $code = '65833254'; ?>
+<h1>EAN8 -> <?php echo $code; ?></h1>
+<img src="?type=ean8&code=<?php echo urlencode( $code ); ?>">
+</div>
+
+<div class="BARCODE_CONTAINER">
+<?php $code = '5901234123457'; ?>
+<h1>EAN13 -> <?php echo $code; ?></h1>
+<img src="?type=ean13&code=<?php echo urlencode( $code ); ?>">
+</div>
+
+<div class="BARCODE_CONTAINER">
+<?php $code = '111222333444'; ?>
+<h1>UPC -> <?php echo $code; ?></h1>
+<img src="?type=upc&code=<?php echo urlencode( $code ); ?>">
+</div>
+
+<div class="BARCODE_CONTAINER">
+<?php $code = '111222333'; ?>
+<h1>CODE11 -> <?php echo $code; ?></h1>
+<img src="?type=code11&code=<?php echo urlencode( $code ); ?>">
+</div>
+
+<div class="BARCODE_CONTAINER">
+<?php $code = '111222333'; ?>
+<h1>CODE39 -> <?php echo $code; ?></h1>
+<img src="?type=code39&code=<?php echo urlencode( $code ); ?>">
+</div>
+
+<div class="BARCODE_CONTAINER">
+<?php $code = 'ABC-1234-/+'; ?>
+<h1>CODE93 -> <?php echo $code; ?></h1>
+<img src="?type=code93&code=<?php echo urlencode( $code ); ?>">
+</div>
+
+<div class="BARCODE_CONTAINER">
+<?php $code = 'AABBCCDDEE 128-B'; ?>
+<h1>CODE128 -> <?php echo $code; ?></h1>
+<img src="?type=code128&code=<?php echo urlencode( $code ); ?>">
+</div>
+
+<div class="BARCODE_CONTAINER">
+<?php $code = '123456789'; ?>
+<h1>CODABAR -> <?php echo $code; ?></h1>
+<img src="?type=codabar&code=<?php echo urlencode( $code ); ?>">
+</div>
+
+<div class="BARCODE_CONTAINER">
+<?php $code = '111222333'; ?>
+<h1>MSI -> <?php echo $code; ?></h1>
+<img src="?type=msi&code=<?php echo urlencode( $code ); ?>">
+</div>
+
+<div class="BARCODE_CONTAINER">
+<?php $code = md5( time() ); ?>
+<h1>DATAMATRIX -> <?php echo $code; ?></h1>
+<img src="?type=datamatrix&code=<?php echo urlencode( $code ); ?>">
+</div>

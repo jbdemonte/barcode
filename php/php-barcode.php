@@ -3,7 +3,7 @@
  * Application: BarCode Coder Library (BCCL)
  *
  * @package BCCL
- * @version 2.0.10
+ * @version 2.0.11
  * @porting PHP
  *
  * @date    2013-01-06
@@ -121,6 +121,15 @@ class Barcode
     protected $barcode_margin = 0;
 
     /**
+     * Specifies whether the image in the portrait or landscape mode to display.
+     *
+     * @since   2.0.11
+     * @access  protected
+     * @var     string
+     */
+    protected $image_orientaton = 'landscape';
+
+    /**
      * The check code for error detection and correction is as CRC, using polynomial division. (https://wikipedia.org/wiki/Cyclic_redundancy_check)
      *
      * @since   2.0.7
@@ -151,8 +160,6 @@ class Barcode
         $get_args = func_get_args();
         $num_args = func_num_args();
 
-        $this->angle();
-
         if ( $num_args == 1 )
         {
             foreach ( $get_args[0] as $arg_index => $arg_value )
@@ -179,14 +186,14 @@ class Barcode
                         $this->quality( $arg_value );
                         break;
                     }
-                    case 'angle':
-                    {
-                        $this->angle( $arg_value );
-                        break;
-                    }
                     case 'margin':
                     {
                         $this->margin( $arg_value );
+                        break;
+                    }
+                    case 'orientaton':
+                    {
+                        $this->orientaton( $arg_value );
                         break;
                     }
                     case 'crc':
@@ -225,29 +232,6 @@ class Barcode
         {
             imagedestroy( $this->image_resource );
         }
-    }
-
-    /**
-     * Can be called to change the image angle.
-     *
-     * @since   2.0.8
-     * @access  public
-     *
-     * @param   integer $value Contains the value of the angle.
-     *
-     * @return  Barcode
-     */
-    public function angle( $value = null )
-    {
-        $this->image_angle = is_numeric( $value ) ? $value : $this->image_angle;
-
-        $this->image_angle = deg2rad( -$this->image_angle );
-
-        $this->image_cos = cos( $this->image_angle );
-
-        $this->image_sin = sin( $this->image_angle );
-
-        return $this;
     }
 
     /**
@@ -477,6 +461,10 @@ class Barcode
         $barcode_start_x = $image_center_x;
         $barcode_start_y = $image_center_y;
 
+        $this->image_angle = deg2rad( -$this->image_angle );
+        $this->image_cos = cos( $this->image_angle );
+        $this->image_sin = sin( $this->image_angle );
+
         self::_rotate( $barcode_center_x, $barcode_center_y, $this->image_cos, $this->image_sin, $image_center_x, $image_center_y );
 
         $barcode_start_x -= $image_center_x;
@@ -549,6 +537,30 @@ class Barcode
 
             return $this->image_resource;
         }
+    }
+
+    /**
+     * Can be called to change the display format. Default: Landscape.
+     *
+     * @since   2.0.11
+     * @access  public
+     *
+     * @param   string $value Contains the value of orientation.
+     *
+     * @return  Barcode
+     */
+    public function orientaton( $value = null )
+    {
+        $this->image_orientaton = is_string( $value ) && empty( $value ) == false ? $value : $this->image_orientaton;
+
+        if ( is_resource( $this->image_resource ) == false ): $this->create(); endif;
+
+        if ( $this->image_orientaton == 'p' || $this->image_orientaton == 'portrait' )
+        {
+            $this->image_resource = imagerotate( $this->image_resource, 90, 0xFFFFFF );
+        }
+
+        return $this;
     }
 
     /**

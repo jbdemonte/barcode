@@ -5,10 +5,9 @@ PRESENTATION
 ------------
 This plugin allows you to create barcodes thanks to php.
 
-LICENCE
--------
-[GPLv3](http://www.gnu.org/licenses/gpl.html)
-[CeCILL](http://www.cecill.info/licences/Licence_CeCILL_V2-fr.html)
+REQUIREMENTS
+------------
+* PHP 5.0+
 
 FEATURES / SYMBOLOGIES
 ----------------------
@@ -25,25 +24,16 @@ FEATURES / SYMBOLOGIES
 * MSI
 * Data Matrix
 
-OUTPUT
-------
-* GD
-* FPDF
-
-REQUIREMENTS
-------------
-* PHP 5.0+
-
 USAGE
 -----
 ```php
 try
 {
-    $barcode = new Barcode( array( 'type' => 'datamatrix', 'content' => 'test', 'format' => 'png', 'margin' => 10 ) );
+    $barcode = new Barcode( array( 'type' => 'datamatrix', 'content' => 'test', 'format' => 'png', 'margin' => 10, 'orientaton' => 'portrait' ) );
     $barcode->image();
 
     $barcode = new Barcode();
-    $barcode->type( 'datamatrix' )->content( 'test' )->format( 'jpg' )->margin( 10 )->image();
+    $barcode->type( 'datamatrix' )->content( 'test' )->format( 'jpg' )->margin( 10 )->orientaton( 'portrait' )->image();
 
     $barcode = new Barcode();
     $barcode->type( 'datamatrix' );
@@ -54,6 +44,7 @@ try
     $image_resource = $barcode->resource();
     imagettftext( $image_resource, 10, 0, 20, 30, 0x000000, 'font file path', 'text label' );
     $barcode->resource( $image_resource );
+    $barcode->orientaton( 'portrait' );
     $barcode->image();
 
     $barcode = new Barcode( 'datamatrix', 'test' );
@@ -70,3 +61,13 @@ catch ( Exception $Exception )
     echo $Exception->getMessage();
 }
 ```
+
+OUTPUT
+------
+* GD
+* FPDF
+
+LICENCE
+-------
+[GPLv3](http://www.gnu.org/licenses/gpl.html)
+[CeCILL](http://www.cecill.info/licences/Licence_CeCILL_V2-fr.html)
