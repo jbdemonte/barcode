@@ -2,8 +2,8 @@
 /**
  * Application: BarCode Coder Library (BCCL)
  *
+ * @version 2.0.12
  * @package BCCL
- * @version 2.0.11
  * @porting PHP
  *
  * @date    2013-01-06
@@ -25,52 +25,17 @@
 /**
  * Barcode Class
  *
- * @package BCCL
  * @since   2.0.3
+ * @package BCCL
  */
 class Barcode
 {
-    /**
-     * Contains the barcode type.
-     *
-     * @since   2.0.7
-     * @access  protected
-     * @var     string
-     */
-    protected $barcode_type = 'datamatrix';
-
-    /**
-     * Contains the barcode content.
-     *
-     * @since   2.0.7
-     * @access  protected
-     * @var     string
-     */
-    protected $barcode_content = 'BarCode Coder Library';
-
-    /**
-     * Contains the standard file format, after which the bar code is to be output.
-     *
-     * @since   2.0.7
-     * @access  protected
-     * @var     string
-     */
-    protected $content_type = 'image/gif';
-
-    /**
-     * Contains the allowed file extensions.
-     *
-     * @since   2.0.7
-     * @access  protected
-     * @var     array
-     */
-    protected $allowed_file_extensions = array( 'gif', 'jpg', 'jpeg', 'png' );
-
     /**
      * Contains the image resource.
      *
      * @since   2.0.7
      * @access  protected
+     *
      * @var     null|resource
      */
     protected $image_resource = null;
@@ -80,72 +45,180 @@ class Barcode
      *
      * @since   2.0.8
      * @access  protected
+     *
      * @var     integer
      */
     protected $image_quality = 80;
-
-    /**
-     * If the value is changed, the issuing image is rotated. The value can vary from 0 to 360.
-     *
-     * @since   2.0.8
-     * @access  protected
-     * @var     integer
-     */
-    protected $image_angle = 0;
-
-    /**
-     * Cosine, in mathematics, is a trigonometric function of an angle.
-     *
-     * @since   2.0.9
-     * @access  protected
-     * @var     integer
-     */
-    protected $image_cos = 0;
-
-    /**
-     * Sine, in mathematics, is a trigonometric function of an angle.
-     *
-     * @since   2.0.9
-     * @access  protected
-     * @var     integer
-     */
-    protected $image_sin = 0;
-
-    /**
-     * Contains the value that should have the barcode frame.
-     *
-     * @since   2.0.7
-     * @access  protected
-     * @var     integer
-     */
-    protected $barcode_margin = 0;
 
     /**
      * Specifies whether the image in the portrait or landscape mode to display.
      *
      * @since   2.0.11
      * @access  protected
+     *
      * @var     string
      */
     protected $image_orientaton = 'landscape';
+
+    /**
+     * Does the image width.
+     *
+     * @since   2.0.12
+     * @access  protected
+     *
+     * @var     null|integer
+     */
+    protected $image_width = null;
+
+    /**
+     * Does the image height.
+     *
+     * @since   2.0.12
+     * @access  protected
+     *
+     * @var     null|integer
+     */
+    protected $image_height = null;
+
+    /**
+     * Specifies how large a barcode to be displayed. Possible values could be: size in inches, cm, mm or px.
+     *
+     * @since   2.0.12
+     * @access  protected
+     *
+     * @var     string
+     */
+    protected $image_scale = 'px';
+
+    /**
+     * Contains the allowed scales.
+     *
+     * @since   2.0.12
+     * @access  protected
+     *
+     * @var     array
+     */
+    protected $array_of_allowed_image_scales = array( 'inch', 'cm', 'mm', 'px' );
+
+    /**
+     * Specifies how large a barcode to be displayed. Possible values could be: size in inches, cm, mm or px.
+     *
+     * @since   2.0.12
+     * @access  protected
+     *
+     * @var     integer
+     */
+    protected $image_dpi = 90;
+
+    /**
+     * Contains the standard file format, after which the bar code is to be output.
+     *
+     * @since   2.0.7
+     * @access  protected
+     *
+     * @var     string
+     */
+    protected $image_content_type = 'gif';
+
+    /**
+     * Contains the allowed file extensions.
+     *
+     * @since   2.0.7
+     * @access  protected
+     *
+     * @var     array
+     */
+    protected $array_of_allowed_image_extensions = array( 'gif', 'jpg', 'jpeg', 'png' );
+
+    /**
+     * Contains the desired image width.
+     *
+     * @since   2.0.12
+     * @access  protected
+     *
+     * @var     null|integer
+     */
+    protected $image_resize_width = null;
+
+    /**
+     * Contains the desired image height.
+     *
+     * @since   2.0.12
+     * @access  protected
+     *
+     * @var     null|integer
+     */
+    protected $image_resize_height = null;
+
+    /**
+     * Contains the desired image scale.
+     *
+     * @since   2.0.12
+     * @access  protected
+     *
+     * @var     null|string
+     */
+    protected $image_resize_scale = null;
+
+    /**
+     * Contains the desired dots per inch.
+     *
+     * @since   2.0.12
+     * @access  protected
+     *
+     * @var     null|integer
+     */
+    protected $image_resize_dpi = null;
+
+    /**
+     * Contains the barcode type.
+     *
+     * @since   2.0.7
+     * @access  protected
+     *
+     * @var     string
+     */
+    protected $barcode_type = 'DATAMATRIX';
+
+    /**
+     * Contains the barcode content.
+     *
+     * @since   2.0.7
+     * @access  protected
+     *
+     * @var     string
+     */
+    protected $barcode_content = 'BarCode Coder Library';
+
+    /**
+     * Contains the value that should have the barcode frame.
+     *
+     * @since   2.0.7
+     * @access  protected
+     *
+     * @var     integer
+     */
+    protected $barcode_margin = 0;
 
     /**
      * The check code for error detection and correction is as CRC, using polynomial division. (https://wikipedia.org/wiki/Cyclic_redundancy_check)
      *
      * @since   2.0.7
      * @access  protected
+     *
      * @var     boolean
      */
-    protected $cyclic_redundancy_check = true;
+    protected $barcode_cyclic_redundancy_check = true;
 
     /**
      * Determines whether the data matrix to display rectangle. (DIN 16587 Rectangular Extension of Data Matrix)
      *
      * @since   2.0.7
      * @access  protected
+     *
      * @var     boolean
      */
-    protected $rectangular = false;
+    protected $barcode_datamatrix_rectangular = false;
 
     /**
      * Create an instance and processed the incoming arguments.
@@ -164,7 +237,7 @@ class Barcode
         {
             foreach ( $get_args[0] as $arg_index => $arg_value )
             {
-                switch ( $arg_value )
+                switch ( strtolower( $arg_index ) )
                 {
                     case 'type':
                     {
@@ -196,16 +269,34 @@ class Barcode
                         $this->orientaton( $arg_value );
                         break;
                     }
-                    case 'crc':
-                    case 'cyclic_redundancy_check':
+                    case 'width':
                     {
-                        $this->cyclic_redundancy_check = is_bool( $arg_value ) ? $arg_value : $this->cyclic_redundancy_check;
+                        $this->width( $arg_value );
+                        break;
+                    }
+                    case 'height':
+                    {
+                        $this->height( $arg_value );
+                        break;
+                    }
+                    case 'scale':
+                    {
+                        $this->scale( $arg_value );
+                        break;
+                    }
+                    case 'dpi':
+                    {
+                        $this->dpi( $arg_value );
+                        break;
+                    }
+                    case 'crc':
+                    {
+                        $this->crc( $arg_value );
                         break;
                     }
                     case 'rect':
-                    case 'rectangular':
                     {
-                        $this->rectangular = is_bool( $arg_value ) ? $arg_value : $this->rectangular;
+                        $this->rect( $arg_value );
                         break;
                     }
                 }
@@ -240,13 +331,13 @@ class Barcode
      * @since   2.0.7
      * @access  public
      *
-     * @param   string $value Contains the barcode type.
+     * @param   null|string $value Contains the value of barcode type.
      *
      * @return  Barcode
      */
-    public function type( $value = '' )
+    public function type( $value = null )
     {
-        $this->barcode_type = is_string( $value ) && empty( $value ) == false ? $value : $this->barcode_type;
+        $this->barcode_type = is_string( $value ) && empty( $value ) == false ? strtolower( $value ) : $this->barcode_type;
 
         return $this;
     }
@@ -257,11 +348,11 @@ class Barcode
      * @since   2.0.7
      * @access  public
      *
-     * @param   string $value Contains the barcode content.
+     * @param   null|string $value Contains the value of barcode content.
      *
      * @return  Barcode
      */
-    public function content( $value = '' )
+    public function content( $value = null )
     {
         $this->barcode_content = is_string( $value ) && empty( $value ) == false ? $value : $this->barcode_content;
 
@@ -274,13 +365,13 @@ class Barcode
      * @since   2.0.7
      * @access  public
      *
-     * @param   string $value Contains the desired file extensions.
+     * @param   null|string $value Contains the value of image extensions.
      *
      * @return  Barcode
      */
-    public function format( $value = '' )
+    public function format( $value = null )
     {
-        $this->content_type = in_array( $value, $this->allowed_file_extensions ) ? 'image/' . $value : $this->content_type;
+        $this->image_content_type = in_array( $value, $this->array_of_allowed_image_extensions ) ? strtolower( $value ) : $this->image_content_type;
 
         return $this;
     }
@@ -291,7 +382,7 @@ class Barcode
      * @since   2.0.8
      * @access  public
      *
-     * @param   integer $value Contains the value of the quality.
+     * @param   null|integer $value Contains the value of image quality.
      *
      * @return  Barcode
      */
@@ -308,7 +399,7 @@ class Barcode
      * @since   2.0.7
      * @access  public
      *
-     * @param   integer $value Considering the DPI, the barcode a white frame is added.
+     * @param   null|integer $value Contains the value of barcode margin.
      *
      * @return  Barcode
      */
@@ -358,17 +449,117 @@ class Barcode
     }
 
     /**
+     * Can be called to change the image width.
+     *
+     * @since   2.0.12
+     * @access  public
+     *
+     * @param   null|integer $value Contains the value of image width.
+     *
+     * @return  Barcode
+     */
+    public function width( $value = null )
+    {
+        $this->image_resize_width = is_numeric( $value ) ? $value : $this->image_resize_width;
+
+        return $this;
+    }
+
+    /**
+     * Can be called to change the image height.
+     *
+     * @since   2.0.12
+     * @access  public
+     *
+     * @param   null|integer $value Contains the value of image height.
+     *
+     * @return  Barcode
+     */
+    public function height( $value = null )
+    {
+        $this->image_resize_height = is_numeric( $value ) ? $value : $this->image_resize_height;
+
+        return $this;
+    }
+
+    /**
+     * Can be called to change the image scale.
+     *
+     * @since   2.0.12
+     * @access  public
+     *
+     * @param   null|string $value Contains the value of image scale.
+     *
+     * @return  Barcode
+     */
+    public function scale( $value = null )
+    {
+        $this->image_resize_scale = in_array( $value, $this->array_of_allowed_image_scales ) ? $value : $this->image_resize_scale;
+
+        return $this;
+    }
+
+    /**
+     * Can be called to change the dots per inch.
+     *
+     * @since   2.0.12
+     * @access  public
+     *
+     * @param   null|integer $value Contains the value of dots per inch.
+     *
+     * @return  Barcode
+     */
+    public function dpi( $value = null )
+    {
+        $this->image_resize_dpi = is_numeric( $value ) ? $value : $this->image_resize_dpi;
+
+        return $this;
+    }
+
+    /**
+     * Can be called to determine whether a review should be carried out.
+     *
+     * @since   2.0.12
+     * @access  public
+     *
+     * @param   null|boolean|integer|string $value Contains the value of true.
+     *
+     * @return  Barcode
+     */
+    public function crc( $value = null )
+    {
+        $this->barcode_cyclic_redundancy_check = $value ? true : false;
+
+        return $this;
+    }
+
+    /**
+     * Can be called to determine the rectangular representation of a data matrix.
+     *
+     * @since   2.0.12
+     * @access  public
+     *
+     * @param   null|boolean|integer|string $value Contains the value of true.
+     *
+     * @return  Barcode
+     */
+    public function rect( $value = null )
+    {
+        $this->barcode_datamatrix_rectangular = $value ? true : false;
+
+        return $this;
+    }
+
+    /**
      * Created on the basis of the barcode data an image.
      *
      * @since   2.0.7
      * @access  public
      *
-     * @param   integer $dots_per_inch Indicates is produced at what resolution the barcode.
-     *
      * @return  Barcode
      * @throws  Exception
      */
-    public function create( $dots_per_inch = 90 )
+    public function create()
     {
         if ( extension_loaded( 'gd' ) == false ): throw new Exception( 'The required extension GD is not loaded.' ); endif;
 
@@ -377,7 +568,7 @@ class Barcode
             case 'STD25':
             case 'INT25':
             {
-                $array_of_modules = BarcodeI25::getDigit( $this->barcode_content, $this->cyclic_redundancy_check, $this->barcode_type );
+                $array_of_modules = BarcodeI25::getDigit( $this->barcode_content, $this->barcode_cyclic_redundancy_check, $this->barcode_type );
                 break;
             }
             case 'EAN8':
@@ -403,7 +594,7 @@ class Barcode
             }
             case 'CODE93':
             {
-                $array_of_modules = Barcode93::getDigit( $this->barcode_content, $this->cyclic_redundancy_check );
+                $array_of_modules = Barcode93::getDigit( $this->barcode_content, $this->barcode_cyclic_redundancy_check );
                 break;
             }
             case 'CODE128':
@@ -418,12 +609,12 @@ class Barcode
             }
             case 'MSI':
             {
-                $array_of_modules = BarcodeMSI::getDigit( $this->barcode_content, $this->cyclic_redundancy_check );
+                $array_of_modules = BarcodeMSI::getDigit( $this->barcode_content, $this->barcode_cyclic_redundancy_check );
                 break;
             }
             case 'DATAMATRIX':
             {
-                $array_of_modules = BarcodeDatamatrix::getDigit( $this->barcode_content, $this->rectangular );
+                $array_of_modules = BarcodeDatamatrix::getDigit( $this->barcode_content, $this->barcode_datamatrix_rectangular );
                 break;
             }
             default:
@@ -440,32 +631,33 @@ class Barcode
         // Generate widths, heights and coordinates.
         //-------------------------------------------------
 
+        $angle = deg2rad( -0 );
+
+        $angle_cos = cos( $angle );
+        $angle_sin = sin( $angle );
+
         $module_x_count = count( $array_of_modules[0] );
         $module_y_count = count( $array_of_modules );
 
-        $module_width = $this->barcode_type == 'datamatrix' ? 2 : 1;
+        $module_width  = $this->barcode_type == 'datamatrix' ? 2 : 1;
         $module_height = $this->barcode_type == 'datamatrix' ? 2 : 40;
 
-        $barcode_width = $module_x_count * $module_width;
+        $barcode_width  = $module_x_count * $module_width;
         $barcode_height = $module_y_count * $module_height;
 
         $barcode_center_x = $barcode_width / 2;
         $barcode_center_y = $barcode_height / 2;
 
-        $image_width = $barcode_width + $this->barcode_margin;
-        $image_height = $barcode_height + $this->barcode_margin;
+        $this->image_width  = $barcode_width + $this->barcode_margin;
+        $this->image_height = $barcode_height + $this->barcode_margin;
 
-        $image_center_x = $image_width / 2;
-        $image_center_y = $image_height / 2;
+        $image_center_x = $this->image_width / 2;
+        $image_center_y = $this->image_height / 2;
 
         $barcode_start_x = $image_center_x;
         $barcode_start_y = $image_center_y;
 
-        $this->image_angle = deg2rad( -$this->image_angle );
-        $this->image_cos = cos( $this->image_angle );
-        $this->image_sin = sin( $this->image_angle );
-
-        self::_rotate( $barcode_center_x, $barcode_center_y, $this->image_cos, $this->image_sin, $image_center_x, $image_center_y );
+        self::_rotate( $barcode_center_x, $barcode_center_y, $angle_cos, $angle_sin, $image_center_x, $image_center_y );
 
         $barcode_start_x -= $image_center_x;
         $barcode_start_y -= $image_center_y;
@@ -475,9 +667,9 @@ class Barcode
         // the rectangles based on the module data.
         //-------------------------------------------------
 
-        $this->image_resource = imagecreatetruecolor( $image_width, $image_height );
+        $this->image_resource = imagecreatetruecolor( $this->image_width, $this->image_height );
 
-        imagefilledrectangle( $this->image_resource, 0, 0, $image_width, $image_height, 0xFFFFFF );
+        imagefilledrectangle( $this->image_resource, 0, 0, $this->image_width, $this->image_height, 0xFFFFFF );
 
         foreach ( $array_of_modules as $module_y_index => $module_y_value )
         {
@@ -491,10 +683,10 @@ class Barcode
                     $rectangle_x_end = ( $module_x_index + 0.999 ) * $module_width;
                     $rectangle_y_end = ( $module_y_index + 0.999 ) * $module_height;
 
-                    self::_rotate( $rectangle_x_start, $rectangle_y_start, $this->image_cos, $this->image_sin, $point_a_x, $point_a_y );
-                    self::_rotate( $rectangle_x_end,   $rectangle_y_start, $this->image_cos, $this->image_sin, $point_b_x, $point_b_y );
-                    self::_rotate( $rectangle_x_end,   $rectangle_y_end,   $this->image_cos, $this->image_sin, $point_c_x, $point_c_y );
-                    self::_rotate( $rectangle_x_start, $rectangle_y_end,   $this->image_cos, $this->image_sin, $point_d_x, $point_d_y );
+                    self::_rotate( $rectangle_x_start, $rectangle_y_start, $angle_cos, $angle_sin, $point_a_x, $point_a_y );
+                    self::_rotate( $rectangle_x_end,   $rectangle_y_start, $angle_cos, $angle_sin, $point_b_x, $point_b_y );
+                    self::_rotate( $rectangle_x_end,   $rectangle_y_end,   $angle_cos, $angle_sin, $point_c_x, $point_c_y );
+                    self::_rotate( $rectangle_x_start, $rectangle_y_end,   $angle_cos, $angle_sin, $point_d_x, $point_d_y );
 
                     $array_of_coordinates = array();
 
@@ -551,14 +743,131 @@ class Barcode
      */
     public function orientaton( $value = null )
     {
-        $this->image_orientaton = is_string( $value ) && empty( $value ) == false ? $value : $this->image_orientaton;
-
         if ( is_resource( $this->image_resource ) == false ): $this->create(); endif;
+
+        $this->image_orientaton = is_string( $value ) && empty( $value ) == false ? $value : $this->image_orientaton;        
 
         if ( $this->image_orientaton == 'p' || $this->image_orientaton == 'portrait' )
         {
             $this->image_resource = imagerotate( $this->image_resource, 90, 0xFFFFFF );
+
+            $this->image_width  = imagesx( $this->image_resource );
+            $this->image_height = imagesy( $this->image_resource );
         }
+
+        return $this;
+    }
+
+    /**
+     * Can be called to enlarge a barcode to a certain size.
+     *
+     * @since   2.0.12
+     * @access  public
+     *
+     * @param   integer #1 Contains the value of image width.
+     * @param   integer #2 Contains the value of image height.
+     * @param   string  #3 Contains the value of scale.
+     * @param   integer #4 Contains the value of dots per inch.
+     *
+     * @return  Barcode
+     * @throws  Exception
+     */
+    public function resize()
+    {
+        if ( is_resource( $this->image_resource ) == false ): $this->create(); endif;
+
+        $get_args = func_get_args();
+        $num_args = func_num_args();
+
+        if ( $num_args == 1 && is_string( $get_args[0] ) )
+        {
+            // TODO: More templates process.
+            // $get_args[0] = 'Draw a picture of 100 to 99 in inch with 90 dpi';
+            // $get_args[0] = '100 x 99 [SCALE] 90 [DPI]';
+            // $get_args[0] = '100 x 99 inch 90 dpi';
+            // $get_args[0] = '100x99inch90dpi';
+            // $get_args[0] = '100,99,inch,90';
+            // $get_args[0] = '100x99';
+            // $get_args[0] = '100,99';
+            // $get_args[0] = '100 99';
+
+            if ( preg_match( '/(?P<width>\d+)x(?P<height>\d+)(?P<scale>inch|cm|mm|px)(?P<dpi>\d+)/', $get_args[0], $match ) )
+            {
+                $this->width( $match['width'] )->height( $match['height'] )->scale( $match['scale'] )->dpi( $match['dpi'] );
+            }
+        }
+        else if ( $num_args == 1 && is_array( $get_args[0] ) )
+        {
+            foreach ( $get_args[0] as $arg_index => $arg_value )
+            {
+                switch ( strtolower( $arg_index ) )
+                {
+                    case 'width':
+                    {
+                        $this->width( $arg_value );
+                        break;
+                    }
+                    case 'height':
+                    {
+                        $this->height( $arg_value );
+                        break;
+                    }
+                    case 'scale':
+                    {
+                        $this->scale( $arg_value );
+                        break;
+                    }
+                    case 'dpi':
+                    {
+                        $this->dpi( $arg_value );
+                        break;
+                    }
+                }
+            }
+        }
+        else if ( $num_args == 4 )
+        {
+            $this->width( $get_args[0] )->height( $get_args[1] )->scale( $get_args[2] )->dpi( $get_args[3] );
+        }
+
+        switch ( $this->image_resize_scale )
+        {
+            case 'inch':
+            {
+                $new_image_width  = ( $this->image_resize_width  / 1 ) * $this->image_resize_dpi;
+                $new_image_height = ( $this->image_resize_height / 1 ) * $this->image_resize_dpi;
+                break;
+            }
+            case 'cm':
+            {
+                $new_image_width  = ( $this->image_resize_width  / 2.54 ) * $this->image_resize_dpi;
+                $new_image_height = ( $this->image_resize_height / 2.54 ) * $this->image_resize_dpi;
+                break;
+            }
+            case 'mm':
+            {
+                $new_image_width  = ( $this->image_resize_width  / 25.4 ) * $this->image_resize_dpi;
+                $new_image_height = ( $this->image_resize_height / 25.4 ) * $this->image_resize_dpi;
+                break;
+            }
+            case 'px':
+            {
+                $new_image_width  = ( $this->image_resize_width  / $this->image_resize_dpi ) * $this->image_resize_dpi;
+                $new_image_height = ( $this->image_resize_height / $this->image_resize_dpi ) * $this->image_resize_dpi;
+                break;
+            }
+        }
+
+        $new_image_resource = imagecreatetruecolor( $new_image_width, $new_image_height );
+
+        imagecopyresampled( $new_image_resource, $this->image_resource, 0, 0, 0, 0, $new_image_width, $new_image_height, $this->image_width, $this->image_height );
+
+        imagedestroy( $this->image_resource );
+
+        $this->image_resource = $new_image_resource;
+
+        $this->image_width  = $new_image_width;
+        $this->image_height = $new_image_height;
 
         return $this;
     }
@@ -580,23 +889,28 @@ class Barcode
     {
         if ( is_resource( $this->image_resource ) == false ): $this->create(); endif;
 
-        if ( $value === null ): header( 'Content-type: ' . $this->content_type ); endif;
+        if ( $value === null )
+        {
+            header( 'Content-Type: image/' . $this->image_content_type );
+
+            header( 'Content-Disposition: filename="BARCODE-' . strtoupper( $this->barcode_type ) . '-' . strtoupper( sha1( $this->barcode_content ) ) . '.' . $this->image_content_type . '"' );
+        }
 
         if ( $value === true ): ob_start(); endif;
 
         if ( is_string( $value ) && is_writeable( dirname( $value ) ) == false ): throw new Exception( 'The specified file path (' . $value . ') is not writable.' ); endif;
 
-        if ( $this->content_type == 'image/gif' && function_exists( 'imagegif' ) )
+        if ( $this->image_content_type == 'gif' && function_exists( 'imagegif' ) )
         {
             imagegif( $this->image_resource, is_string( $value ) ? $value : null );
         }
-        else if ( $this->content_type == 'image/jpg' || $this->content_type == 'image/jpeg' && function_exists( 'imagejpeg' ) )
+        else if ( $this->image_content_type == 'jpg' || $this->image_content_type == 'jpeg' && function_exists( 'imagejpeg' ) )
         {
             imageinterlace( $this->image_resource, true );
 
             imagejpeg( $this->image_resource, is_string( $value ) ? $value : null, round( $this->image_quality ) );
         }
-        else if ( $this->content_type == 'image/png' && function_exists( 'imagepng' ) )
+        else if ( $this->image_content_type == 'png' && function_exists( 'imagepng' ) )
         {
             imagepng( $this->image_resource, is_string( $value ) ? $value : null, round( 9 * $this->image_quality / 100 ) );
         }

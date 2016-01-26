@@ -33,13 +33,18 @@ try
     $barcode->image();
 
     $barcode = new Barcode();
-    $barcode->type( 'datamatrix' )->content( 'test' )->format( 'jpg' )->margin( 10 )->orientaton( 'portrait' )->image();
+    $barcode->type( 'datamatrix' )->content( 'test' )->format( 'jpg' )->margin( 10 )->orientaton( 'portrait' )->resize( 100, 50, 'mm', 90 )->image();
 
     $barcode = new Barcode();
     $barcode->type( 'datamatrix' );
     $barcode->content( 'test' );
     $barcode->format( 'jpg' );
     $barcode->margin( 50 );
+    $barcode->width( 100 );
+    $barcode->height( 50 );
+    $barcode->scale( 'mm' );
+    $barcode->dpi( 90 );
+    $barcode->resize();
     $barcode->create();
     $image_resource = $barcode->resource();
     imagettftext( $image_resource, 10, 0, 20, 30, 0x000000, 'font file path', 'text label' );
