@@ -2,7 +2,7 @@
 /**
  * Application: BarCode Coder Library (BCCL)
  *
- * @version 2.0.12
+ * @version 2.0.13
  * @package BCCL
  * @porting PHP
  *
@@ -98,7 +98,7 @@ class Barcode
      *
      * @var     array
      */
-    protected $array_of_allowed_image_scales = array( 'inch', 'cm', 'mm', 'px' );
+    protected $array_of_allowed_image_scales = array( 'inch', 'in', 'cm', 'mm', 'pixel', 'px', 'points', 'pt' );
 
     /**
      * Specifies how large a barcode to be displayed. Possible values could be: size in inches, cm, mm or px.
@@ -178,7 +178,7 @@ class Barcode
      *
      * @var     string
      */
-    protected $barcode_type = 'DATAMATRIX';
+    protected $barcode_type = 'datamatrix';
 
     /**
      * Contains the barcode content.
@@ -193,12 +193,12 @@ class Barcode
     /**
      * Contains the value that should have the barcode frame.
      *
-     * @since   2.0.7
+     * @since   2.0.13
      * @access  protected
      *
-     * @var     integer
+     * @var     array
      */
-    protected $barcode_margin = 0;
+    protected $barcode_margin = array( 'top' => 0, 'right' => 0, 'bottom' => 0, 'left' => 0 );
 
     /**
      * The check code for error detection and correction is as CRC, using polynomial division. (https://wikipedia.org/wiki/Cyclic_redundancy_check)
@@ -405,45 +405,21 @@ class Barcode
      */
     public function margin( $value = null )
     {
-        // Is used to prepare a perfect margin.
+        $get_args = func_get_args();
+        $num_args = func_num_args();
 
-        // $get_args = func_get_args();
-        // $num_args = func_num_args();
-
-        // $barcode_margin_top    = 0;
-        // $barcode_margin_right  = 0;
-        // $barcode_margin_bottom = 0;
-        // $barcode_margin_left   = 0;
-
-        // switch ( $num_args )
-        // {
-        //     case 1:
-        //     {
-        //         $barcode_margin_top    = $get_args[0];
-        //         $barcode_margin_right  = $get_args[0];
-        //         $barcode_margin_bottom = $get_args[0];
-        //         $barcode_margin_left   = $get_args[0];
-        //         break;
-        //     }
-        //     case 2:
-        //     {
-        //         $barcode_margin_top    = $get_args[0];
-        //         $barcode_margin_right  = $get_args[1];
-        //         $barcode_margin_bottom = $get_args[0];
-        //         $barcode_margin_left   = $get_args[1];
-        //         break;
-        //     }
-        //     case 4:
-        //     {
-        //         $barcode_margin_top    = $get_args[0];
-        //         $barcode_margin_right  = $get_args[1];
-        //         $barcode_margin_bottom = $get_args[2];
-        //         $barcode_margin_left   = $get_args[3];
-        //         break;
-        //     }
-        // }
-
-        $this->barcode_margin = is_numeric( $value ) ? $value * 2 : $this->barcode_margin;
+        if ( $num_args == 1 )
+        {
+            $this->barcode_margin = array( 'top' => $get_args[0], 'right' => $get_args[0], 'bottom' => $get_args[0], 'left' => $get_args[0] );
+        }
+        else if ( $num_args == 2 )
+        {
+            $this->barcode_margin = array( 'top' => $get_args[0], 'right' => $get_args[1], 'bottom' => $get_args[0], 'left' => $get_args[1] );
+        }
+        else if ( $num_args == 4 )
+        {
+            $this->barcode_margin = array( 'top' => $get_args[0], 'right' => $get_args[1], 'bottom' => $get_args[2], 'left' => $get_args[3] );
+        }
 
         return $this;
     }
@@ -645,22 +621,11 @@ class Barcode
         $barcode_width  = $module_x_count * $module_width;
         $barcode_height = $module_y_count * $module_height;
 
-        $barcode_center_x = $barcode_width / 2;
-        $barcode_center_y = $barcode_height / 2;
+        $this->image_width  = $this->barcode_margin['left'] + $barcode_width  + $this->barcode_margin['right'];
+        $this->image_height = $this->barcode_margin['top']  + $barcode_height + $this->barcode_margin['bottom'];
 
-        $this->image_width  = $barcode_width + $this->barcode_margin;
-        $this->image_height = $barcode_height + $this->barcode_margin;
-
-        $image_center_x = $this->image_width / 2;
-        $image_center_y = $this->image_height / 2;
-
-        $barcode_start_x = $image_center_x;
-        $barcode_start_y = $image_center_y;
-
-        self::_rotate( $barcode_center_x, $barcode_center_y, $angle_cos, $angle_sin, $image_center_x, $image_center_y );
-
-        $barcode_start_x -= $image_center_x;
-        $barcode_start_y -= $image_center_y;
+        $barcode_start_x = $this->barcode_margin['left'];
+        $barcode_start_y = $this->barcode_margin['top'];
 
         //-------------------------------------------------
         // Generate the image resource and calculate
@@ -791,7 +756,7 @@ class Barcode
             // $get_args[0] = '100,99';
             // $get_args[0] = '100 99';
 
-            if ( preg_match( '/(?P<width>\d+)x(?P<height>\d+)(?P<scale>inch|cm|mm|px)(?P<dpi>\d+)/', $get_args[0], $match ) )
+            if ( preg_match( '/(?P<width>\d+)x(?P<height>\d+)(?P<scale>' . implode( '|', $this->array_of_allowed_image_scales ) . ')(?P<dpi>\d+)/', $get_args[0], $match ) )
             {
                 $this->width( $match['width'] )->height( $match['height'] )->scale( $match['scale'] )->dpi( $match['dpi'] );
             }
@@ -833,6 +798,7 @@ class Barcode
         switch ( $this->image_resize_scale )
         {
             case 'inch':
+            case 'in':
             {
                 $new_image_width  = ( $this->image_resize_width  / 1 ) * $this->image_resize_dpi;
                 $new_image_height = ( $this->image_resize_height / 1 ) * $this->image_resize_dpi;
@@ -850,7 +816,10 @@ class Barcode
                 $new_image_height = ( $this->image_resize_height / 25.4 ) * $this->image_resize_dpi;
                 break;
             }
+            case 'pixel':
             case 'px':
+            case 'points':
+            case 'pt':
             {
                 $new_image_width  = ( $this->image_resize_width  / $this->image_resize_dpi ) * $this->image_resize_dpi;
                 $new_image_height = ( $this->image_resize_height / $this->image_resize_dpi ) * $this->image_resize_dpi;
@@ -894,6 +863,10 @@ class Barcode
             header( 'Content-Type: image/' . $this->image_content_type );
 
             header( 'Content-Disposition: filename="BARCODE-' . strtoupper( $this->barcode_type ) . '-' . strtoupper( sha1( $this->barcode_content ) ) . '.' . $this->image_content_type . '"' );
+
+            header( 'Cache-Control: no-cache, must-revalidate' );
+
+            header( 'Expires: Thu, 01 Jan 1970 00:00:00 GMT' );
         }
 
         if ( $value === true ): ob_start(); endif;
