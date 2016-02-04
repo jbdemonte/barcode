@@ -1,6 +1,11 @@
 php-barcode
 ===========
 
+LICENCE
+-------
+[GPLv3](http://www.gnu.org/licenses/gpl.html)
+[CeCILL](http://www.cecill.info/licences/Licence_CeCILL_V2-fr.html)
+
 PRESENTATION
 ------------
 This plugin allows you to create barcodes thanks to php.
@@ -24,6 +29,11 @@ FEATURES / SYMBOLOGIES
 * MSI
 * Data Matrix
 
+OUTPUT
+------
+* GD
+* FPDF
+
 USAGE
 -----
 ```php
@@ -44,6 +54,7 @@ try
     $barcode->height( 50 );
     $barcode->scale( 'mm' );
     $barcode->dpi( 90 );
+    $barcode->color( 'FF00FF' );
     $barcode->resize();
     $barcode->create();
     $image_resource = $barcode->resource();
@@ -66,13 +77,3 @@ catch ( Exception $Exception )
     echo $Exception->getMessage();
 }
 ```
-
-OUTPUT
-------
-* GD
-* FPDF
-
-LICENCE
--------
-[GPLv3](http://www.gnu.org/licenses/gpl.html)
-[CeCILL](http://www.cecill.info/licences/Licence_CeCILL_V2-fr.html)
