@@ -2,7 +2,7 @@
 /**
  * Application: BarCode Coder Library (BCCL)
  *
- * @version 2.0.14
+ * @version 2.0.15
  * @package BCCL
  * @porting PHP
  *
@@ -309,8 +309,7 @@ class Barcode
         }
         else if ( $num_args == 2 )
         {
-            $this->type( $get_args[0] );
-            $this->content( $get_args[1] );
+            $this->type( $get_args[0] )->content( $get_args[1] );
         }
 
         return $this;
@@ -376,7 +375,7 @@ class Barcode
      */
     public function format( $value = null )
     {
-        $this->image_content_type = in_array( $value, $this->array_of_allowed_image_extensions ) ? strtolower( $value ) : $this->image_content_type;
+        $this->image_content_type = in_array( $value, $this->array_of_allowed_image_extensions ) ? $value : $this->image_content_type;
 
         return $this;
     }
@@ -552,12 +551,12 @@ class Barcode
 
         if ( $num_args == 1 )
         {
-            $this->image_barcode_module_color = $get_args[0];
+            $this->image_barcode_module_color = is_string( $get_args[0] ) ? $get_args[0] : $this->image_barcode_module_color;
         }
         else if ( $num_args == 2 )
         {
-            $this->image_barcode_module_color = $get_args[0];
-            $this->image_background_color     = $get_args[1];
+            $this->image_barcode_module_color = is_string( $get_args[0] ) ? $get_args[0] : $this->image_barcode_module_color;
+            $this->image_background_color     = is_string( $get_args[1] ) ? $get_args[1] : $this->image_background_color;
         }
 
         return $this;
@@ -587,12 +586,12 @@ class Barcode
             case 'EAN8':
             case 'EAN13':
             {
-                $array_of_modules = BarcodeEAN::getDigit( $this->barcode_content, $this->barcode_type );
+                $array_of_modules = BarcodeEuropeanArticleNumber::getDigit( $this->barcode_content, $this->barcode_type );
             }
             break;
             case 'UPC':
             {
-                $array_of_modules = BarcodeUPC::getDigit( $this->barcode_content );
+                $array_of_modules = BarcodeUniversalProductCode::getDigit( $this->barcode_content );
             }
             break;
             case 'CODE11':
@@ -622,12 +621,17 @@ class Barcode
             break;
             case 'MSI':
             {
-                $array_of_modules = BarcodeMSI::getDigit( $this->barcode_content, $this->barcode_cyclic_redundancy_check );
+                $array_of_modules = BarcodeModifiedPlessey::getDigit( $this->barcode_content, $this->barcode_cyclic_redundancy_check );
             }
             break;
             case 'DATAMATRIX':
             {
-                $array_of_modules = BarcodeDatamatrix::getDigit( $this->barcode_content, $this->barcode_datamatrix_rectangular );
+                $array_of_modules = BarcodeDataMatrix::getDigit( $this->barcode_content, $this->barcode_datamatrix_rectangular );
+            }
+            break;
+            case 'QRCODE':
+            {
+
             }
             break;
             default:
@@ -652,17 +656,14 @@ class Barcode
         $module_x_count = count( $array_of_modules[0] );
         $module_y_count = count( $array_of_modules );
 
-        $module_width  = $this->barcode_type == 'datamatrix' ? 2 : 1;
-        $module_height = $this->barcode_type == 'datamatrix' ? 2 : 40;
+        $module_width  = $this->barcode_type == 'datamatrix' ? 1 : 1;
+        $module_height = $this->barcode_type == 'datamatrix' ? 1 : 40;
 
         $barcode_width  = $module_x_count * $module_width;
         $barcode_height = $module_y_count * $module_height;
 
         $this->image_width  = $this->barcode_margin['left'] + $barcode_width  + $this->barcode_margin['right'];
         $this->image_height = $this->barcode_margin['top']  + $barcode_height + $this->barcode_margin['bottom'];
-
-        $barcode_start_x = $this->barcode_margin['left'];
-        $barcode_start_y = $this->barcode_margin['top'];
 
         //-------------------------------------------------
         // Generate the image resource. 
@@ -694,27 +695,34 @@ class Barcode
         {
             foreach ( $module_y_value as $module_x_index => $module_x_value )
             {
-                if ( $array_of_modules[ $module_y_index ][ $module_x_index ] == '1' )
+                if ( $array_of_modules[ $module_y_index ][ $module_x_index ] )
                 {
-                    $rectangle_x_start = $module_x_index * $module_width;
-                    $rectangle_y_start = $module_y_index * $module_height;
+                    if ( $this->barcode_type == 'datamatrix' )
+                    {
+                        imagesetpixel( $this->image_resource, $this->barcode_margin['left'] + $module_x_index, $this->barcode_margin['top'] + $module_y_index, $this->image_barcode_module_color );
+                    }
+                    else
+                    {
+                        $rectangle_x_start = $module_x_index * $module_width;
+                        $rectangle_y_start = $module_y_index * $module_height;
 
-                    $rectangle_x_end = ( $module_x_index + 0.999 ) * $module_width;
-                    $rectangle_y_end = ( $module_y_index + 0.999 ) * $module_height;
+                        $rectangle_x_end = ( $module_x_index + 0.999 ) * $module_width;
+                        $rectangle_y_end = ( $module_y_index + 0.999 ) * $module_height;
 
-                    self::_rotate( $rectangle_x_start, $rectangle_y_start, $angle_cos, $angle_sin, $point_a_x, $point_a_y );
-                    self::_rotate( $rectangle_x_end,   $rectangle_y_start, $angle_cos, $angle_sin, $point_b_x, $point_b_y );
-                    self::_rotate( $rectangle_x_end,   $rectangle_y_end,   $angle_cos, $angle_sin, $point_c_x, $point_c_y );
-                    self::_rotate( $rectangle_x_start, $rectangle_y_end,   $angle_cos, $angle_sin, $point_d_x, $point_d_y );
+                        self::_rotate( $rectangle_x_start, $rectangle_y_start, $angle_cos, $angle_sin, $point_a_x, $point_a_y );
+                        self::_rotate( $rectangle_x_end,   $rectangle_y_start, $angle_cos, $angle_sin, $point_b_x, $point_b_y );
+                        self::_rotate( $rectangle_x_end,   $rectangle_y_end,   $angle_cos, $angle_sin, $point_c_x, $point_c_y );
+                        self::_rotate( $rectangle_x_start, $rectangle_y_end,   $angle_cos, $angle_sin, $point_d_x, $point_d_y );
 
-                    $array_of_coordinates = array();
+                        $array_of_coordinates = array();
 
-                    array_push( $array_of_coordinates, $barcode_start_x + $point_a_x, $barcode_start_y + $point_a_y );
-                    array_push( $array_of_coordinates, $barcode_start_x + $point_b_x, $barcode_start_y + $point_b_y );
-                    array_push( $array_of_coordinates, $barcode_start_x + $point_c_x, $barcode_start_y + $point_c_y );
-                    array_push( $array_of_coordinates, $barcode_start_x + $point_d_x, $barcode_start_y + $point_d_y );
+                        array_push( $array_of_coordinates, $this->barcode_margin['left'] + $point_a_x, $this->barcode_margin['top'] + $point_a_y );
+                        array_push( $array_of_coordinates, $this->barcode_margin['left'] + $point_b_x, $this->barcode_margin['top'] + $point_b_y );
+                        array_push( $array_of_coordinates, $this->barcode_margin['left'] + $point_c_x, $this->barcode_margin['top'] + $point_c_y );
+                        array_push( $array_of_coordinates, $this->barcode_margin['left'] + $point_d_x, $this->barcode_margin['top'] + $point_d_y );
 
-                    imagefilledpolygon( $this->image_resource, $array_of_coordinates, 4, $this->image_barcode_module_color );
+                        imagefilledpolygon( $this->image_resource, $array_of_coordinates, 4, $this->image_barcode_module_color );
+                    }
                 }
             }
         }
@@ -798,7 +806,7 @@ class Barcode
         $get_args = func_get_args();
         $num_args = func_num_args();
 
-        if ( $num_args == 1 && is_int( $get_args[0] ) && $get_args[0] > 100 && $get_args[0] < 9000 )
+        if ( $num_args == 1 && is_int( $get_args[0] ) && $get_args[0] > 100 )
         {
             $new_image_width  = $this->image_width  * $get_args[0] / 100;
             $new_image_height = $this->image_height * $get_args[0] / 100;
@@ -863,20 +871,20 @@ class Barcode
             case 'inch':
             case 'in':
             {
-                $new_image_width  = ( $this->image_resize_width  / 1 ) * $this->image_resize_dpi;
-                $new_image_height = ( $this->image_resize_height / 1 ) * $this->image_resize_dpi;
+                $new_image_width  = $this->image_resize_dpi * $this->image_resize_width  / 1;
+                $new_image_height = $this->image_resize_dpi * $this->image_resize_height / 1;
             }
             break;
             case 'cm':
             {
-                $new_image_width  = ( $this->image_resize_width  / 2.54 ) * $this->image_resize_dpi;
-                $new_image_height = ( $this->image_resize_height / 2.54 ) * $this->image_resize_dpi;
+                $new_image_width  = $this->image_resize_dpi * $this->image_resize_width  / 2.54;
+                $new_image_height = $this->image_resize_dpi * $this->image_resize_height / 2.54;
             }
             break;
             case 'mm':
             {
-                $new_image_width  = ( $this->image_resize_width  / 25.4 ) * $this->image_resize_dpi;
-                $new_image_height = ( $this->image_resize_height / 25.4 ) * $this->image_resize_dpi;
+                $new_image_width  = $this->image_resize_dpi * $this->image_resize_width  / 25.4;
+                $new_image_height = $this->image_resize_dpi * $this->image_resize_height / 25.4;
             }
             break;
             case 'pixel':
@@ -884,8 +892,8 @@ class Barcode
             case 'points':
             case 'pt':
             {
-                $new_image_width  = ( $this->image_resize_width  / $this->image_resize_dpi ) * $this->image_resize_dpi;
-                $new_image_height = ( $this->image_resize_height / $this->image_resize_dpi ) * $this->image_resize_dpi;
+                $new_image_width  = $this->image_resize_dpi * $this->image_resize_width  / $this->image_resize_dpi;
+                $new_image_height = $this->image_resize_dpi * $this->image_resize_height / $this->image_resize_dpi;
             }
             break;
         }
@@ -1048,12 +1056,12 @@ class Barcode
             break;
             case 'ean8':
             case 'ean13':
-            $digit = BarcodeEAN::getDigit( $code, $type );
-            $hri = BarcodeEAN::compute( $code, $type );
+            $digit = BarcodeEuropeanArticleNumber::getDigit( $code, $type );
+            $hri = BarcodeEuropeanArticleNumber::compute( $code, $type );
             break;
             case 'upc':
-            $digit = BarcodeUPC::getDigit( $code );
-            $hri = BarcodeUPC::compute( $code );
+            $digit = BarcodeUniversalProductCode::getDigit( $code );
+            $hri = BarcodeUniversalProductCode::compute( $code );
             break;
             case 'code11':
             $digit = Barcode11::getDigit( $code );
@@ -1076,11 +1084,11 @@ class Barcode
             $hri = $code;
             break;
             case 'msi':
-            $digit = BarcodeMSI::getDigit( $code, $crc );
-            $hri = BarcodeMSI::compute( $code, $crc );
+            $digit = BarcodeModifiedPlessey::getDigit( $code, $crc );
+            $hri = BarcodeModifiedPlessey::compute( $code, $crc );
             break;
             case 'datamatrix':
-            $digit = BarcodeDatamatrix::getDigit( $code, $rect );
+            $digit = BarcodeDataMatrix::getDigit( $code, $rect );
             $hri = $code;
             break;
         }
@@ -1535,12 +1543,12 @@ class BarcodeI25
 }
 
 /**
- * BarcodeEAN Class
+ * BarcodeEuropeanArticleNumber Class
  *
  * @since   2.0.3
  * @package BCCL
  */
-class BarcodeEAN
+class BarcodeEuropeanArticleNumber
 {
     /**
      * DEFAULT
@@ -1718,12 +1726,12 @@ class BarcodeEAN
 }
 
 /**
- * BarcodeUPC Class
+ * BarcodeUniversalProductCode Class
  *
  * @since   2.0.3
  * @package BCCL
  */
-class BarcodeUPC
+class BarcodeUniversalProductCode
 {
     /**
      * DEFAULT
@@ -1744,7 +1752,7 @@ class BarcodeUPC
             $code = '0' . $code;
         }
 
-        return BarcodeEAN::getDigit( $code, 'ean13' );
+        return BarcodeEuropeanArticleNumber::getDigit( $code, 'ean13' );
     }
 
     /**
@@ -1766,17 +1774,17 @@ class BarcodeUPC
             $code = '0' . $code;
         }
 
-        return substr( BarcodeEAN::compute( $code, 'ean13' ), 1 );
+        return substr( BarcodeEuropeanArticleNumber::compute( $code, 'ean13' ), 1 );
     }
 }
 
 /**
- * BarcodeMSI Class
+ * BarcodeModifiedPlessey Class
  *
  * @since   2.0.3
  * @package BCCL
  */
-class BarcodeMSI
+class BarcodeModifiedPlessey
 {
     /**
      * DEFAULT
@@ -2625,12 +2633,12 @@ class BarcodeCodabar
 }
 
 /**
- * BarcodeDatamatrix Class
+ * BarcodeDataMatrix Class
  *
  * @since   2.0.3
  * @package BCCL
  */
-class BarcodeDatamatrix
+class BarcodeDataMatrix
 {
     /**
      * 24 squares et 6 rectangular
