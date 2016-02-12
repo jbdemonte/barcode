@@ -3,8 +3,8 @@ php-barcode
 
 LICENCE
 -------
-[GPLv3](http://www.gnu.org/licenses/gpl.html)
-[CeCILL](http://www.cecill.info/licences/Licence_CeCILL_V2-fr.html)
+*[GPLv3](http://www.gnu.org/licenses/gpl.html)
+*[CeCILL](http://www.cecill.info/licences/Licence_CeCILL_V2-fr.html)
 
 PRESENTATION
 ------------

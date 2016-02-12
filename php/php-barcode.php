@@ -2,7 +2,7 @@
 /**
  * Application: BarCode Coder Library (BCCL)
  *
- * @version 2.0.17
+ * @version 2.0.18
  * @package BCCL
  * @porting PHP
  *
@@ -178,7 +178,7 @@ class Barcode
      *
      * @var     string
      */
-    protected $barcode_type = 'datamatrix';
+    protected $barcode_type = 'qrcode';
 
     /**
      * Contains the barcode content.
@@ -926,7 +926,7 @@ class Barcode
      * @since   2.0.7
      * @access  public
      *
-     * @param   boolean|string $value If the value is true, then deliver the image data to a variable. If the value is a string, then save the image to a file.
+     * @param   null|boolean|string $value If the value is true, then deliver the image data to a variable. If the value is false, then start a file download. If the value is a string, then save the image to a file. If the filename is empty, then use the automatically generated.
      *
      * @return  string Does the image data, if the variable "$value" is true.
      * @throws  Exception
@@ -935,11 +935,13 @@ class Barcode
     {
         if ( is_resource( $this->image_resource ) == false ): $this->create(); endif;
 
-        if ( $value === null )
+        $filename = 'BARCODE-' . strtoupper( $this->barcode_type ) . '-' . strtoupper( sha1( $this->barcode_content ) ) . '.' . $this->image_content_type;
+
+        if ( $value === null || $value === false )
         {
             header( 'Content-Type: image/' . $this->image_content_type );
 
-            header( 'Content-Disposition: filename="BARCODE-' . strtoupper( $this->barcode_type ) . '-' . strtoupper( sha1( $this->barcode_content ) ) . '.' . $this->image_content_type . '"' );
+            header( 'Content-Disposition: ' . ( $value === false ? 'attachment;' : '' ) . 'filename="' . $filename . '"' );
 
             header( 'Cache-Control: no-cache, must-revalidate' );
 
@@ -947,6 +949,10 @@ class Barcode
         }
 
         if ( $value === true ): ob_start(); endif;
+
+        if ( is_string( $value ) && empty( $value ) == true ): $value = $filename; endif;
+
+        if ( is_string( $value ) && strrpos( $value, '.' ) == false ): $value .= '.' . $this->image_content_type; endif;
 
         if ( is_string( $value ) && is_writeable( dirname( $value ) ) == false ): throw new Exception( 'The specified file path (' . $value . ') is not writable.' ); endif;
 
@@ -1651,7 +1657,7 @@ class Barcode_EuropeanArticleNumber
         else
         {
             //-------------------------------------------------
-            // ean13
+            // ean 13
             //-------------------------------------------------
 
             //-------------------------------------------------
@@ -1666,7 +1672,7 @@ class Barcode_EuropeanArticleNumber
 
             for ( $i = 1; $i < 7; $i++ )
             {
-                $result .= self::$encoding[ intval( $code[ $i ] ) ][ intval( $seq[ $i-1 ] ) ];
+                $result .= self::$encoding[ intval( $code[ $i ] ) ][ intval( $seq[ $i - 1 ] ) ];
             }
 
             //-------------------------------------------------
@@ -1684,10 +1690,6 @@ class Barcode_EuropeanArticleNumber
                 $result .= self::$encoding[ intval( $code[ $i ] ) ][ 2 ];
             }
         }
-
-        //-------------------------------------------------
-        // ean13
-        //-------------------------------------------------
 
         //-------------------------------------------------
         // stop
