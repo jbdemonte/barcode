@@ -141,3 +141,9 @@
 <h1>DATAMATRIX -> <?php echo $code; ?></h1>
 <img src="?type=datamatrix&code=<?php echo urlencode( $code ); ?>">
 </div>
+
+<div class="BARCODE_CONTAINER">
+<?php $code = md5( time() ); ?>
+<h1>QRCODE -> <?php echo $code; ?></h1>
+<img src="?type=qrcode&code=<?php echo urlencode( $code ); ?>">
+</div>

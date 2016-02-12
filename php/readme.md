@@ -18,16 +18,17 @@ FEATURES / SYMBOLOGIES
 ----------------------
 * Standard 2 of 5 (STD25)
 * Interleaved 2 of 5 (INT25)
-* EAN 8
-* EAN 13
-* UPC
-* CODE 11
-* CODE 39
-* CODE 93
-* CODE 128
-* CODABAR
-* MSI
+* European Article Number 8 (EAN 8)
+* European Article Number 13 (EAN 13)
+* Universal Product Code (UPC)
+* Code 11
+* Code 39
+* Code 93
+* Code 128
+* Codabar
+* Modified Plessey (MSI)
 * Data Matrix
+* Quick Response Code (QR-Code)
 
 OUTPUT
 ------
@@ -39,14 +40,14 @@ USAGE
 ```php
 try
 {
-    $barcode = new Barcode( array( 'type' => 'datamatrix', 'content' => 'test', 'format' => 'png', 'margin' => 10, 'orientaton' => 'portrait' ) );
+    $barcode = new Barcode( array( 'type' => 'qrcode', 'content' => 'test', 'format' => 'png', 'margin' => 10, 'orientaton' => 'portrait' ) );
     $barcode->image();
 
     $barcode = new Barcode();
-    $barcode->type( 'datamatrix' )->content( 'test' )->format( 'jpg' )->margin( 10 )->orientaton( 'portrait' )->resize( 100, 50, 'mm', 90 )->image();
+    $barcode->type( 'qrcode' )->content( 'test' )->format( 'jpg' )->margin( 10 )->orientaton( 'portrait' )->resize( 100, 50, 'mm', 90 )->image();
 
     $barcode = new Barcode();
-    $barcode->type( 'datamatrix' );
+    $barcode->type( 'qrcode' );
     $barcode->content( 'test' );
     $barcode->format( 'jpg' );
     $barcode->margin( 50 );
@@ -63,13 +64,13 @@ try
     $barcode->orientaton( 'portrait' );
     $barcode->image();
 
-    $barcode = new Barcode( 'datamatrix', 'test' );
+    $barcode = new Barcode( 'qrcode', 'test' );
     $barcode->image();
 
-    $barcode = new Barcode( 'datamatrix', 'test' );
+    $barcode = new Barcode( 'qrcode', 'test' );
     $image_data = $barcode->image( true );
 
-    $barcode = new Barcode( 'datamatrix', 'test' );
+    $barcode = new Barcode( 'qrcode', 'test' );
     $barcode->image( './barcode.gif' );
 }
 catch ( Exception $Exception )
