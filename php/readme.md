@@ -3,8 +3,8 @@ php-barcode
 
 LICENCE
 -------
-*[GPLv3](http://www.gnu.org/licenses/gpl.html)
-*[CeCILL](http://www.cecill.info/licences/Licence_CeCILL_V2-fr.html)
+* [GPLv3](http://www.gnu.org/licenses/gpl.html)
+* [CeCILL](http://www.cecill.info/licences/Licence_CeCILL_V2-fr.html)
 
 PRESENTATION
 ------------
@@ -28,7 +28,7 @@ FEATURES / SYMBOLOGIES
 * Codabar
 * Modified Plessey (MSI)
 * Data Matrix
-* Quick Response Code (QR-Code)
+* Quick Response Code (QR Code)
 
 OUTPUT
 ------
@@ -65,13 +65,18 @@ try
     $barcode->image();
 
     $barcode = new Barcode( 'qrcode', 'test' );
+
     $barcode->image();
 
-    $barcode = new Barcode( 'qrcode', 'test' );
     $image_data = $barcode->image( true );
 
-    $barcode = new Barcode( 'qrcode', 'test' );
-    $barcode->image( './barcode.gif' );
+    $barcode->image( false );
+
+    $barcode->image( 'barcode.gif' );
+
+    $barcode->image( 'barcode' );
+
+    $barcode->image( '' );
 }
 catch ( Exception $Exception )
 {

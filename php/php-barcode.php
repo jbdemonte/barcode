@@ -2,7 +2,7 @@
 /**
  * Application: BarCode Coder Library (BCCL)
  *
- * @version 2.0.18
+ * @version 2.0.19
  * @package BCCL
  * @porting PHP
  *
@@ -341,6 +341,8 @@ class Barcode
      */
     public function type( $value = null )
     {
+        if ( is_null( $value ) ): return $this->barcode_type; endif;
+        
         $this->barcode_type = is_string( $value ) && empty( $value ) == false ? strtolower( $value ) : $this->barcode_type;
 
         return $this;
@@ -358,6 +360,8 @@ class Barcode
      */
     public function content( $value = null )
     {
+        if ( is_null( $value ) ): return $this->barcode_content; endif;
+
         $this->barcode_content = is_string( $value ) && empty( $value ) == false ? $value : $this->barcode_content;
 
         return $this;
@@ -375,6 +379,8 @@ class Barcode
      */
     public function format( $value = null )
     {
+        if ( is_null( $value ) ): return $this->image_content_type; endif;
+
         $this->image_content_type = in_array( $value, $this->array_of_allowed_image_extensions ) ? $value : $this->image_content_type;
 
         return $this;
@@ -478,6 +484,8 @@ class Barcode
      */
     public function scale( $value = null )
     {
+        if ( is_null( $value ) ): return $this->image_resize_scale; endif;
+        
         $this->image_resize_scale = in_array( $value, $this->array_of_allowed_image_scales ) ? $value : $this->image_resize_scale;
 
         return $this;
@@ -495,6 +503,8 @@ class Barcode
      */
     public function dpi( $value = null )
     {
+        if ( is_null( $value ) ): return $this->image_resize_dpi; endif;
+
         $this->image_resize_dpi = is_numeric( $value ) ? $value : $this->image_resize_dpi;
 
         return $this;
@@ -709,11 +719,24 @@ class Barcode
                     }
                     else
                     {
+                        if ( $this->barcode_type == 'ean8' && in_array( $module_x_index, array( 0, 2, 32, 34, 64, 66 ) ) )
+                        {
+                            $new_module_height = $module_height + 6;
+                        }
+                        else if ( $this->barcode_type == 'ean13' && in_array( $module_x_index, array( 0, 2, 46, 48, 92, 94 ) ) )
+                        {
+                            $new_module_height = $module_height + 6;
+                        }
+                        else
+                        {
+                            $new_module_height = $module_height;
+                        }
+
                         $rectangle_x_start = $module_x_index * $module_width;
-                        $rectangle_y_start = $module_y_index * $module_height;
+                        $rectangle_y_start = $module_y_index * $new_module_height;
 
                         $rectangle_x_end = ( $module_x_index + 0.999 ) * $module_width;
-                        $rectangle_y_end = ( $module_y_index + 0.999 ) * $module_height;
+                        $rectangle_y_end = ( $module_y_index + 0.999 ) * $new_module_height;
 
                         self::_rotate( $rectangle_x_start, $rectangle_y_start, $angle_cos, $angle_sin, $point_a_x, $point_a_y );
                         self::_rotate( $rectangle_x_end,   $rectangle_y_start, $angle_cos, $angle_sin, $point_b_x, $point_b_y );
@@ -731,6 +754,37 @@ class Barcode
                     }
                 }
             }
+        }
+
+        //-------------------------------------------------
+        // Draw a text label.
+        //-------------------------------------------------
+
+        if ( $this->barcode_type == 'ean8' || $this->barcode_type == 'ean13' )
+        {
+            $string_x_start = $this->barcode_margin['left'] - 10;
+            $string_y_start = $this->barcode_margin['top'] + $barcode_height - 2;
+        }
+
+        if ( $this->barcode_type == 'ean8' && preg_match( '/^([0-9]{4})([0-9]{4})$/', $this->barcode_content, $match ) )
+        {
+            imagestring( $this->image_resource, 2, $string_x_start + 3, $string_y_start, '<', $this->image_barcode_module_color );
+
+            imagestring( $this->image_resource, 2, $string_x_start + 16, $string_y_start, $match[1], $this->image_barcode_module_color );
+
+            imagestring( $this->image_resource, 2, $string_x_start + 48, $string_y_start, $match[2], $this->image_barcode_module_color );
+
+            imagestring( $this->image_resource, 2, $string_x_start + 79, $string_y_start, '>', $this->image_barcode_module_color );
+        }
+        else if ( $this->barcode_type == 'ean13' && preg_match( '/^([0-9]{1})([0-9]{6})([0-9]{6})$/', $this->barcode_content, $match ) )
+        {
+            imagestring( $this->image_resource, 2, $string_x_start + 3, $string_y_start, $match[1], $this->image_barcode_module_color );
+
+            imagestring( $this->image_resource, 2, $string_x_start + 17, $string_y_start, $match[2], $this->image_barcode_module_color );
+
+            imagestring( $this->image_resource, 2, $string_x_start + 63, $string_y_start, $match[3], $this->image_barcode_module_color );
+
+            imagestring( $this->image_resource, 2, $string_x_start + 107, $string_y_start, '>', $this->image_barcode_module_color );
         }
 
         return $this;
