@@ -573,6 +573,146 @@ class Barcode
     }
 
     /**
+     * Can be called to beautify the appearance of the barcode.
+     *
+     * @since   2.0.14
+     * @access  public
+     *
+     * @param   null
+     *
+     * @return  Barcode
+     */
+    public function template()
+    {
+        $get_args = func_get_args();
+        $num_args = func_num_args();
+
+        // module_width
+
+        // module_height
+
+        // template_name
+
+        // price_extention = true|false
+
+        // text_position = top|bottom|both
+
+        // barcode_deferrals = true|false
+
+        //-------------------------------------------------
+        // BARCODE DEFERRALS
+        //-------------------------------------------------
+
+        // $barcode_deferrals_8  = array( 0, 2, 32, 34, 64, 66 );
+        // $barcode_deferrals_13 = array( 0, 2, 46, 48, 92, 94 );
+
+        // if ( $this->barcode_type == 'ean8' && in_array( $module_x_index, $barcode_separations_8 ) )
+        // {
+        //     $new_module_height = $module_height + 6;
+        // }
+        // else if ( $this->barcode_type == 'ean13' && in_array( $module_x_index, $barcode_separations_13 ) )
+        // {
+        //     $new_module_height = $module_height + 6;
+        // }
+        // else if ( $this->barcode_type == 'upc' && in_array( $module_x_index, $barcode_separations_13 ) )
+        // {
+        //     $new_module_height = $module_height + 6;
+        // }
+        // else
+        // {
+        //     $new_module_height = $module_height;
+        // }
+
+        //-------------------------------------------------
+        // Draw a text label.
+        //-------------------------------------------------
+
+        // BARCODE WITHOUT ALL.
+        // BARCODE WITH TEXT_LABEL "EAN + CODE" OR "GTIN + CODE", POSITION = "DOWN | UP"
+        // BARCODE WITH LONG LINES AND SAWN CODE, POSITION = "DOWN"
+        // BARCODE WITH LONG LINES AND CODE SAWN AND TEXT_LABEL "ISSN | ISBN | ISMN", POSITION "UP & DOWN"
+
+        // if ( $this->barcode_type == 'ean8' && preg_match( '/^([0-9]{4})([0-9]{4})$/', $this->barcode_content, $match ) )
+        // {
+        //     $string_x_start = $this->barcode_margin['left'] - 10;
+        //     $string_y_start = $this->barcode_margin['top'] + $barcode_height - 2;
+
+        //     imagestring( $this->image_resource, 2, $string_x_start + 3, $string_y_start, '<', $this->image_barcode_module_color );
+        //     imagestring( $this->image_resource, 2, $string_x_start + 16, $string_y_start, $match[1], $this->image_barcode_module_color );
+        //     imagestring( $this->image_resource, 2, $string_x_start + 48, $string_y_start, $match[2], $this->image_barcode_module_color );
+        //     imagestring( $this->image_resource, 2, $string_x_start + 79, $string_y_start, '>', $this->image_barcode_module_color );
+        // }
+
+        // if ( $this->barcode_type == 'ean13' && preg_match( '/^([0-9]{1})([0-9]{6})([0-9]{6})$/', $this->barcode_content, $match ) )
+        // {
+        //     $string_x_start = $this->barcode_margin['left'] - 10;
+        //     $string_y_start = $this->barcode_margin['top'] + $barcode_height - 2;
+
+        //     imagestring( $this->image_resource, 2, $string_x_start + 3, $string_y_start, $match[1], $this->image_barcode_module_color );
+        //     imagestring( $this->image_resource, 2, $string_x_start + 17, $string_y_start, $match[2], $this->image_barcode_module_color );
+        //     imagestring( $this->image_resource, 2, $string_x_start + 63, $string_y_start, $match[3], $this->image_barcode_module_color );
+        //     imagestring( $this->image_resource, 2, $string_x_start + 107, $string_y_start, '>', $this->image_barcode_module_color );
+        // }
+
+        //-------------------------------------------------
+        // INTERNATIONAL STANDARD SERIAL NUMBER
+        //-------------------------------------------------
+
+        // if ( $this->barcode_type == 'ean13' && preg_match( '/^(977)([0-9]{1})([0-9]{5})([0-9]{3})([0-9]{1})$/', $this->barcode_content, $match ) )
+        // {
+        //     $string_x_start = $this->barcode_margin['left'] - 8;
+        //     $string_y_start = $this->barcode_margin['top'] - 9;
+
+        //     imagestring( $this->image_resource, 1, $string_x_start, $string_y_start, 'ISSN ' . $match[1] . '-' . $match[2] . '-' . $match[3] . '-' . $match[4] . '-' . $match[5], $this->image_barcode_module_color );
+        // }
+
+        //-------------------------------------------------
+        // INTERNATIONAL STANDARD BOOK NUMBER
+        //-------------------------------------------------
+
+        // if ( $this->barcode_type == 'ean13' && preg_match( '/^(978|979)([0-9]{1})([0-9]{5})([0-9]{3})([0-9]{1})$/', $this->barcode_content, $match ) )
+        // {
+        //     $string_x_start = $this->barcode_margin['left'] - 8;
+        //     $string_y_start = $this->barcode_margin['top'] - 9;
+
+        //     imagestring( $this->image_resource, 1, $string_x_start, $string_y_start, 'ISBN ' . $match[1] . '-' . $match[2] . '-' . $match[3] . '-' . $match[4] . '-' . $match[5], $this->image_barcode_module_color );
+        // }
+
+        //-------------------------------------------------
+        // INTERNATIONAL STANDARD MUSIC NUMBER
+        //-------------------------------------------------
+
+        // if ( $this->barcode_type == 'ean13' && preg_match( '/^(979)([0]{1})([0-9]{5})([0-9]{3})([0-9]{1})$/', $this->barcode_content, $match ) )
+        // {
+        //     $string_x_start = $this->barcode_margin['left'] - 8;
+        //     $string_y_start = $this->barcode_margin['top'] - 9;
+
+        //     imagestring( $this->image_resource, 1, $string_x_start, $string_y_start, 'ISMN ' . $match[1] . '-' . $match[2] . '-' . $match[3] . '-' . $match[4] . '-' . $match[5], $this->image_barcode_module_color );
+        // }
+
+        //-------------------------------------------------
+        // UNIVERSAL PRODUCT CODE
+        //-------------------------------------------------
+
+        // BARCODE WITHOUT ALL.
+        // BARCODE WITH TEXT_LABEL "UPC + CODE", POSITION "DOWN | UP"
+        // BARCODE WITH LONG LINES AND SAWN CODE, POSITION "DOWN"
+
+        // if ( $this->barcode_type == 'upc' && preg_match( '/^([0-9]{1})([0-9]{5})([0-9]{5})([0-9]{1})$/', $this->barcode_content, $match ) )
+        // {
+        //     $string_x_start = $this->barcode_margin['left'] - 10;
+        //     $string_y_start = $this->barcode_margin['top'] + $barcode_height - 2;
+
+        //     imagestring( $this->image_resource, 2, $string_x_start + 3, $string_y_start, $match[1], $this->image_barcode_module_color );
+        //     imagestring( $this->image_resource, 2, $string_x_start + 20, $string_y_start, $match[2], $this->image_barcode_module_color );
+        //     imagestring( $this->image_resource, 2, $string_x_start + 66, $string_y_start, $match[3], $this->image_barcode_module_color );
+        //     imagestring( $this->image_resource, 2, $string_x_start + 107, $string_y_start, $match[4], $this->image_barcode_module_color );
+        // }
+
+        return $this;
+    }
+
+    /**
      * Created on the basis of the barcode data an image.
      *
      * @since   2.0.7
@@ -593,13 +733,21 @@ class Barcode
                 $array_of_modules = Barcode_Interleaved2of5::getDigit( $this->barcode_content, $this->barcode_cyclic_redundancy_check, $this->barcode_type );
             }
             break;
+            case 'EAN':
             case 'EAN8':
             case 'EAN13':
+            case 'GTIN':
+            case 'GTIN8':
+            case 'GTIN13':
+            case 'ISSN':
+            case 'ISBN':
+            case 'ISMN':
             {
                 $array_of_modules = Barcode_EuropeanArticleNumber::getDigit( $this->barcode_content, $this->barcode_type );
             }
             break;
             case 'UPC':
+            case 'GTIN12':
             {
                 $array_of_modules = Barcode_UniversalProductCode::getDigit( $this->barcode_content );
             }
@@ -686,12 +834,12 @@ class Barcode
         // Preparation of color.
         //-------------------------------------------------
 
-        if ( preg_match( '/(?P<red>[0-9a-fA-F]{2})(?P<green>[0-9a-fA-F]{2})(?P<blue>[0-9a-fA-F]{2})/', $this->image_barcode_module_color, $match ) )
+        if ( preg_match( '/^(?P<red>[0-9a-fA-F]{2})(?P<green>[0-9a-fA-F]{2})(?P<blue>[0-9a-fA-F]{2})$/', $this->image_barcode_module_color, $match ) )
         {
             $this->image_barcode_module_color = imagecolorallocate( $this->image_resource, hexdec( $match[ 'red' ] ), hexdec( $match[ 'green' ] ), hexdec( $match[ 'blue' ] ) );
         }
 
-        if ( preg_match( '/(?P<red>[0-9a-fA-F]{2})(?P<green>[0-9a-fA-F]{2})(?P<blue>[0-9a-fA-F]{2})/', $this->image_background_color, $match ) )
+        if ( preg_match( '/^(?P<red>[0-9a-fA-F]{2})(?P<green>[0-9a-fA-F]{2})(?P<blue>[0-9a-fA-F]{2})$/', $this->image_background_color, $match ) )
         {
             $this->image_background_color = imagecolorallocate( $this->image_resource, hexdec( $match[ 'red' ] ), hexdec( $match[ 'green' ] ), hexdec( $match[ 'blue' ] ) );
         }
@@ -719,24 +867,11 @@ class Barcode
                     }
                     else
                     {
-                        if ( $this->barcode_type == 'ean8' && in_array( $module_x_index, array( 0, 2, 32, 34, 64, 66 ) ) )
-                        {
-                            $new_module_height = $module_height + 6;
-                        }
-                        else if ( $this->barcode_type == 'ean13' && in_array( $module_x_index, array( 0, 2, 46, 48, 92, 94 ) ) )
-                        {
-                            $new_module_height = $module_height + 6;
-                        }
-                        else
-                        {
-                            $new_module_height = $module_height;
-                        }
-
                         $rectangle_x_start = $module_x_index * $module_width;
-                        $rectangle_y_start = $module_y_index * $new_module_height;
+                        $rectangle_y_start = $module_y_index * $module_height;
 
                         $rectangle_x_end = ( $module_x_index + 0.999 ) * $module_width;
-                        $rectangle_y_end = ( $module_y_index + 0.999 ) * $new_module_height;
+                        $rectangle_y_end = ( $module_y_index + 0.999 ) * $module_height;
 
                         self::_rotate( $rectangle_x_start, $rectangle_y_start, $angle_cos, $angle_sin, $point_a_x, $point_a_y );
                         self::_rotate( $rectangle_x_end,   $rectangle_y_start, $angle_cos, $angle_sin, $point_b_x, $point_b_y );
@@ -754,37 +889,6 @@ class Barcode
                     }
                 }
             }
-        }
-
-        //-------------------------------------------------
-        // Draw a text label.
-        //-------------------------------------------------
-
-        if ( $this->barcode_type == 'ean8' || $this->barcode_type == 'ean13' )
-        {
-            $string_x_start = $this->barcode_margin['left'] - 10;
-            $string_y_start = $this->barcode_margin['top'] + $barcode_height - 2;
-        }
-
-        if ( $this->barcode_type == 'ean8' && preg_match( '/^([0-9]{4})([0-9]{4})$/', $this->barcode_content, $match ) )
-        {
-            imagestring( $this->image_resource, 2, $string_x_start + 3, $string_y_start, '<', $this->image_barcode_module_color );
-
-            imagestring( $this->image_resource, 2, $string_x_start + 16, $string_y_start, $match[1], $this->image_barcode_module_color );
-
-            imagestring( $this->image_resource, 2, $string_x_start + 48, $string_y_start, $match[2], $this->image_barcode_module_color );
-
-            imagestring( $this->image_resource, 2, $string_x_start + 79, $string_y_start, '>', $this->image_barcode_module_color );
-        }
-        else if ( $this->barcode_type == 'ean13' && preg_match( '/^([0-9]{1})([0-9]{6})([0-9]{6})$/', $this->barcode_content, $match ) )
-        {
-            imagestring( $this->image_resource, 2, $string_x_start + 3, $string_y_start, $match[1], $this->image_barcode_module_color );
-
-            imagestring( $this->image_resource, 2, $string_x_start + 17, $string_y_start, $match[2], $this->image_barcode_module_color );
-
-            imagestring( $this->image_resource, 2, $string_x_start + 63, $string_y_start, $match[3], $this->image_barcode_module_color );
-
-            imagestring( $this->image_resource, 2, $string_x_start + 107, $string_y_start, '>', $this->image_barcode_module_color );
         }
 
         return $this;
@@ -943,8 +1047,8 @@ class Barcode
             break;
             case 'mm':
             {
-                $new_image_width  = $this->image_resize_width  * $this->image_resize_dpi / 25.4;
-                $new_image_height = $this->image_resize_height * $this->image_resize_dpi / 25.4;
+                $new_image_width  = $this->image_resize_width  * $this->image_resize_dpi / 254;
+                $new_image_height = $this->image_resize_height * $this->image_resize_dpi / 254;
             }
             break;
             case 'pixel':
@@ -952,8 +1056,8 @@ class Barcode
             case 'points':
             case 'pt':
             {
-                $new_image_width  = $this->image_resize_width  * $this->image_resize_dpi / $this->image_resize_dpi;
-                $new_image_height = $this->image_resize_height * $this->image_resize_dpi / $this->image_resize_dpi;
+                $new_image_width  = $this->image_resize_width;
+                $new_image_height = $this->image_resize_height;
             }
             break;
         }
@@ -1010,17 +1114,17 @@ class Barcode
 
         if ( is_string( $value ) && is_writeable( dirname( $value ) ) == false ): throw new Exception( 'The specified file path (' . $value . ') is not writable.' ); endif;
 
-        if ( $this->image_content_type == 'gif' && function_exists( 'imagegif' ) )
+        if ( function_exists( 'imagegif' ) && $this->image_content_type == 'gif' )
         {
             imagegif( $this->image_resource, is_string( $value ) ? $value : null );
         }
-        else if ( $this->image_content_type == 'jpg' || $this->image_content_type == 'jpeg' && function_exists( 'imagejpeg' ) )
+        else if ( function_exists( 'imagejpeg' ) && $this->image_content_type == 'jpg' || $this->image_content_type == 'jpeg' )
         {
             imageinterlace( $this->image_resource, true );
 
             imagejpeg( $this->image_resource, is_string( $value ) ? $value : null, round( $this->image_quality ) );
         }
-        else if ( $this->image_content_type == 'png' && function_exists( 'imagepng' ) )
+        else if ( function_exists( 'imagepng' ) && $this->image_content_type == 'png' )
         {
             imagepng( $this->image_resource, is_string( $value ) ? $value : null, round( 9 * $this->image_quality / 100 ) );
         }
@@ -2442,7 +2546,8 @@ class Barcode_Code128
         '11010000100', //  103  Start A Start A Start A 0208    D   11010000100
         '11010010000', //  104  Start B Start B Start B 0209    N   11010010000
         '11010011100', //  105  Start C Start C Start C 0210    O   11010011100
-        '11000111010'  //  106  Stop    Stop    Stop    0211    O   11000111010
+        '11000111010', //  106  Stop    Stop    Stop    0211    O   11000111010
+        '11'           //  107  Termination bar
     );
 
     /**
