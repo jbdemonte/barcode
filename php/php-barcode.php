@@ -2,7 +2,7 @@
 /**
  * Application: BarCode Coder Library (BCCL)
  *
- * @version 2.0.19
+ * @version 2.0.20
  * @package BCCL
  * @porting PHP
  *
@@ -51,14 +51,14 @@ class Barcode
     protected $image_quality = 100;
 
     /**
-     * Specifies whether the image in the portrait or landscape mode to display.
+     * Specifies in which direction the image is to be displayed.
      *
      * @since   2.0.11
      * @access  protected
      *
      * @var     string
      */
-    protected $image_orientaton = 'landscape';
+    protected $image_orientaton = 'top';
 
     /**
      * Does the image width.
@@ -88,7 +88,7 @@ class Barcode
      *
      * @var     array
      */
-    protected $array_of_allowed_image_scales = array( 'inch', 'in', 'cm', 'mm', 'pixel', 'px', 'points', 'pt' );
+    protected $array_of_allowed_image_scales = array( 'inch', 'in', 'cm', 'mm', 'pixels', 'px', 'points', 'pt' );
 
     /**
      * Contains the image format, after which the barcode is to be output.
@@ -225,7 +225,7 @@ class Barcode
      *
      * @since   2.0.7
      * @access  public
-     * 
+     *
      * @return  Barcode
      */
     public function __construct()
@@ -321,7 +321,7 @@ class Barcode
      * @since   2.0.7
      * @access  public
      */
-    public function __destruct() 
+    public function __destruct()
     {
         if ( $this->image_resource !== null && get_resource_type( $this->image_resource ) === 'gd' )
         {
@@ -342,8 +342,8 @@ class Barcode
     public function type( $value = null )
     {
         if ( is_null( $value ) ): return $this->barcode_type; endif;
-        
-        $this->barcode_type = is_string( $value ) && empty( $value ) == false ? strtolower( $value ) : $this->barcode_type;
+
+        $this->barcode_type = is_string( $value ) ? strtolower( $value ) : $this->barcode_type;
 
         return $this;
     }
@@ -362,7 +362,7 @@ class Barcode
     {
         if ( is_null( $value ) ): return $this->barcode_content; endif;
 
-        $this->barcode_content = is_string( $value ) && empty( $value ) == false ? $value : $this->barcode_content;
+        $this->barcode_content = $value;
 
         return $this;
     }
@@ -420,15 +420,15 @@ class Barcode
 
         if ( $num_args == 1 )
         {
-            $this->barcode_margin = array( 'top' => $get_args[ 0 ], 'right' => $get_args[ 0 ], 'bottom' => $get_args[ 0 ], 'left' => $get_args[ 0 ] );
+            $this->barcode_margin = array( 'top' => intval( $get_args[ 0 ] ), 'right' => intval( $get_args[ 0 ] ), 'bottom' => intval( $get_args[ 0 ] ), 'left' => intval( $get_args[ 0 ] ) );
         }
         else if ( $num_args == 2 )
         {
-            $this->barcode_margin = array( 'top' => $get_args[ 0 ], 'right' => $get_args[ 1 ], 'bottom' => $get_args[ 0 ], 'left' => $get_args[ 1 ] );
+            $this->barcode_margin = array( 'top' => intval( $get_args[ 0 ] ), 'right' => intval( $get_args[ 1 ] ), 'bottom' => intval( $get_args[ 0 ] ), 'left' => intval( $get_args[ 1 ] ) );
         }
         else if ( $num_args == 4 )
         {
-            $this->barcode_margin = array( 'top' => $get_args[ 0 ], 'right' => $get_args[ 1 ], 'bottom' => $get_args[ 2 ], 'left' => $get_args[ 3 ] );
+            $this->barcode_margin = array( 'top' => intval( $get_args[ 0 ] ), 'right' => intval( $get_args[ 1 ] ), 'bottom' => intval( $get_args[ 2 ] ), 'left' => intval( $get_args[ 3 ] ) );
         }
 
         return $this;
@@ -485,7 +485,7 @@ class Barcode
     public function scale( $value = null )
     {
         if ( is_null( $value ) ): return $this->image_resize_scale; endif;
-        
+
         $this->image_resize_scale = in_array( $value, $this->array_of_allowed_image_scales ) ? $value : $this->image_resize_scale;
 
         return $this;
@@ -624,7 +624,7 @@ class Barcode
         // }
 
         //-------------------------------------------------
-        // Draw a text label.
+        // EAN 8 + 13
         //-------------------------------------------------
 
         // BARCODE WITHOUT ALL.
@@ -734,10 +734,10 @@ class Barcode
             }
             break;
             case 'EAN':
-            case 'EAN8':
-            case 'EAN13':
             case 'GTIN':
+            case 'EAN8':
             case 'GTIN8':
+            case 'EAN13':
             case 'GTIN13':
             case 'ISSN':
             case 'ISBN':
@@ -923,7 +923,7 @@ class Barcode
     }
 
     /**
-     * Can be called to change the display format. Default: Landscape.
+     * Can be called to change the orientation.
      *
      * @since   2.0.11
      * @access  public
@@ -936,11 +936,36 @@ class Barcode
     {
         if ( is_resource( $this->image_resource ) == false ): $this->create(); endif;
 
-        $this->image_orientaton = is_string( $value ) && empty( $value ) == false ? $value : $this->image_orientaton;        
+        $this->image_orientaton = empty( $value ) == false ? $value : $this->image_orientaton;
 
-        if ( $this->image_orientaton == 'p' || $this->image_orientaton == 'portrait' )
+        switch ( $this->image_orientaton )
         {
-            $this->image_resource = imagerotate( $this->image_resource, 90, $this->image_background_color );
+            default:
+            case 'top':
+            {
+                // $this->image_orientaton = 0; The default value causes the image to be blurred.
+            }
+            break;
+            case 'right':
+            {
+                $this->image_orientaton = 270;
+            }
+            break;
+            case 'bottom':
+            {
+                $this->image_orientaton = 180;
+            }
+            break;
+            case 'left':
+            {
+                $this->image_orientaton = 90;
+            }
+            break;
+        }
+
+        if ( is_int( $this->image_orientaton ) )
+        {
+            $this->image_resource = imagerotate( $this->image_resource, $this->image_orientaton, $this->image_background_color );
 
             $this->image_width  = imagesx( $this->image_resource );
             $this->image_height = imagesy( $this->image_resource );
@@ -972,8 +997,8 @@ class Barcode
 
         if ( $num_args == 1 && is_int( $get_args[ 0 ] ) && $get_args[ 0 ] > 100 )
         {
-            $new_image_width  = $this->image_width  * $get_args[ 0 ] / 100;
-            $new_image_height = $this->image_height * $get_args[ 0 ] / 100;
+            $this->image_resize_width  = $this->image_width  * $get_args[ 0 ] / 100;
+            $this->image_resize_height = $this->image_height * $get_args[ 0 ] / 100;
         }
         else if ( $num_args == 1 && is_string( $get_args[ 0 ] ) )
         {
@@ -1025,53 +1050,45 @@ class Barcode
         {
             $this->width( $get_args[ 0 ] )->height( $get_args[ 1 ] )->scale( $get_args[ 2 ] )->dpi( $get_args[ 3 ] );
         }
-        else
-        {
-            return false;
-        }
 
         switch ( $this->image_resize_scale )
         {
             case 'inch':
             case 'in':
             {
-                $new_image_width  = $this->image_resize_width  * $this->image_resize_dpi / 1;
-                $new_image_height = $this->image_resize_height * $this->image_resize_dpi / 1;
+                $this->image_resize_width  = $this->image_resize_width  * $this->image_resize_dpi / 1;
+                $this->image_resize_height = $this->image_resize_height * $this->image_resize_dpi / 1;
             }
             break;
             case 'cm':
             {
-                $new_image_width  = $this->image_resize_width  * $this->image_resize_dpi / 2.54;
-                $new_image_height = $this->image_resize_height * $this->image_resize_dpi / 2.54;
+                $this->image_resize_width  = $this->image_resize_width  * $this->image_resize_dpi / 2.54;
+                $this->image_resize_height = $this->image_resize_height * $this->image_resize_dpi / 2.54;
             }
             break;
             case 'mm':
             {
-                $new_image_width  = $this->image_resize_width  * $this->image_resize_dpi / 254;
-                $new_image_height = $this->image_resize_height * $this->image_resize_dpi / 254;
-            }
-            break;
-            case 'pixel':
-            case 'px':
-            case 'points':
-            case 'pt':
-            {
-                $new_image_width  = $this->image_resize_width;
-                $new_image_height = $this->image_resize_height;
+                $this->image_resize_width  = $this->image_resize_width  * $this->image_resize_dpi / 254;
+                $this->image_resize_height = $this->image_resize_height * $this->image_resize_dpi / 254;
             }
             break;
         }
 
-        $new_image_resource = imagecreatetruecolor( $new_image_width, $new_image_height );
+        if ( is_null( $this->image_resize_width ) || is_null( $this->image_resize_height ) )
+        {
+            return $this;
+        }
 
-        imagecopyresampled( $new_image_resource, $this->image_resource, 0, 0, 0, 0, $new_image_width, $new_image_height, $this->image_width, $this->image_height );
+        $new_image_resource = imagecreatetruecolor( $this->image_resize_width, $this->image_resize_height );
+
+        imagecopyresampled( $new_image_resource, $this->image_resource, 0, 0, 0, 0, $this->image_resize_width, $this->image_resize_height, $this->image_width, $this->image_height );
 
         imagedestroy( $this->image_resource );
 
         $this->image_resource = $new_image_resource;
 
-        $this->image_width  = $new_image_width;
-        $this->image_height = $new_image_height;
+        $this->image_width  = $this->image_resize_width;
+        $this->image_height = $this->image_resize_height;
 
         return $this;
     }
@@ -1093,22 +1110,24 @@ class Barcode
     {
         if ( is_resource( $this->image_resource ) == false ): $this->create(); endif;
 
-        $filename = 'BARCODE-' . strtoupper( $this->barcode_type ) . '-' . strtoupper( sha1( $this->barcode_content ) ) . '.' . $this->image_content_type;
+        $file_name = 'BARCODE-' . strtoupper( $this->barcode_type ) . '-' . strtoupper( sha1( $this->barcode_content ) ) . '.' . $this->image_content_type;
 
         if ( $value === null || $value === false )
         {
             header( 'Content-Type: image/' . $this->image_content_type );
 
-            header( 'Content-Disposition: ' . ( $value === false ? 'attachment;' : '' ) . 'filename="' . $filename . '"' );
+            header( 'Content-Disposition: ' . ( $value === false ? 'attachment;' : '' ) . 'filename="' . $file_name . '"' );
 
-            header( 'Cache-Control: no-cache, must-revalidate' );
+            header( 'Cache-Control: no-cache, no-store, must-revalidate' );
 
-            header( 'Expires: Thu, 01 Jan 1970 00:00:00 GMT' );
+            header( 'Pragma: no-cache' );
+
+            header( 'Expires: 0' );
         }
 
         if ( $value === true ): ob_start(); endif;
 
-        if ( is_string( $value ) && empty( $value ) == true ): $value = $filename; endif;
+        if ( is_string( $value ) && empty( $value ) == true ): $value = $file_name; endif;
 
         if ( is_string( $value ) && strrpos( $value, '.' ) == false ): $value .= '.' . $this->image_content_type; endif;
 
@@ -1547,8 +1566,6 @@ class Barcode
     }
 }
 
-
-
 /**
  * Barcode_Interleaved2of5 Class
  *
@@ -1585,11 +1602,17 @@ class Barcode_Interleaved2of5
     {
         if ( ! $crc )
         {
-            if ( strlen( $code ) % 2 ) $code = '0' . $code;
+            if ( strlen( $code ) % 2 )
+            {
+                $code = '0' . $code;
+            }
         }
         else
         {
-            if ( ( $type == 'int25' ) && ( strlen( $code ) % 2 == 0 ) ) $code = '0' . $code;
+            if ( ( $type == 'int25' ) && ( strlen( $code ) % 2 == 0 ) )
+            {
+                $code = '0' . $code;
+            }
 
             $odd = true;
 
@@ -1626,7 +1649,10 @@ class Barcode_Interleaved2of5
     {
         $code = self::compute( $code, $crc, $type );
 
-        if ( $code == '' ) return $code;
+        if ( $code == '' )
+        {
+            return $code;
+        }
 
         $result = '';
 
@@ -1657,11 +1683,17 @@ class Barcode_Interleaved2of5
                 {
                     $result .= '1';
 
-                    if ( self::$encoding[ $c1 ][ $j ] == 'W' ) $result .= '1';
+                    if ( self::$encoding[ $c1 ][ $j ] == 'W' )
+                    {
+                        $result .= '1';
+                    }
 
                     $result .= '0';
 
-                    if ( self::$encoding[ $c2 ][ $j ] == 'W' ) $result .= '0';
+                    if ( self::$encoding[ $c2 ][ $j ] == 'W' )
+                    {
+                        $result .= '0';
+                    }
                 }
             }
 
@@ -1697,7 +1729,10 @@ class Barcode_Interleaved2of5
                 {
                     $result .= '1';
 
-                    if ( self::$encoding[ $c ][ $j ] == 'W' ) $result .= '11';
+                    if ( self::$encoding[ $c ][ $j ] == 'W' )
+                    {
+                        $result .= '11';
+                    }
 
                     $result .= '0';
                 }
@@ -3241,7 +3276,7 @@ class Barcode_DataMatrix
         $chr = 0;
 
         $row = 4;
-        
+
         $col = 0;
 
         do
@@ -3305,7 +3340,7 @@ class Barcode_DataMatrix
                 if ( ( $row >= 0 ) && ( $col < $totalCols ) && ( !isset( $assigned[ $row ][ $col ] ) || $assigned[ $row ][ $col ] != 1 ) )
                 {
                     self::patternShapeStandard( $datamatrix, $assigned, $codeWordsBits[ $chr ], $row, $col, $totalRows, $totalCols );
-                    
+
                     $chr++;
                 }
 
@@ -3738,7 +3773,7 @@ class Barcode_QuickResponseCode
 {
     /**
      * Error correction level low.
-     * 
+     *
      * 7% of codewords can be restored.
      *
      * @since  2.0.17
@@ -3895,7 +3930,7 @@ class Barcode_QuickResponseCode
      * @var    array
      */
     private static $ver = array( 1 => array( 34, 41, 17, 27, 63, 77, 34, 48, 101, 127, 58, 77, 149, 187, 82, 111, 202, 255, 106, 144, 255, 322, 139, 178, 293, 370, 154, 207, 365, 461, 202, 259, 432, 552, 235, 312, 513, 652, 288, 364, 604, 772, 331, 427, 691, 883, 374, 489, 796, 1022, 427, 580, 871, 1101, 468, 621, 991, 1250, 530, 703, 1082, 1408, 602, 775, 1212, 1548, 674, 876, 1346, 1725, 746, 948, 1500, 1903, 813, 1063, 1600, 2061, 919, 1159, 1708, 2232, 969, 1224, 1872, 2409, 1056, 1358, 2059, 2620, 1108, 1468, 2188, 2812, 1228, 1588, 2395, 3057, 1286, 1718, 2544, 3283, 1425, 1804, 2701, 3514, 1501, 1933, 2857, 3669, 1581, 2085, 3035, 3909, 1677, 2181, 3289, 4158, 1782, 2358, 3486, 4417, 1897, 2473, 3693, 4686, 2022, 2670, 3909, 4965, 2157, 2805, 4134, 5253, 2301, 2949, 4343, 5529, 2361, 3081, 4588, 5836, 2524, 3244, 4775, 6153, 2625, 3417, 5039, 6479, 2735, 3599, 5313, 6743, 2927, 3791, 5596, 7089, 3057, 3993 ), 2 => array( 20, 25, 10, 16, 38, 47, 20, 29, 61, 77, 35, 47, 90, 114, 50, 67, 122, 154, 64, 87, 154, 195, 84, 108, 178, 224, 93, 125, 221, 279, 122, 157, 262, 335, 143, 189, 311, 395, 174, 221, 366, 468, 200, 259, 419, 535, 227, 296, 483, 619, 259, 352, 528, 667, 283, 376, 600, 758, 321, 426, 656, 854, 365, 470, 734, 938, 408, 531, 816, 1046, 452, 574, 909, 1153, 493, 644, 970, 1249, 557, 702, 1035, 1352, 587, 742, 1134, 1460, 640, 823, 1248, 1588, 672, 890, 1326, 1704, 744, 963, 1451, 1853, 779, 1041, 1542, 1990, 864, 1094, 1637, 2132, 910, 1172, 1732, 2223, 958, 1263, 1839, 2369, 1016, 1322, 1994, 2520, 1080, 1429, 2113, 2677, 1150, 1499, 2238, 2840, 1226, 1618, 2369, 3009, 1307, 1700, 2506, 3183, 1394, 1787, 2632, 3351, 1431, 1867, 2780, 3537, 1530, 1966, 2894, 3729, 1591, 2071, 3054, 3927, 1658, 2181, 3220, 4087, 1774, 2298, 3391, 4296, 1852, 2420 ), 4 => array( 14, 17, 7, 11, 26, 32, 14, 20, 42, 53, 24, 32, 62, 78, 34, 46, 84, 106, 44, 60, 106, 134, 58, 74, 122, 154, 64, 86, 152, 192, 84, 108, 180, 230, 98, 130, 213, 271, 119, 151, 251, 321, 137, 177, 287, 367, 155, 203, 331, 425, 177, 241, 362, 458, 194, 258, 412, 520, 220, 292, 450, 586, 250, 322, 504, 644, 280, 364, 560, 718, 310, 394, 624, 792, 338, 442, 666, 858, 382, 482, 711, 929, 403, 509, 779, 1003, 439, 565, 857, 1091, 461, 611, 911, 1171, 511, 661, 997, 1273, 535, 715, 1059, 1367, 593, 751, 1125, 1465, 625, 805, 1190, 1528, 658, 868, 1264, 1628, 698, 908, 1370, 1732, 742, 982, 1452, 1840, 790, 1030, 1538, 1952, 842, 1112, 1628, 2068, 898, 1168, 1722, 2188, 958, 1228, 1809, 2303, 983, 1283, 1911, 2431, 1051, 1351, 1989, 2563, 1093, 1423, 2099, 2699, 1139, 1499, 2213, 2809, 1219, 1579, 2331, 2953, 1273, 1663 ), 8 => array( 8, 10, 4, 7, 16, 20, 8, 12, 26, 32, 15, 20, 38, 48, 21, 28, 52, 65, 27, 37, 65, 82, 36, 45, 75, 95, 39, 53, 93, 118, 52, 66, 111, 141, 60, 80, 131, 167, 74, 93, 155, 198, 85, 109, 177, 226, 96, 125, 204, 262, 109, 149, 223, 282, 120, 159, 254, 320, 136, 180, 277, 361, 154, 198, 310, 397, 173, 224, 345, 442, 191, 243, 384, 488, 208, 272, 410, 528, 235, 297, 438, 572, 248, 314, 480, 618, 270, 348, 528, 672, 284, 376, 561, 721, 315, 407, 614, 784, 330, 440, 652, 842, 365, 462, 692, 902, 385, 496, 732, 940, 405, 534, 778, 1002, 430, 559, 843, 1066, 457, 604, 894, 1132, 486, 634, 947, 1201, 518, 684, 1002, 1273, 553, 719, 1060, 1347, 590, 756, 1113, 1417, 605, 790, 1176, 1496, 647, 832, 1224, 1577, 673, 876, 1292, 1661, 701, 923, 1362, 1729, 750, 972, 1435, 1817, 784, 1024 ) );
-    
+
     /**
      * Confirmed Arbitrary
      *
@@ -4080,7 +4115,7 @@ class Barcode_QuickResponseCode
 
         switch ( $this->type )
         {
-            case self::NUM: 
+            case self::NUM:
             {
                 $data = str_split( $data, 3 );
 
@@ -4097,7 +4132,7 @@ class Barcode_QuickResponseCode
                 $data[] = $rem;
             }
             break;
-            case self::ALPHA: 
+            case self::ALPHA:
             {
                 $data = str_split( $data, 2 );
 
@@ -4114,7 +4149,7 @@ class Barcode_QuickResponseCode
                 $data[] = $rem;
             }
             break;
-            case self::BIN: 
+            case self::BIN:
             {
                 $data = str_split( $data );
 
@@ -4188,11 +4223,11 @@ class Barcode_QuickResponseCode
         // Initialize frame
         //-------------------------------------------------
 
-        $align = '1111110001101011000111111';
+        $align = '11111100' . '01101011' . '00011111' . '1';
 
         $time = str_pad( '', $this->module_count - 14, '01' );
 
-        $pos = '1111111100000110111011011101101110110000011111111';
+        $pos = '11111111' . '00000110' . '11101101' . '11011011' . '10110000' . '01111111' . '1';
 
         $blank = str_pad( '', 8, '0' );
 
@@ -4332,7 +4367,7 @@ class Barcode_QuickResponseCode
         {
             $this->data .= self::bits( array_shift( $ecc[ 'd' ][ $i % $c ] ), 8 );
         }
-        
+
         if ( isset( $b[ 2 ] ) )
         {
             for ( $i = $b[ 0 ]; $i < $c; $i++ )
@@ -4374,7 +4409,7 @@ class Barcode_QuickResponseCode
             //-------------------------------------------------
             // Skip vertical timing column?
             //-------------------------------------------------
-            
+
             for ( $d = $b[ 0 ]; $d != $b[ 1 ]; $d += $b[ 2 ] )
             {
                 if ( $this->array_of_modules[ $d ][ $c ] == '4' )
@@ -4387,7 +4422,7 @@ class Barcode_QuickResponseCode
                 if ( $this->array_of_modules[ $d ][ $c - 1 ] == '4' )
                 {
                     $this->array_of_modules[ $d ][ $c - 1 ] = $this->data[ $e ];
-                    
+
                     $e++;
                 }
             }
@@ -4420,7 +4455,7 @@ class Barcode_QuickResponseCode
 
             switch( $m )
             {
-                case 0: 
+                case 0:
                 {
                     for ( $i = 0; $i < $this->module_count; $i++ )
                     {
@@ -4434,7 +4469,7 @@ class Barcode_QuickResponseCode
                     }
                 }
                 break;
-                case 1: 
+                case 1:
                 {
                     for ( $i = 0; $i < $this->module_count; $i++ )
                     {
@@ -4448,7 +4483,7 @@ class Barcode_QuickResponseCode
                     }
                 }
                 break;
-                case 2: 
+                case 2:
                 {
                     for ( $i = 0; $i < $this->module_count; $i++ )
                     {
@@ -4490,7 +4525,7 @@ class Barcode_QuickResponseCode
                     }
                 }
                 break;
-                case 5: 
+                case 5:
                 {
                     for ( $i = 0; $i < $this->module_count; $i++ )
                     {
@@ -4518,7 +4553,7 @@ class Barcode_QuickResponseCode
                     }
                 }
                 break;
-                case 7: 
+                case 7:
                 {
                     for ( $i = 0; $i < $this->module_count; $i++ )
                     {
@@ -4636,10 +4671,10 @@ class Barcode_QuickResponseCode
      * @since  2.0.17
      * @access private
      *
-     * @param  integer/string/array $DEFAULT DEFAULT
-     * @param  integer/string/array $DEFAULT DEFAULT
-     * @param  integer/string/array $DEFAULT DEFAULT
-     * @param  integer/string/array $DEFAULT DEFAULT
+     * @param  string  $data  DEFAULT
+     * @param  string  $phase DEFAULT
+     * @param  integer $x     DEFAULT
+     * @param  integer $y     DEFAULT
      */
     private function place( $data, $phase, $x, $y )
     {
@@ -4698,8 +4733,8 @@ class Barcode_QuickResponseCode
      *
      * @static
      *
-     * @param  integer/string/array $DEFAULT DEFAULT
-     * @param  integer/string/array $DEFAULT DEFAULT
+     * @param  array   $d DEFAULT
+     * @param  integer $b DEFAULT
      *
      * @return integer/string/array $DEFAULT DEFAULT
      */
@@ -4718,7 +4753,7 @@ class Barcode_QuickResponseCode
         while ( $i > 0 )
         {
             $b = self::$n2a[ $d[ 0 ] ];
-            
+
             array_shift( $d );
 
             for ( $c = 0; $c < $j; $c++ )
@@ -4740,10 +4775,10 @@ class Barcode_QuickResponseCode
      *
      * @static
      *
-     * @param  integer/string/array $DEFAULT DEFAULT
-     * @param  integer/string/array $DEFAULT DEFAULT
+     * @param  integer $d DEFAULT
+     * @param  integer $l DEFAULT
      *
-     * @return integer/string/array $DEFAULT DEFAULT
+     * @return string DEFAULT
      */
     private static function bits( $d, $l )
     {
@@ -4758,11 +4793,11 @@ class Barcode_QuickResponseCode
      *
      * @static
      *
-     * @param  integer/string/array $DEFAULT DEFAULT
-     * @param  integer/string/array $DEFAULT DEFAULT
-     * @param  integer/string/array $DEFAULT DEFAULT
+     * @param  array   $a   DEFAULT
+     * @param  integer $b   DEFAULT
+     * @param  boolean $arr DEFAULT
      *
-     * @return integer/string/array $DEFAULT DEFAULT
+     * @return string|array  DEFAULT
      */
     private static function transpose( $a, $b, $arr = false )
     {
@@ -4771,7 +4806,7 @@ class Barcode_QuickResponseCode
         $c = count( $a );
 
         $j = 0;
-        
+
         $t = '';
 
         while ( $j < $b )
@@ -4781,7 +4816,7 @@ class Barcode_QuickResponseCode
             while ( $i < $c )
             {
                 $t .= $a[ $i ][ $j ];
-                
+
                 $i++;
             }
 

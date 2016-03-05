@@ -40,28 +40,28 @@ USAGE
 ```php
 try
 {
-    $barcode = new Barcode( array( 'type' => 'qrcode', 'content' => 'test', 'format' => 'png', 'margin' => 10, 'orientaton' => 'portrait' ) );
+    $barcode = new Barcode( array( 'type' => 'qrcode', 'content' => 'test', 'format' => 'png', 'margin' => 10, 'orientaton' => 'bottom' ) );
     $barcode->image();
 
     $barcode = new Barcode();
-    $barcode->type( 'qrcode' )->content( 'test' )->format( 'jpg' )->margin( 10 )->orientaton( 'portrait' )->resize( 100, 50, 'mm', 90 )->image();
+    $barcode->type( 'qrcode' )->content( 'test' )->format( 'jpg' )->margin( 10 )->orientaton( 'right' )->resize( 100, 50, 'mm', 90 )->image();
 
     $barcode = new Barcode();
     $barcode->type( 'qrcode' );
     $barcode->content( 'test' );
     $barcode->format( 'jpg' );
     $barcode->margin( 50 );
+    $barcode->color( 'FF00FF' );
     $barcode->width( 100 );
     $barcode->height( 50 );
     $barcode->scale( 'mm' );
     $barcode->dpi( 90 );
-    $barcode->color( 'FF00FF' );
     $barcode->resize();
     $barcode->create();
     $image_resource = $barcode->resource();
     imagettftext( $image_resource, 10, 0, 20, 30, 0x000000, 'font file path', 'text label' );
     $barcode->resource( $image_resource );
-    $barcode->orientaton( 'portrait' );
+    $barcode->orientaton( 'left' );
     $barcode->image();
 
     $barcode = new Barcode( 'qrcode', 'test' );
@@ -70,13 +70,10 @@ try
 
     $image_data = $barcode->image( true );
 
-    $barcode->image( false );
-
-    $barcode->image( 'barcode.gif' );
-
-    $barcode->image( 'barcode' );
-
-    $barcode->image( '' );
+    $barcode->image( false );         // Start a file download.
+    $barcode->image( 'barcode.gif' ); 
+    $barcode->image( 'barcode' );     // The file extension is added automatically.
+    $barcode->image( '' );            // A file name is automatically created.
 }
 catch ( Exception $Exception )
 {
