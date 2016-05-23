@@ -410,9 +410,9 @@
     }
 
 </style>
-<nav class="page-navigation">
-<ul class="menu-list">
-<li class="menu-item"><a class="menu-item-link" name="test">TEMPLATES</a></li>
+<nav class="PAGE_NAVIGATION">
+<ul class="MENU_LIST">
+<li class="MENU_ITEM"><a class="MENU_ITEM_LINK" name="test">TEMPLATES</a></li>
 </ul>
 </nav>
 <div class="PAGE_HEADLINE">BarCode Coder Library -> Barcode Design Studio</div>
@@ -437,7 +437,7 @@
 
 <form class="FORM_CONTAINER">
 <label class="INPUT_HEADER">BARCODE CONTENT</label>
-<textarea class="INPUT_ELEMENT INPUT_TEXT textarea-resize" name="INPUT_BARCODE_CONTENT" placeholder="BARCODE CONTENT ..." title="SEVERAL BARCODES: SEPARATED BY A NEW LINE OR A COMMA." autocomplete="off" pattern="[\s\d\w]+" required></textarea>
+<textarea class="INPUT_ELEMENT INPUT_TEXT TEXTAREA_RESIZE" name="INPUT_BARCODE_CONTENT" placeholder="BARCODE CONTENT ..." title="SEVERAL BARCODES: SEPARATED BY A NEW LINE OR A COMMA." autocomplete="off" pattern="[\s\d\w]+" required></textarea>
 </form>
 
 <form class="FORM_CONTAINER hidden">
@@ -490,7 +490,7 @@
 <div class="FORM_CONTAINER_INPUT"><label class="INPUT_RADIO_LABEL" for="INPUT_IMAGE_RESIZE_SCALE_3">MILLIMETER (MM)</label><aside class="INPUT_RADIO_ASIDE"><input type="radio" class="INPUT_ELEMENT INPUT_RADIO" name="INPUT_IMAGE_RESIZE_SCALE" id="INPUT_IMAGE_RESIZE_SCALE_3" value="3" checked></aside></div>
 <div class="FORM_CONTAINER_INPUT"><label class="INPUT_RADIO_LABEL" for="INPUT_IMAGE_RESIZE_SCALE_4">PIXELS (PX)</label><aside class="INPUT_RADIO_ASIDE"><input type="radio" class="INPUT_ELEMENT INPUT_RADIO" name="INPUT_IMAGE_RESIZE_SCALE" id="INPUT_IMAGE_RESIZE_SCALE_4" value="4"></aside></div>
 <label class="INPUT_HEADER">IMAGE RESIZE DOTS PER INCH (DPI)</label>
-<div class="FORM_CONTAINER_INPUT"><input type="range" class="INPUT_ELEMENT INPUT_RANGE" name="INPUT_IMAGE_RESIZE_DPI" autocomplete="off" min="60" max="600" step="30" value="300"><input type="text" class="INPUT_ELEMENT INPUT_RANGE_VALUE" name="INPUT_IMAGE_RESIZE_DPI" autocomplete="off" maxlength="5"></div>
+<div class="FORM_CONTAINER_INPUT"><input type="range" class="INPUT_ELEMENT INPUT_RANGE" name="INPUT_IMAGE_RESIZE_DPI" autocomplete="off" min="60" max="600" step="30" value="600"><input type="text" class="INPUT_ELEMENT INPUT_RANGE_VALUE" name="INPUT_IMAGE_RESIZE_DPI" autocomplete="off" maxlength="5"></div>
 </form>
 
 <form class="FORM_CONTAINER">
@@ -499,11 +499,11 @@
 <div class="FORM_CONTAINER_INPUT"><label class="INPUT_RADIO_LABEL" for="INPUT_IMAGE_ORIENTATON_2">RIGHT</label><aside class="INPUT_RADIO_ASIDE"><input type="radio" class="INPUT_ELEMENT INPUT_RADIO" name="INPUT_IMAGE_ORIENTATON" id="INPUT_IMAGE_ORIENTATON_2" value="2"></aside></div>
 <div class="FORM_CONTAINER_INPUT"><label class="INPUT_RADIO_LABEL" for="INPUT_IMAGE_ORIENTATON_3">BOTTOM</label><aside class="INPUT_RADIO_ASIDE"><input type="radio" class="INPUT_ELEMENT INPUT_RADIO" name="INPUT_IMAGE_ORIENTATON" id="INPUT_IMAGE_ORIENTATON_3" value="3"></aside></div>
 <div class="FORM_CONTAINER_INPUT"><label class="INPUT_RADIO_LABEL" for="INPUT_IMAGE_ORIENTATON_4">LEFT</label><aside class="INPUT_RADIO_ASIDE"><input type="radio" class="INPUT_ELEMENT INPUT_RADIO" name="INPUT_IMAGE_ORIENTATON" id="INPUT_IMAGE_ORIENTATON_4" value="4"></aside></div>
-<label class="INPUT_HEADER">IMAGE QUALITY (UNIT IN PERCENT)</label>
+<label class="INPUT_HEADER">IMAGE QUALITY (UNIT IN PERCENT AND ONLY VALID WITH JPEG)</label>
 <div class="FORM_CONTAINER_INPUT"><input type="range" class="INPUT_ELEMENT INPUT_RANGE" name="INPUT_IMAGE_QUALITY" autocomplete="off" min="10" max="100" step="10" value="80"><input type="text" class="INPUT_ELEMENT INPUT_RANGE_VALUE" name="INPUT_IMAGE_QUALITY" autocomplete="off" min="10" max="100" maxlength="5"></div>
 <label class="INPUT_HEADER">IMAGE FORMAT</label>
-<div class="FORM_CONTAINER_INPUT"><label class="INPUT_RADIO_LABEL" for="INPUT_IMAGE_FORMAT_1">GRAPHICS INTERCHANGE FORMAT (GIF)</label><aside class="INPUT_RADIO_ASIDE"><input type="radio" class="INPUT_ELEMENT INPUT_RADIO" name="INPUT_IMAGE_FORMAT" id="INPUT_IMAGE_FORMAT_1" value="1" checked></aside></div>
-<div class="FORM_CONTAINER_INPUT"><label class="INPUT_RADIO_LABEL" for="INPUT_IMAGE_FORMAT_2">PORTABLE NETWORK GRAPHICS (PNG)</label><aside class="INPUT_RADIO_ASIDE"><input type="radio" class="INPUT_ELEMENT INPUT_RADIO" name="INPUT_IMAGE_FORMAT" id="INPUT_IMAGE_FORMAT_2" value="2"></aside></div>
+<div class="FORM_CONTAINER_INPUT"><label class="INPUT_RADIO_LABEL" for="INPUT_IMAGE_FORMAT_1">GRAPHICS INTERCHANGE FORMAT (GIF)</label><aside class="INPUT_RADIO_ASIDE"><input type="radio" class="INPUT_ELEMENT INPUT_RADIO" name="INPUT_IMAGE_FORMAT" id="INPUT_IMAGE_FORMAT_1" value="1"></aside></div>
+<div class="FORM_CONTAINER_INPUT"><label class="INPUT_RADIO_LABEL" for="INPUT_IMAGE_FORMAT_2">PORTABLE NETWORK GRAPHICS (PNG)</label><aside class="INPUT_RADIO_ASIDE"><input type="radio" class="INPUT_ELEMENT INPUT_RADIO" name="INPUT_IMAGE_FORMAT" id="INPUT_IMAGE_FORMAT_2" value="2" checked></aside></div>
 <div class="FORM_CONTAINER_INPUT"><label class="INPUT_RADIO_LABEL" for="INPUT_IMAGE_FORMAT_3">JOINT PHOTOGRAPHIC EXPERTS GROUP (JPEG)</label><aside class="INPUT_RADIO_ASIDE"><input type="radio" class="INPUT_ELEMENT INPUT_RADIO" name="INPUT_IMAGE_FORMAT" id="INPUT_IMAGE_FORMAT_3" value="3"></aside></div>
 <label class="INPUT_HEADER">IMAGE OUTPUT</label>
 <div class="FORM_CONTAINER_INPUT"><label class="INPUT_RADIO_LABEL" for="INPUT_IMAGE_OUTPUT_1">DISPLAY THE IMAGE</label><aside class="INPUT_RADIO_ASIDE"><input type="radio" class="INPUT_ELEMENT INPUT_RADIO" name="INPUT_IMAGE_OUTPUT" id="INPUT_IMAGE_OUTPUT_1" value="1" checked></aside></div>
@@ -754,18 +754,18 @@
 
     function TEXTAREA_RESIZE()
     {
-        var a = document.getElementsByClassName('textarea-resize');
+        var a = document.getElementsByClassName( 'TEXTAREA_RESIZE' );
 
         for ( var b = 0; b < a.length; b++ )
         {
-            a[b].style.height = a[b].scrollHeight + 'px';
+            a[ b ].style.height = a[ b ].scrollHeight + 'px';
 
-            a[b].onkeyup = function(event)
+            a[ b ].onkeyup = function( event )
             {
                 this.style.height = this.scrollHeight + 'px';
             }
         }
     }
-    TEXTAREA_RESIZE();
+    setTimeout( TEXTAREA_RESIZE, 500 );
 
 </script>

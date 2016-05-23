@@ -1081,7 +1081,10 @@ class Barcode
 
         $new_image_resource = imagecreatetruecolor( $this->image_resize_width, $this->image_resize_height );
 
-        imagecopyresampled( $new_image_resource, $this->image_resource, 0, 0, 0, 0, $this->image_resize_width, $this->image_resize_height, $this->image_width, $this->image_height );
+        if ( imagecopyresampled( $new_image_resource, $this->image_resource, 0, 0, 0, 0, $this->image_resize_width, $this->image_resize_height, $this->image_width, $this->image_height ) === false )
+        {
+            throw new Exception( 'When creating the preview image an error has occurred.' );
+        }
 
         imagedestroy( $this->image_resource );
 
