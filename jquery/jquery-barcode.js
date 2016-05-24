@@ -1273,9 +1273,8 @@
         svg += '</svg>';
 
         // create a dom object, flush container and add object to the container
-        object = document.createElement("object");
-        object.setAttribute("type", "image/svg+xml");
-        object.setAttribute("data", "data:image/svg+xml," + svg);
+        object = document.createElement(“img”);
+        object.setAttribute(“src”, "data:image/svg+xml," + encodeURIComponent(svg));
         this.resize($container, width).append(object);
       },
       // svg 1D barcode renderer
