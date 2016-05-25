@@ -1,6 +1,0 @@
----
-    name: Barcode jQuery demo
-    description: This is a jsFiddle demo of jbdemonte/barcode
-    resources:
-      - https://cdn.rawgit.com/jbdemonte/barcode/master/jquery/jquery-barcode.js
-...
