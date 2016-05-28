@@ -46,10 +46,6 @@
     {
         display: none;
     }
-    #submit
-    {
-
-    }
     #barcodeTarget,
     #canvasTarget
     {
@@ -161,15 +157,15 @@ y:<input type="text" id="posY" value="20" size="3">
 
     function generateBarcode()
     {
-        var value = $( "#barcodeValue" ).val();
+        var value = $( '#barcodeValue' ).val();
 
-        var btype = $( "input[name=btype]:checked" ).val();
+        var btype = $( 'input[name=btype]:checked' ).val();
 
-        var renderer = $( "input[name=renderer]:checked" ).val();
+        var renderer = $( 'input[name=renderer]:checked' ).val();
 
         var quietZone = false;
 
-        if ( $( "#quietzone" ).is( ':checked' ) || $( "#quietzone" ).attr( 'checked' ) )
+        if ( $( '#quietzone' ).is( ':checked' ) || $( '#quietzone' ).attr( 'checked' ) )
         {
             quietZone = true;
         }
@@ -178,24 +174,24 @@ y:<input type="text" id="posY" value="20" size="3">
         {
             output:renderer,
 
-            bgColor: $( "#bgColor" ).val(),
+            bgColor: $( '#bgColor' ).val(),
 
-            color: $( "#color" ).val(),
+            color: $( '#color' ).val(),
 
-            barWidth: $( "#barWidth" ).val(),
+            barWidth: $( '#barWidth' ).val(),
 
-            barHeight: $( "#barHeight" ).val(),
+            barHeight: $( '#barHeight' ).val(),
 
-            moduleSize: $( "#moduleSize" ).val(),
+            moduleSize: $( '#moduleSize' ).val(),
 
-            posX: $( "#posX" ).val(),
+            posX: $( '#posX' ).val(),
 
-            posY: $( "#posY" ).val(),
+            posY: $( '#posY' ).val(),
 
-            addQuietZone: $( "#quietZoneSize" ).val()
+            addQuietZone: $( '#quietZoneSize' ).val()
         };
 
-        if ( $( "#rectangular" ).is( ':checked' ) || $( "#rectangular" ).attr( 'checked' ) )
+        if ( $( '#rectangular' ).is( ':checked' ) || $( '#rectangular' ).attr( 'checked' ) )
         {
             value = {code:value, rect: true};
         }
@@ -204,15 +200,15 @@ y:<input type="text" id="posY" value="20" size="3">
         {
             clearCanvas();
 
-            $( "#barcodeTarget" ).hide();
+            $( '#barcodeTarget' ).hide();
 
-            $( "#canvasTarget" ).show().barcode( value, btype, settings );
+            $( '#canvasTarget' ).show().barcode( value, btype, settings );
         }
         else
         {
-            $( "#canvasTarget" ).hide();
+            $( '#canvasTarget' ).hide();
 
-            $( "#barcodeTarget" ).html( "" ).show().barcode( value, btype, settings );
+            $( '#barcodeTarget' ).html( '' ).show().barcode( value, btype, settings );
         }
     }
 

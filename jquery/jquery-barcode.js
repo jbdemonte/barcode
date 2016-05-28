@@ -22,7 +22,7 @@
 
         if ( type === 'string' )
         {
-            val = val.replace( /[^0-9-.]/g, '' );
+            val = val.replace( '/[^0-9-.]/g', '' );
 
             val = parseInt( val * 1, 10 );
 
@@ -85,7 +85,7 @@
                         code = '0' + code;
                     }
 
-                    for ( i = code.length - 1; i > -1; i-- )
+                    for ( i = code.length - 1; i > - 1; i-- )
                     {
                         v = intval( code.charAt( i ) );
 
@@ -364,7 +364,7 @@
 
                 code = code.substring( 0, len );
 
-                for ( i = code.length - 1; i > -1; i-- )
+                for ( i = code.length - 1; i > - 1; i-- )
                 {
                     sum += ( odd ? 3 : 1 ) * intval( code.charAt( i ) );
 
@@ -642,7 +642,7 @@
 
                     index = table.indexOf( c );
 
-                    if ( ( c === '_' ) || ( index < 0 ) )
+                    if ( c === '_' || index < 0 )
                     {
                         return '';
                     }
@@ -707,13 +707,13 @@
             {
                 var i, c, tableCActivated, result, sum, isum = 0, j = 0, value = 0, self = this;
 
-                var tableB = "!\"#$%&'()*+, -./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+                var tableB = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
                 // check each characters
 
                 for ( i = 0; i < code.length; i++ )
                 {
-                    if ( tableB.indexOf( code.charAt( i ) ) === -1 )
+                    if ( tableB.indexOf( code.charAt( i ) ) === - 1 )
                     {
                         return '';
                     }
@@ -753,7 +753,7 @@
 
                         // 6 min everywhere or 4 mini at the end
 
-                        tableCActivated = ( j > 5 ) || ( ( i + j - 1 === code.length ) && ( j > 3 ) );
+                        tableCActivated = ( j > 5 ) || ( i + j - 1 === code.length && j > 3 );
 
                         if ( tableCActivated )
                         {
@@ -766,7 +766,7 @@
 
                         // 2 min for table C so need table B
                     }
-                    else if ( ( i === code.length ) || ( code.charAt( i ) < '0' ) || ( code.charAt( i ) > '9' ) || ( code.charAt( i + 1 ) < '0' ) || ( code.charAt( i + 1 ) > '9' ) )
+                    else if ( i === code.length || code.charAt( i ) < '0' || code.charAt( i ) > '9' || code.charAt( i + 1 ) < '0' || code.charAt( i + 1 ) > '9' )
                     {
                         tableCActivated = false;
 
@@ -893,7 +893,7 @@
 
             champGaloisMult: function( a, b )
             {
-                // MULTIPLICATION IN GALOIS FIELD GF( 2^8 )
+                // Multiplication in galois field gf( 2^8 )
 
                 if ( ! a || ! b )
                 {
@@ -904,7 +904,7 @@
             },
             champGaloisDoub: function( a, b )
             {
-                // THE OPERATION a * 2^b IN GALOIS FIELD GF( 2^8 )
+                // The operation a * 2^b in galois field gf( 2^8 )
 
                 if ( ! a )
                 {
@@ -920,24 +920,24 @@
             },
             champGaloisSum: function( a, b )
             {
-                // SUM IN GALOIS FIELD GF( 2^8 )
+                // Sum in galois field gf( 2^8 )
 
                 return a ^ b;
             },
             selectIndex: function( dataCodeWordsCount, rectangular )
             {
-                // CHOOSE THE GOOD INDEX FOR TABLES
+                // Choose the good index for tables
 
                 var n = 0;
 
                 if ( ( dataCodeWordsCount < 1 || dataCodeWordsCount > 1558 ) && ! rectangular )
                 {
-                    return -1;
+                    return - 1;
                 }
 
                 if ( ( dataCodeWordsCount < 1 || dataCodeWordsCount > 49 ) && rectangular )
                 {
-                    return -1;
+                    return - 1;
                 }
 
                 if ( rectangular )
@@ -1105,19 +1105,19 @@
 
                         chr++;
                     }
-                    else if ( ( etape < 3 ) && ( row === totalRows - 2 ) && ! col && ( totalCols % 4 ) )
+                    else if ( etape < 3 && row === totalRows - 2 && ! col && totalCols % 4 )
                     {
                         self.patternShapeSpecial2( datamatrix, assigned, codeWordsBits[ chr ], totalRows, totalCols );
 
                         chr++;
                     }
-                    else if ( ( row === totalRows - 2 ) && ! col && ( totalCols % 8 === 4 ) )
+                    else if ( row === totalRows - 2 && ! col && totalCols % 8 === 4 )
                     {
                         self.patternShapeSpecial3( datamatrix, assigned, codeWordsBits[ chr ], totalRows, totalCols );
 
                         chr++;
                     }
-                    else if ( ( row === totalRows + 4 ) && ( col === 2 ) && ( totalCols % 8 === 0 ) )
+                    else if ( row === totalRows + 4 && col === 2 && totalCols % 8 === 0 )
                     {
                         self.patternShapeSpecial4( datamatrix, assigned, codeWordsBits[ chr ], totalRows, totalCols );
 
@@ -1128,7 +1128,7 @@
 
                     do
                     {
-                        if ( ( row < totalRows ) && ( col >= 0 ) && ( assigned[ row ][ col ] !== 1 ) )
+                        if ( row < totalRows && col >= 0 && assigned[ row ][ col ] !== 1 )
                         {
                             self.patternShapeStandard( datamatrix, assigned, codeWordsBits[ chr ], row, col, totalRows, totalCols );
 
@@ -1149,7 +1149,7 @@
 
                     do
                     {
-                        if ( ( row >= 0 ) && ( col < totalCols ) && ( assigned[ row ][ col ] !== 1 ) )
+                        if ( row >= 0 && col < totalCols && assigned[ row ][ col ] !== 1 )
                         {
                             self.patternShapeStandard( datamatrix, assigned, codeWordsBits[ chr ], row, col, totalRows, totalCols );
 
@@ -1480,7 +1480,7 @@
 
                 r = v >> 8;
 
-                return( this.cRgb( r, g, b ) );
+                return this.cRgb( r, g, b );
             }
         },
         hexToRGB: function( hex )
@@ -1493,14 +1493,14 @@
 
             r = v >> 8;
 
-            return( {r: r, g: g, b: b} );
+            return { r: r, g: g, b: b };
         },
 
         // test if a string is a hexa string color ( like #FF0000 )
 
         isHexColor: function( value )
         {
-            return value.match( /#[0-91-F]/gi );
+            return value.match( '/#[0-91-F]/gi' );
         },
 
         // encode data in base64
