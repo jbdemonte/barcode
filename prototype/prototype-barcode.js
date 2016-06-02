@@ -19,16 +19,27 @@
         settings:
         {
             barWidth: 1,
+
             barHeight: 50,
+
             moduleSize: 5,
+
             showHRI: true,
+
             addQuietZone: true,
+
             marginHRI: 5,
+
             bgColor: '#FFFFFF',
+
             color: '#000000',
+
             fontSize: 10,
+
             output: 'css',
+
             posX: 0,
+            
             posY: 0
         },
 
@@ -345,7 +356,10 @@
                 }
                 else if ( typeof crc == 'boolean' )
                 {
-                    if ( crc ) code = this.computeMod10( code );
+                    if ( crc )
+                    {
+                    	code = this.computeMod10( code );
+                    }
                 }
 
                 return code;
@@ -429,7 +443,7 @@
         },
         code11:
         {
-            encoding: [  '101011', '1101011', '1001011', '1100101', '1011011', '1101101', '1001101', '1010011', '1101001', '110101', '101101' ],
+            encoding: [ '101011', '1101011', '1001011', '1100101', '1011011', '1101101', '1001101', '1010011', '1101001', '110101', '101101' ],
 
             getDigit: function( code )
             {
@@ -910,7 +924,7 @@
 
                         n++;
                     }
-                    else if ( ( c >= 48 && c <= 57 ) && ( i + 1 < text.length ) && ( text.charCodeAt( i + 1 ) >= 48 && text.charCodeAt( i + 1 ) <= 57 ) )
+                    else if ( c >= 48 && c <= 57 && i + 1 < text.length && text.charCodeAt( i + 1 ) >= 48 && text.charCodeAt( i + 1 ) <= 57 )
                     {
                         c = ( ( c - 48 ) * 10 ) + ( ( text.charCodeAt( i + 1 ) ) - 48 );
 

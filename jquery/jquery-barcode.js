@@ -968,7 +968,7 @@
 
                         n++;
                     }
-                    else if ( ( c >= 48 && c <= 57 ) && ( i + 1 < text.length ) && ( text.charCodeAt( i + 1 ) >= 48 && text.charCodeAt( i + 1 ) <= 57 ) )
+                    else if ( c >= 48 && c <= 57 && i + 1 < text.length && text.charCodeAt( i + 1 ) >= 48 && text.charCodeAt( i + 1 ) <= 57 )
                     {
                         c = ( ( c - 48 ) * 10 ) + ( ( text.charCodeAt( i + 1 ) ) - 48 );
 
