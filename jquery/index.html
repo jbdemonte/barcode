@@ -245,23 +245,23 @@ y:<input type="text" id="posY" value="20" size="3">
         ctx.strokeRect ( 0, 0, canvas.width, canvas.height );
     }
 
-    $( function(){
-
-        $( 'input[name=btype]' ).click( function(){
-
-        if ( $( this ).attr( 'id' ) == 'datamatrix' )
+    $( function()
+    {
+        $( 'input[name=btype]' ).click( function()
         {
-            showConfig2D();
-        }
-        else
-        {
-            showConfig1D();
-        }
+            if ( $( this ).attr( 'id' ) == 'datamatrix' )
+            {
+                showConfig2D();
+            }
+            else
+            {
+                showConfig1D();
+            }
 
         } );
 
-        $( 'input[name=renderer]' ).click( function(){
-
+        $( 'input[name=renderer]' ).click( function()
+        {
             if ( $( this ).attr( 'id' ) == 'canvas' )
             {
                 $( '#miscCanvas' ).show();
