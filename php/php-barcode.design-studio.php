@@ -509,8 +509,12 @@
 <div class="FORM_CONTAINER_INPUT"><label class="INPUT_RADIO_LABEL" for="INPUT_IMAGE_OUTPUT_1">DISPLAY THE IMAGE</label><aside class="INPUT_RADIO_ASIDE"><input type="radio" class="INPUT_ELEMENT INPUT_RADIO" name="INPUT_IMAGE_OUTPUT" id="INPUT_IMAGE_OUTPUT_1" value="1" checked></aside></div>
 <div class="FORM_CONTAINER_INPUT"><label class="INPUT_RADIO_LABEL" for="INPUT_IMAGE_OUTPUT_2">START A FILE DOWNLOAD</label><aside class="INPUT_RADIO_ASIDE"><input type="radio" class="INPUT_ELEMENT INPUT_RADIO" name="INPUT_IMAGE_OUTPUT" id="INPUT_IMAGE_OUTPUT_2" value="2"></aside></div>
 <div class="FORM_CONTAINER_INPUT"><label class="INPUT_RADIO_LABEL" for="INPUT_IMAGE_OUTPUT_3">SAVE THE IMAGE TO A FILE</label><aside class="INPUT_RADIO_ASIDE"><input type="radio" class="INPUT_ELEMENT INPUT_RADIO" name="INPUT_IMAGE_OUTPUT" id="INPUT_IMAGE_OUTPUT_3" value="3"></aside></div>
-<label class="INPUT_HEADER">FILE LOCATION (WRITE PERMISSIONS ARE REQUIRED)</label>
-<input type="text" class="INPUT_ELEMENT INPUT_TEXT" name="INPUT_IMAGE_FILE_NAME" placeholder="DIR NAME / FILE NAME ..." autocomplete="off">
+
+<label class="INPUT_HEADER">FILE NAME FORMAT (WRITE PERMISSIONS ARE REQUIRED)</label>
+<div class="FORM_CONTAINER_INPUT"><label class="INPUT_RADIO_LABEL" for="INPUT_FILE_NAME_FORMAT_1">BARCODE-TYPE-CONTENT.EXTENSION</label><aside class="INPUT_RADIO_ASIDE"><input type="radio" class="INPUT_ELEMENT INPUT_RADIO" name="INPUT_FILE_NAME_FORMAT" id="INPUT_FILE_NAME_FORMAT_1" value="1" checked></aside></div>
+<div class="FORM_CONTAINER_INPUT"><label class="INPUT_RADIO_LABEL" for="INPUT_FILE_NAME_FORMAT_2">BARCODE-TYPE-SHA1(CONTENT).EXTENSION</label><aside class="INPUT_RADIO_ASIDE"><input type="radio" class="INPUT_ELEMENT INPUT_RADIO" name="INPUT_FILE_NAME_FORMAT" id="INPUT_FILE_NAME_FORMAT_2" value="2"></aside></div>
+<input type="text" class="INPUT_ELEMENT INPUT_TEXT" name="INPUT_FILE_NAME_FORMAT" placeholder="FILE NAME ..." autocomplete="off">
+
 </form>
 
 <form class="FORM_CONTAINER">
@@ -573,9 +577,9 @@
             BARCODE_URL += '&' + INDEX + '=' + BARCODE_CONFIGURATION[ INDEX ];
         }
 
-        document.getElementsByClassName('BARCODE_IMAGE')[0].src = './php-barcode.test.php?a=1' + BARCODE_URL;
+        document.getElementsByClassName( 'BARCODE_IMAGE' )[ 0 ].src = './php-barcode.test.php?a=1' + BARCODE_URL;
 
-        document.getElementsByName('BARCODE_CONFIGURATION')[0].innerHTML = BARCODE_URL;
+        document.getElementsByName( 'BARCODE_CONFIGURATION' )[ 0 ].innerHTML = BARCODE_URL;
     }
 
     //-------------------------------------------------
@@ -584,44 +588,45 @@
 
     function INPUT_RANGE()
     {
-        var a = document.getElementsByClassName('INPUT_RANGE');
+        var a = document.getElementsByClassName( 'INPUT_RANGE' );
 
         for ( var b = 0; b < a.length; b++ )
         {
-            document.getElementsByName( a[b].name )[1].value = a[b].value;
+            document.getElementsByName( a[ b ].name )[ 1 ].value = a[ b ].value;
 
-            a[b].oninput = function(event)
+            a[ b ].oninput = function( event )
             {
-                document.getElementsByName( this.name )[1].value = this.value;
+                document.getElementsByName( this.name )[ 1 ].value = this.value;
             }
         }
 
-        var a = document.getElementsByClassName('INPUT_RANGE_VALUE');
+        var a = document.getElementsByClassName( 'INPUT_RANGE_VALUE' );
 
         for ( var b = 0; b < a.length; b++ )
         {
-            a[b].onkeyup = function(event)
+            a[ b ].onkeyup = function( event )
             {
-                document.getElementsByName( this.name )[0].value = this.value;
+                document.getElementsByName( this.name )[ 0 ].value = this.value;
             }
         }
     }
+
     INPUT_RANGE();
 
     //-------------------------------------------------
     // INPUT ELEMENT
     //-------------------------------------------------
 
-    var a = document.getElementsByClassName('INPUT_ELEMENT');
+    var a = document.getElementsByClassName( 'INPUT_ELEMENT' );
 
     for ( var b = 0; b < a.length; b++ )
     {
-        if ( a[b].type == 'text' || a[b].type == 'radio' && a[b].checked == true )
+        if ( a[ b ].type == 'text' || a[ b ].type == 'radio' && a[ b ].checked == true )
         {
-            BARCODE_CONFIGURATION[ a[b].name ] = encodeURIComponent( a[b].value );
+            BARCODE_CONFIGURATION[ a[ b ].name ] = encodeURIComponent( a[ b ].value );
         }
 
-        a[b].onchange = function(event)
+        a[ b ].onchange = function(event)
         {
             BARCODE_CONFIGURATION[ this.name ] = encodeURIComponent( this.value );
 
@@ -735,14 +740,14 @@
 
     function SET_BARCODE_PROPERTY( BARCODE_KEY, BARCODE_VALUE )
     {
-        if ( typeof document.getElementsByName( BARCODE_KEY )[0] != 'undefined' )
+        if ( typeof document.getElementsByName( BARCODE_KEY )[ 0 ] != 'undefined' )
         {
-            document.getElementsByName( BARCODE_KEY )[0].value = BARCODE_VALUE;
+            document.getElementsByName( BARCODE_KEY )[ 0 ].value = BARCODE_VALUE;
         }
 
-        if ( typeof document.getElementsByName( BARCODE_KEY )[1] != 'undefined' )
+        if ( typeof document.getElementsByName( BARCODE_KEY )[ 1 ] != 'undefined' )
         {
-            document.getElementsByName( BARCODE_KEY )[1].value = BARCODE_VALUE;
+            document.getElementsByName( BARCODE_KEY )[ 1 ].value = BARCODE_VALUE;
         }
 
         BARCODE_CONFIGURATION[ BARCODE_KEY ] = encodeURIComponent( BARCODE_VALUE );
@@ -766,6 +771,7 @@
             }
         }
     }
+    
     setTimeout( TEXTAREA_RESIZE, 500 );
 
 </script>

@@ -31,6 +31,16 @@
 class Barcode
 {
     /**
+     * Contains the file name.
+     *
+     * @since   2.0.20
+     * @access  protected
+     *
+     * @var     string
+     */
+    protected $file_name = '';
+
+    /**
      * Contains the image resource.
      *
      * @since   2.0.7
@@ -249,9 +259,14 @@ class Barcode
                         $this->content( $arg_value );
                     }
                     break;
-                    case 'format':
+                    case 'name':
                     {
-                        $this->format( $arg_value );
+                        $this->name( $arg_value );
+                    }
+                    break;
+                    case 'extension':
+                    {
+                        $this->extension( $arg_value );
                     }
                     break;
                     case 'quality':
@@ -368,16 +383,50 @@ class Barcode
     }
 
     /**
-     * Can be called to set a new file output format.
+     * Can be called to set a new file name.
      *
-     * @since   2.0.7
+     * @since   2.0.20
      * @access  public
      *
-     * @param   null|string $value Contains the value of image extensions.
+     * @param   null|string $value Contains the value of file name.
      *
      * @return  Barcode
      */
-    public function format( $value = null )
+    public function name( $value = null )
+    {
+        // if ( is_null( $value ) ): return $this->image_content_type; endif;
+
+        // $this->image_content_type = in_array( $value, $this->array_of_allowed_image_extensions ) ? $value : $this->image_content_type;
+
+        // if ( is_int( $this->barcode_content ) )
+        // {
+        //     echo 'nur zahlen'
+        // }
+
+        // $this->file_name = $value;
+
+        // if ( is_string( $value ) && empty( $value ) == true ): $value = $this->file_name; endif;
+
+        // if ( is_string( $value ) && strrpos( $value, '.' ) == false ): $value .= '.' . $this->image_content_type; endif;
+
+        // if ( is_string( $value ) && is_writeable( dirname( $value ) ) == false ): throw new Exception( 'The specified file path (' . $value . ') is not writable.' ); endif;
+
+        $this->file_name = 'BARCODE-' . strtoupper( $this->barcode_type ) . '-' . strtoupper( sha1( $this->barcode_content ) ) . '.' . $this->image_content_type;
+
+        return $this;
+    }
+
+    /**
+     * Can be called to set a new image extension.
+     *
+     * @since   2.0.20
+     * @access  public
+     *
+     * @param   null|string $value Contains the value of image extension.
+     *
+     * @return  Barcode
+     */
+    public function extension( $value = null )
     {
         if ( is_null( $value ) ): return $this->image_content_type; endif;
 
@@ -1113,13 +1162,13 @@ class Barcode
     {
         if ( is_resource( $this->image_resource ) == false ): $this->create(); endif;
 
-        $file_name = 'BARCODE-' . strtoupper( $this->barcode_type ) . '-' . strtoupper( sha1( $this->barcode_content ) ) . '.' . $this->image_content_type;
+        if ( empty( $this->file_name ) ): $this->name(); endif;
 
         if ( $value === null || $value === false )
         {
             header( 'Content-Type: image/' . $this->image_content_type );
 
-            header( 'Content-Disposition: ' . ( $value === false ? 'attachment;' : '' ) . 'filename="' . $file_name . '"' );
+            header( 'Content-Disposition: ' . ( $value === false ? 'attachment;' : '' ) . 'filename="' . $this->file_name . '"' );
 
             header( 'Cache-Control: no-cache, no-store, must-revalidate' );
 
@@ -1130,25 +1179,19 @@ class Barcode
 
         if ( $value === true ): ob_start(); endif;
 
-        if ( is_string( $value ) && empty( $value ) == true ): $value = $file_name; endif;
-
-        if ( is_string( $value ) && strrpos( $value, '.' ) == false ): $value .= '.' . $this->image_content_type; endif;
-
-        if ( is_string( $value ) && is_writeable( dirname( $value ) ) == false ): throw new Exception( 'The specified file path (' . $value . ') is not writable.' ); endif;
-
         if ( function_exists( 'imagegif' ) && $this->image_content_type == 'gif' )
         {
-            imagegif( $this->image_resource, is_string( $value ) ? $value : null );
+            imagegif( $this->image_resource, is_string( $value ) ? $this->file_name : null );
         }
         else if ( function_exists( 'imagejpeg' ) && $this->image_content_type == 'jpg' || $this->image_content_type == 'jpeg' )
         {
             imageinterlace( $this->image_resource, true );
 
-            imagejpeg( $this->image_resource, is_string( $value ) ? $value : null, round( $this->image_quality ) );
+            imagejpeg( $this->image_resource, is_string( $value ) ? $this->file_name : null, round( $this->image_quality ) );
         }
         else if ( function_exists( 'imagepng' ) && $this->image_content_type == 'png' )
         {
-            imagepng( $this->image_resource, is_string( $value ) ? $value : null, round( 9 * $this->image_quality / 100 ) );
+            imagepng( $this->image_resource, is_string( $value ) ? $this->file_name : null, round( 9 * $this->image_quality / 100 ) );
         }
         else
         {
@@ -4202,7 +4245,9 @@ class Barcode_QuickResponseCode
         if ( $rem > 0 )
         {
             $this->data .= str_pad( '', min( 4, $rem ), '0' );
+
             $this->data .= str_pad( '', 8 - strlen( $this->data ) % 8, '0' );
+
             $this->data .= str_pad( '', $cap - strlen( $this->data ), '11101100' . '00010001' );
         }
 
@@ -4235,6 +4280,7 @@ class Barcode_QuickResponseCode
         $blank = str_pad( '', 8, '0' );
 
         $this->place( $pos, 7, 0, 0 );
+
         $this->place( $pos, 7, $this->module_count - 7, 0 );
 
         //-------------------------------------------------
@@ -4242,6 +4288,7 @@ class Barcode_QuickResponseCode
         //-------------------------------------------------
 
         $this->place( $pos, 7, 0, $this->module_count - 7 );
+
         $this->place( $blank, 1, $this->module_count - 8, 0 );
 
         //-------------------------------------------------
@@ -4253,7 +4300,9 @@ class Barcode_QuickResponseCode
         $blank .= $blank;
 
         $this->place( $blank, 8, $this->module_count - 8, 7 );
+
         $this->place( $blank, 2, 7, $this->module_count - 8 );
+
         $this->place( $blank, 2, 7, 0 );
 
         $blank .= '00';
@@ -4265,6 +4314,7 @@ class Barcode_QuickResponseCode
         //-------------------------------------------------
 
         $this->place( $time, $this->module_count - 14, 7, 6 );
+
         $this->place( $time, 1, 6, 7 );
 
         $this->array_of_modules[ $this->module_count - 8 ][ 8 ] = '1';
@@ -4314,6 +4364,7 @@ class Barcode_QuickResponseCode
                 //-------------------------------------------------
 
                 $this->place( $blank, 3, $this->module_count - 11, 0 );
+
                 $this->place( $blank, 6, 0, $this->module_count - 11 );
             }
         }
@@ -4352,6 +4403,7 @@ class Barcode_QuickResponseCode
             for ( $i = 0; $i < $a[ 0 ]; $i++ )
             {
                 $ecc[ 'd' ][] = array_splice( $this->data, 0, $a[ 1 ] );
+
                 $ecc[ 'e' ][] = self::crc2( end( $ecc[ 'd' ] ), $e );
             }
         }
@@ -4648,10 +4700,15 @@ class Barcode_QuickResponseCode
         $f = self::bits( ( self::crc( $f, 1335 ) + ( $f << 10 ) ) ^ 21522, 15 );
 
         $this->place( substr( $f, 7, 8 ), 8, $this->module_count - 8, 8 );
+
         $this->place( strrev( substr( $f, 0, 7 ) ), 1, 8, $this->module_count - 7 );
+
         $this->place( strrev( substr( $f, 9, 6 ) ), 1, 8, 0 );
+
         $this->place( strrev( substr( $f, 7, 2 ) ), 1, 8, 7 );
+
         $this->place( substr( $f, 6, 1 ), 1, 7, 8 );
+
         $this->place( substr( $f, 0, 6 ), 6, 0, 8 );
 
         //-------------------------------------------------
@@ -4661,9 +4718,11 @@ class Barcode_QuickResponseCode
         if ( $this->vers > 5 )
         {
             $v = $this->vers + 1;
+
             $v = strrev( self::bits( self::crc( $v, 7973 ) + ( $v << 12 ), 18 ) );
 
             $this->place( $v, 3, $this->module_count - 11, 0 );
+
             $this->place( self::transpose( $v, 3 ), 6, 0, $this->module_count - 11 );
         }
     }

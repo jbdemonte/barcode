@@ -16,23 +16,23 @@
 
     if ( count( $_GET ) )
     {
-        $INPUT_BARCODE_TYPE = $INPUT_BARCODE_CONTENT = $INPUT_BARCODE_MARGIN_TOP = $INPUT_BARCODE_MARGIN_RIGHT = $INPUT_BARCODE_MARGIN_BOTTOM = $INPUT_BARCODE_MARGIN_LEFT = $INPUT_IMAGE_RESIZE_WIDTH = $INPUT_IMAGE_RESIZE_HEIGHT = $INPUT_IMAGE_RESIZE_SCALE = $INPUT_IMAGE_RESIZE_DPI = $INPUT_IMAGE_ORIENTATON = $INPUT_IMAGE_QUALITY = $INPUT_IMAGE_FORMAT = $INPUT_IMAGE_OUTPUT = $INPUT_IMAGE_FILE_NAME = null;
+        $INPUT_BARCODE_TYPE = $INPUT_BARCODE_CONTENT = $INPUT_BARCODE_MARGIN_TOP = $INPUT_BARCODE_MARGIN_RIGHT = $INPUT_BARCODE_MARGIN_BOTTOM = $INPUT_BARCODE_MARGIN_LEFT = $INPUT_IMAGE_RESIZE_WIDTH = $INPUT_IMAGE_RESIZE_HEIGHT = $INPUT_IMAGE_RESIZE_SCALE = $INPUT_IMAGE_RESIZE_DPI = $INPUT_IMAGE_ORIENTATON = $INPUT_IMAGE_QUALITY = $INPUT_IMAGE_FORMAT = $INPUT_IMAGE_OUTPUT = $INPUT_FILE_NAME_FORMAT = null;
 
-        if ( isset( $_REQUEST['INPUT_BARCODE_TYPE'] ) ): $INPUT_BARCODE_TYPE = $_REQUEST['INPUT_BARCODE_TYPE']; endif;
-        if ( isset( $_REQUEST['INPUT_BARCODE_CONTENT'] ) ): $INPUT_BARCODE_CONTENT = htmlentities( stripslashes( urldecode( trim( $_REQUEST['INPUT_BARCODE_CONTENT'] ) ) ), ENT_QUOTES, 'UTF-8' ); endif;
-        if ( isset( $_REQUEST['INPUT_BARCODE_MARGIN_TOP'] ) ): $INPUT_BARCODE_MARGIN_TOP = intval( $_REQUEST['INPUT_BARCODE_MARGIN_TOP'] ); endif;
-        if ( isset( $_REQUEST['INPUT_BARCODE_MARGIN_RIGHT'] ) ): $INPUT_BARCODE_MARGIN_RIGHT = intval( $_REQUEST['INPUT_BARCODE_MARGIN_RIGHT'] ); endif;
-        if ( isset( $_REQUEST['INPUT_BARCODE_MARGIN_BOTTOM'] ) ): $INPUT_BARCODE_MARGIN_BOTTOM = intval( $_REQUEST['INPUT_BARCODE_MARGIN_BOTTOM'] ); endif;
-        if ( isset( $_REQUEST['INPUT_BARCODE_MARGIN_LEFT'] ) ): $INPUT_BARCODE_MARGIN_LEFT = intval( $_REQUEST['INPUT_BARCODE_MARGIN_LEFT'] ); endif;
-        if ( isset( $_REQUEST['INPUT_IMAGE_RESIZE_WIDTH'] ) ): $INPUT_IMAGE_RESIZE_WIDTH = intval( $_REQUEST['INPUT_IMAGE_RESIZE_WIDTH'] ); endif;
-        if ( isset( $_REQUEST['INPUT_IMAGE_RESIZE_HEIGHT'] ) ): $INPUT_IMAGE_RESIZE_HEIGHT = intval( $_REQUEST['INPUT_IMAGE_RESIZE_HEIGHT'] ); endif;
-        if ( isset( $_REQUEST['INPUT_IMAGE_RESIZE_SCALE'] ) ): $INPUT_IMAGE_RESIZE_SCALE = intval( $_REQUEST['INPUT_IMAGE_RESIZE_SCALE'] ); endif;
-        if ( isset( $_REQUEST['INPUT_IMAGE_RESIZE_DPI'] ) ): $INPUT_IMAGE_RESIZE_DPI = intval( $_REQUEST['INPUT_IMAGE_RESIZE_DPI'] ); endif;
-        if ( isset( $_REQUEST['INPUT_IMAGE_ORIENTATON'] ) ): $INPUT_IMAGE_ORIENTATON = intval( $_REQUEST['INPUT_IMAGE_ORIENTATON'] ); endif;
-        if ( isset( $_REQUEST['INPUT_IMAGE_QUALITY'] ) ): $INPUT_IMAGE_QUALITY = intval( $_REQUEST['INPUT_IMAGE_QUALITY'] ); endif;
-        if ( isset( $_REQUEST['INPUT_IMAGE_FORMAT'] ) ): $INPUT_IMAGE_FORMAT = intval( $_REQUEST['INPUT_IMAGE_FORMAT'] ); endif;
-        if ( isset( $_REQUEST['INPUT_IMAGE_OUTPUT'] ) ): $INPUT_IMAGE_OUTPUT = intval( $_REQUEST['INPUT_IMAGE_OUTPUT'] ); endif;
-        if ( isset( $_REQUEST['INPUT_IMAGE_FILE_NAME'] ) ): $INPUT_IMAGE_FILE_NAME = htmlentities( stripslashes( urldecode( trim( $_REQUEST['INPUT_IMAGE_FILE_NAME'] ) ) ), ENT_QUOTES, 'UTF-8' ); endif;
+        if ( isset( $_REQUEST[ 'INPUT_BARCODE_TYPE' ] ) ): $INPUT_BARCODE_TYPE = $_REQUEST[ 'INPUT_BARCODE_TYPE']; endif;
+        if ( isset( $_REQUEST[ 'INPUT_BARCODE_CONTENT' ] ) ): $INPUT_BARCODE_CONTENT = htmlentities( stripslashes( urldecode( trim( $_REQUEST[ 'INPUT_BARCODE_CONTENT'] ) ) ), ENT_QUOTES, 'UTF-8' ); endif;
+        if ( isset( $_REQUEST[ 'INPUT_BARCODE_MARGIN_TOP' ] ) ): $INPUT_BARCODE_MARGIN_TOP = intval( $_REQUEST[ 'INPUT_BARCODE_MARGIN_TOP' ] ); endif;
+        if ( isset( $_REQUEST[ 'INPUT_BARCODE_MARGIN_RIGHT' ] ) ): $INPUT_BARCODE_MARGIN_RIGHT = intval( $_REQUEST[ 'INPUT_BARCODE_MARGIN_RIGHT' ] ); endif;
+        if ( isset( $_REQUEST[ 'INPUT_BARCODE_MARGIN_BOTTOM' ] ) ): $INPUT_BARCODE_MARGIN_BOTTOM = intval( $_REQUEST[ 'INPUT_BARCODE_MARGIN_BOTTOM' ] ); endif;
+        if ( isset( $_REQUEST[ 'INPUT_BARCODE_MARGIN_LEFT' ] ) ): $INPUT_BARCODE_MARGIN_LEFT = intval( $_REQUEST[ 'INPUT_BARCODE_MARGIN_LEFT' ] ); endif;
+        if ( isset( $_REQUEST[ 'INPUT_IMAGE_RESIZE_WIDTH' ] ) ): $INPUT_IMAGE_RESIZE_WIDTH = intval( $_REQUEST[ 'INPUT_IMAGE_RESIZE_WIDTH' ] ); endif;
+        if ( isset( $_REQUEST[ 'INPUT_IMAGE_RESIZE_HEIGHT' ] ) ): $INPUT_IMAGE_RESIZE_HEIGHT = intval( $_REQUEST[ 'INPUT_IMAGE_RESIZE_HEIGHT' ] ); endif;
+        if ( isset( $_REQUEST[ 'INPUT_IMAGE_RESIZE_SCALE' ] ) ): $INPUT_IMAGE_RESIZE_SCALE = intval( $_REQUEST[ 'INPUT_IMAGE_RESIZE_SCALE' ] ); endif;
+        if ( isset( $_REQUEST[ 'INPUT_IMAGE_RESIZE_DPI' ] ) ): $INPUT_IMAGE_RESIZE_DPI = intval( $_REQUEST[ 'INPUT_IMAGE_RESIZE_DPI' ] ); endif;
+        if ( isset( $_REQUEST[ 'INPUT_IMAGE_ORIENTATON' ] ) ): $INPUT_IMAGE_ORIENTATON = intval( $_REQUEST[ 'INPUT_IMAGE_ORIENTATON' ] ); endif;
+        if ( isset( $_REQUEST[ 'INPUT_IMAGE_QUALITY' ] ) ): $INPUT_IMAGE_QUALITY = intval( $_REQUEST[ 'INPUT_IMAGE_QUALITY' ] ); endif;
+        if ( isset( $_REQUEST[ 'INPUT_IMAGE_FORMAT' ] ) ): $INPUT_IMAGE_FORMAT = intval( $_REQUEST[ 'INPUT_IMAGE_FORMAT' ] ); endif;
+        if ( isset( $_REQUEST[ 'INPUT_IMAGE_OUTPUT' ] ) ): $INPUT_IMAGE_OUTPUT = intval( $_REQUEST[ 'INPUT_IMAGE_OUTPUT' ] ); endif;
+        if ( isset( $_REQUEST[ 'INPUT_FILE_NAME_FORMAT' ] ) ): $INPUT_FILE_NAME_FORMAT = htmlentities( stripslashes( urldecode( trim( $_REQUEST[ 'INPUT_FILE_NAME_FORMAT'] ) ) ), ENT_QUOTES, 'UTF-8' ); endif;
 
         try
         {
@@ -58,7 +58,9 @@
             $barcode->content( $INPUT_BARCODE_CONTENT );
 
             $barcode->margin( $INPUT_BARCODE_MARGIN_TOP, $INPUT_BARCODE_MARGIN_RIGHT, $INPUT_BARCODE_MARGIN_BOTTOM, $INPUT_BARCODE_MARGIN_LEFT );
+            
             $barcode->width( $INPUT_IMAGE_RESIZE_WIDTH );
+
             $barcode->height( $INPUT_IMAGE_RESIZE_HEIGHT );
 
             switch ( $INPUT_IMAGE_RESIZE_SCALE )
@@ -71,6 +73,7 @@
             }
 
             $barcode->dpi( $INPUT_IMAGE_RESIZE_DPI );
+
             $barcode->resize();
 
             switch ( $INPUT_IMAGE_ORIENTATON )
@@ -87,17 +90,19 @@
             switch ( $INPUT_IMAGE_FORMAT )
             {
                 default:
-                case 1: $barcode->format( 'gif' ); break;
-                case 2: $barcode->format( 'png' ); break;
-                case 3: $barcode->format( 'jpg' ); break;
+                case 1: $barcode->extension( 'gif' ); break;
+                case 2: $barcode->extension( 'png' ); break;
+                case 3: $barcode->extension( 'jpg' ); break;
             }
+
+            $barcode->name( $INPUT_FILE_NAME_FORMAT );
 
             switch ( $INPUT_IMAGE_OUTPUT )
             {
                 default:
-                case 1: $barcode->image(); break;
+                case 1: $barcode->image( null ); break;
                 case 2: $barcode->image( false ); break;
-                case 3: $barcode->image( $INPUT_IMAGE_FILE_NAME ); break;
+                case 3: $barcode->image( '' ); break;
             }
         }
         catch ( Exception $Exception )

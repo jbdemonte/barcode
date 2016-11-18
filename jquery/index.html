@@ -161,7 +161,7 @@ y:<input type="text" id="posY" value="20" size="3">
 
         var btype = $( 'input[name=btype]:checked' ).val();
 
-        var renderer = $( 'input[name=renderer]:checked' ).val();
+        var renderer = $( 'input[name="renderer"]:checked' ).val();
 
         var quietZone = false;
 
@@ -245,9 +245,9 @@ y:<input type="text" id="posY" value="20" size="3">
         ctx.strokeRect ( 0, 0, canvas.width, canvas.height );
     }
 
-    $( function()
+    $(function()
     {
-        $( 'input[name=btype]' ).click( function()
+        $( 'input[name="btype"]' ).click( function()
         {
             if ( $( this ).attr( 'id' ) == 'datamatrix' )
             {
@@ -258,9 +258,9 @@ y:<input type="text" id="posY" value="20" size="3">
                 showConfig1D();
             }
 
-        } );
+        });
 
-        $( 'input[name=renderer]' ).click( function()
+        $( 'input[name="renderer"]' ).click( function()
         {
             if ( $( this ).attr( 'id' ) == 'canvas' )
             {
@@ -271,10 +271,10 @@ y:<input type="text" id="posY" value="20" size="3">
                 $( '#miscCanvas' ).hide();
             }
 
-        } );
+        });
 
         generateBarcode();
 
-    } );
+    });
 
 </script>

@@ -184,7 +184,7 @@ y : <input type="text" id="posY" value="20" size="3"><br />
 
     function showConfig( event )
     {
-        var element = Event.element( event );
+        var element = event.element( event );
 
         if ( element.id ==  'datamatrix' )
         {
@@ -202,7 +202,7 @@ y : <input type="text" id="posY" value="20" size="3"><br />
 
     function showConfigRenderer( event )
     {
-        var element = Event.element( event );
+        var element = event.element( event );
 
         if ( element.id ==  'canvas' )
         {
@@ -233,7 +233,7 @@ y : <input type="text" id="posY" value="20" size="3"><br />
         ctx.strokeRect( 0, 0, canvas.width, canvas.height );
     }
 
-    Event.observe( window, 'load', function()
+    event.observe( window, 'load', function()
     {
         var btypeGrp = document[ 'forms' ][ 'form' ][ 'btype' ];
 
@@ -253,11 +253,11 @@ y : <input type="text" id="posY" value="20" size="3"><br />
 
         $( 'css' ).click();
 
-    } );
+    });
 
     $( function()
     {
-        $( 'input[name=btype]' ).click( function()
+        $( 'input[name="btype"]' ).click( function()
         {
             if ( $( this ).attr( 'id' ) == 'datamatrix' )
             {
@@ -270,7 +270,7 @@ y : <input type="text" id="posY" value="20" size="3"><br />
 
         } );
 
-        $( 'input[ name=renderer ]' ).click( function()
+        $( 'input[name="renderer"]' ).click( function()
         {
             if ( $( this ).attr( 'id' ) == 'canvas' )
             {
@@ -281,10 +281,10 @@ y : <input type="text" id="posY" value="20" size="3"><br />
                 $( 'miscCanvas' ).hide();
             }
 
-        } );
+        });
 
         generateBarcode();
 
-    } );
+    });
 
 </script>
