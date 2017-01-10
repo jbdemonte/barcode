@@ -2645,7 +2645,7 @@ class Barcode_Code128
      */
     public static function getDigit( $code )
     {
-        $tableB = " !\"#$%&'()*+, -./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[ \ ]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+        $tableB = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
         $result = '';
 
@@ -2677,7 +2677,7 @@ class Barcode_Code128
         // start with C table only if enought numeric
         //-------------------------------------------------
 
-        $tableCActivated = $len> 1;
+        $tableCActivated = $len > 1;
 
         $c = '';
 
@@ -3095,7 +3095,7 @@ class Barcode_DataMatrix
     {
         if ( ( $dataCodeWordsCount < 1 || $dataCodeWordsCount > 1558 ) && ! $rectangular ) return ( -1 );
 
-        if ( ( $dataCodeWordsCount < 1 || $dataCodeWordsCount > 49 ) && $rectangular )  return ( -1 );
+        if ( ( $dataCodeWordsCount < 1 || $dataCodeWordsCount > 49 ) && $rectangular ) return ( -1 );
 
         $n = $rectangular ? 24 : 0;
 
@@ -3138,7 +3138,7 @@ class Barcode_DataMatrix
             }
             else if ( ( $c >= 48 && $c <= 57 ) && ( $i + 1 < $len ) && ( preg_match( '`[0-9]`', $text[ $i + 1 ] ) ) )
             {
-                $c = ( ( $c - 48 ) * 10 ) + intval( $text[ $i+1 ] );
+                $c = ( ( $c - 48 ) * 10 ) + intval( $text[ $i + 1 ] );
 
                 $c += 130;
 
@@ -3171,7 +3171,7 @@ class Barcode_DataMatrix
      */
     private static function addPadCW( &$tab, $from, $to )
     {
-        if ( $from >= $to ) return ;
+        if ( $from >= $to ) return;
 
         $tab[ $from ] = 129;
 
@@ -3383,7 +3383,7 @@ class Barcode_DataMatrix
 
             do
             {
-                if ( ( $row >= 0 ) && ( $col < $totalCols ) && ( !isset( $assigned[ $row ][ $col ] ) || $assigned[ $row ][ $col ] != 1 ) )
+                if ( ( $row >= 0 ) && ( $col < $totalCols ) && ( ! isset( $assigned[ $row ][ $col ] ) || $assigned[ $row ][ $col ] != 1 ) )
                 {
                     self::patternShapeStandard( $datamatrix, $assigned, $codeWordsBits[ $chr ], $row, $col, $totalRows, $totalCols );
 
