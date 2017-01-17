@@ -129,14 +129,14 @@ class Barcode {
     }
 
     // convert a bit string to an array of array of bit char
-    private static function bitStringTo2DArray( $digit ){
+    public static function bitStringTo2DArray( $digit ){
         $d = array();
         $len = strlen($digit);
         for($i=0; $i<$len; $i++) $d[$i] = $digit[$i];
         return(array($d));
     }
 
-    private static function digitToRenderer($fn, $xi, $yi, $angle, $mw, $mh, $digit){
+    public static function digitToRenderer($fn, $xi, $yi, $angle, $mw, $mh, $digit){
         $lines = count($digit);
         $columns = count($digit[0]);
         $angle = deg2rad(-$angle);
@@ -196,7 +196,8 @@ class Barcode {
         $pdf->SetDrawColor($color[0],$color[1],$color[2]);
         $pdf->SetFillColor($color[0],$color[1],$color[2]);
 
-        $fn = function($points) use ($pdf) {
+        $fn = function($points) use ($pdf)
+        {
             $op = 'f';
             $h = $pdf->h;
             $k = $pdf->k;
