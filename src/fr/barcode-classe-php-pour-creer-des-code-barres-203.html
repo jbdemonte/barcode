@@ -1,0 +1,144 @@
+---
+layout: default
+title: "BARCODE : CLASSE PHP DE CREATION DE CODE-BARRES EN GD ET PDF"
+description: "Barcode : classe PHP de génération de code-barres data matrix, ean 8, ean 13, code 128, 2 parmi 5 entrelace et standard, code 11, code 39, code 93, codabar, msi"
+language: fr
+highlight: true
+---
+<h1>Classe PHP : barcode</h1>
+<p id="version" class="version-php">
+    Version : {{site.data.releases.php.version}}<br />
+    Licence : GPL / Cecill<br />
+    Date : {{site.data.releases.php.date}}<br />
+    Auteur: DEMONTE Jean-Baptiste, HOUREZ Jonathan<br /><br />
+    <a href="/download/{{site.data.releases.php.file}}">Télécharger PHP Barcode {{site.data.releases.php.version}}</a>
+</p>
+
+<h2>Installation de la classe PHP Barcode</h2>
+
+<p>Comme toute classe, il suffit d'inclure le fichier source.</p>
+
+<pre class="php:nocontrols:nogutter">
+  include('Barcode.php');
+</pre>
+
+<p>Elle va définir les classes :</p>
+<ul>
+    <li>Barcode</li>
+    <li>BarcodeI25</li>
+    <li>BarcodeEAN</li>
+    <li>BarcodeMSI</li>
+    <li>Barcode11</li>
+    <li>Barcode39</li>
+    <li>Barcode93</li>
+    <li>Barcode128</li>
+    <li>BarcodeCodabar</li>
+    <li>BarcodeDatamatrix</li>
+</ul>
+
+
+<h2>Utilisation de la classe PHP Barcode</h2>
+
+<p>Pour utiliser cette classe, deux méthodes statiques sont disponibles, l'une destinée à une ressource gd et l'autre à une ressource fpdf</p>
+
+<pre class="php:nocontrols:nogutter">
+  Barcode::gd($res, $color, $x, $y, $angle, $type, $datas, $width = null, $height = null);
+  Barcode::fpdf($res, $color, $x, $y, $angle, $type, $datas, $width = null, $height = null);
+</pre>
+
+<h4>$res</h4>
+<p>ressource gd ou fpdf<br /><br />L'unité de mesure dépend de la ressource : pixel pour GD et définit dans le constructeur pour fpdf.
+
+<h4>$color</h4>
+<p>int, chaine<br /><br />Descripteur de la couleur (int) pour GD et chaine hexadécimale pour fpdf (ex: "FF0000")</p>
+
+<h4>$x, $y</h4>
+<p>numérique<br /><br /> Coordonnées du centre du code-barres</p>
+
+<h4>$angle</h4>
+<p>numérique<br /><br />Angle de rotation en degré</p>
+
+<h4>$datas</h4>
+<p>string<br /><br />Valeur du code barres (dépendante du type de code barres)<br />Si le type de code barres en inclus, la présence de checksum n'est pas obligatoire, il est automatiquement recalculé</p>
+<p>tableau<br /><br /></p>
+
+<table class="barcode-details">
+    <tr><th class="label" colspan="2">type : ean8, ean13, code11, code39, code128, codabar</th></tr>
+    <tr><th class="label">member</th><th class="type">Type</th></tr>
+    <tr><td>code</td><td>string</td></tr>
+</table>
+
+<table class="barcode-details">
+    <tr><th class="label" colspan="2">type : std25, int25, code93</th></tr>
+    <tr><th class="label">member</th><th class="type">Type</th></tr>
+    <tr><td>code</td><td>string</td></tr>
+    <tr><td>crc</td><td>boolean</td></tr>
+</table>
+
+<table class="barcode-details">
+    <tr><th class="label" colspan="3">type : msi</th></tr>
+    <tr><th class="label">member</th><th class="type" colspan="2">Type</th></tr>
+    <tr><td>code</td><td colspan="2">string</td></tr>
+    <tr><td rowspan="3">crc</td><td colspan="2">boolean</td></tr>
+    <tr><td rowspan="2">tableau</td><td>crc1 : string("mod10", "mod11")</td></tr>
+    <tr><td>crc2 : string("mod10", "mod11")</td></tr>
+    </tr>
+</table>
+
+<table class="barcode-details">
+    <tr><th class="label" colspan="2">type : datamatrix</th></tr>
+    <tr><th class="label">member</th><th class="type">Type</th></tr>
+    <tr><td>code</td><td>string</td></tr>
+    <tr><td>rect</td><td>boolean (defaut : false)</td></tr>
+</table>
+
+<h4>type (string)</h4>
+<ul>
+    <li>codabar</li>
+    <li>code11 (code 11)</li>
+    <li>code39 (code 39)</li>
+    <li>code93 (code 93)</li>
+    <li>code128 (code 128)</li>
+    <li>ean8 (ean 8)</li>
+    <li>ean13 (ean 13)</li>
+    <li>std25 (2 parmi 5 standart - industriel)</li>
+    <li>int25 (2 parmi 5 entrelacé)</li>
+    <li>msi</li>
+    <li>datamatrix (ASCII + étendu)</li>
+</ul>
+
+<h4>$width, $height</h4>
+<p>numérique<br /><br />hauteur et largeur d'un module, pour les code-barres 2D (datamatrix), $height n'est pas utilisé</p>
+
+<h4>&lt;&lt; Retour &gt;&gt;</h4>
+<p>Ces deux méthodes retournent un tableau contenant les dimensions du code-barres ainsi que les coordonnées de ses extrémités</p>
+<pre class="php:nocontrols:nogutter">
+array(
+        'width' => w,
+        'height'=> h,
+        'p1' => array('x' => x, 'y' => y),
+        'p2' => array('x' => x, 'y' => y),
+        'p3' => array('x' => x, 'y' => y),
+        'p4' => array('x' => x, 'y' => y)
+      );
+</pre>
+
+<p>Exemple :</p>
+
+<pre class="php:nocontrols:nogutter">
+  $im     = imagecreatetruecolor(300, 300);
+  $black  = ImageColorAllocate($im,0x00,0x00,0x00);
+  $white  = ImageColorAllocate($im,0xff,0xff,0xff);
+  imagefilledrectangle($im, 0, 0, 300, 300, $white);
+  $data = Barcode::gd($im, $black, 150, 150, 0, "code128", "12345678", 2, 50);
+</pre>
+
+<p>La fonction "rotate" permet de calculer les coordonnées de rotation de point, trés utile pour centrer la "hri" (human readable interpretation)</p>
+
+<p>Exemple</p>
+<pre class="php:nocontrols:nogutter">
+  $box = imagettfbbox($fontSize, 0, $font, $data['hri']);
+  $len = $box[2] - $box[0];
+  Barcode::rotate(-$len / 2, ($data['height'] / 2) + $fontSize + $marge, $angle, $xt, $yt);
+  imagettftext($im, $fontSize, $angle, $x + $xt, $y + $yt, $blue, $font, $data['hri']);
+</pre>

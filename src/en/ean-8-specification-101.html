@@ -1,0 +1,149 @@
+---
+layout: default
+title: "EAN 8 : SYMBOLOGY, SPECIFICATION, EXPLANATION, CHECKSUM"
+description: "EAN 8 : online ean 8 barcode generator, formula, detailed explanations, examples..."
+language: en
+script: ean8.js
+---
+<h1>EAN 8 BARCODE</h1>
+
+<h2>Format of the EAN 8</h2>
+
+<table class="synthese">
+    <tbody>
+    <tr>
+        <th>Length</th>
+        <th>Type</th>
+        <th>checksum</th>
+    </tr>
+    <tr>
+        <td>8 digits</td>
+        <td>numeric</td>
+        <td>yes</td>
+    </tr>
+    </tbody>
+</table>
+
+<p>The EAN 8 is composed by 7 data digits + 1 checksum digit.<br /><br />The EAN 8 is derived from EAN 13. It is based on the same tables as EAN 13 and has the same checksum calculation.</p>
+
+<br />
+
+<h2>Calculating the EAN 8 checksum</h2>
+
+<p>Calculating the EAN 8 checksum digit is very simple :</p>
+
+<ul>
+    <li>The digit are used from right to left</li>
+</ul>
+
+<img src="../picture/ean8-lecture.jpg" class="centered" />
+
+<ul>
+    <li>Calculate the sum of the numbers of odd and even positions</li>
+</ul>
+
+<img src="../picture/ean8-checksum.jpg" class="centered" />
+
+<ul>
+    <li>Odd : 1 + 3 + 5 + 7 = 16</li>
+    <li>Even : 2 + 4 + 6 = 12</li>
+</ul>
+
+<h3>EAN 8 checksum formula :</h3>
+
+<p> ( 10 - [ (3 * Odd + Even) modulo 10 ] ) modulo 10</p>
+<p>Thus, the example :</p>
+<ul>
+    <li>(10 - [ (3 * 16 + 12) module 10 ] ) modulo 10</li>
+    <li>(10 - [ (48 + 12) module 10 ] ) modulo 10</li>
+    <li>(10 - [ (60) module 10 ] ) modulo 10</li>
+    <li>(10 - [ 0 ] ) modulo 10</li>
+    <li>(10 - 0) modulo 10</li>
+    <li>10 modulo 10</li>
+    <li>0</li>
+</ul>
+<p>So, the checksum of 7654321 is 0</p>
+
+<h3>EAN 8 checksum generator : </h3>
+<p>
+    EAN 8 message :
+    <input type="text" id="ean8Message" maxlength="7">
+    Checksum : <span id="ean8Checksum"></span>
+</p>
+
+<h2>Binary sequence of EAN 8 barcode</h2>
+
+<h4>Start</h4>
+
+<p>A start sequence starts the barcode : <strong>101</strong></p>
+
+<p>The 8 digits will be separated into 2 parts, namely the left part from the 1st to the 4th digit and the right part from the 5th to the 8th digit</p>
+
+<img src="../picture/ean8-2part.jpg" class="centered" />
+
+<h4>Part #1</h4>
+
+<p>The first part is encoded according to the following table :</p>
+
+<table class="binary">
+    <tr><th>digit</th><th>sequence</th></tr>
+    <tr><td>0</td><td>0001101</td></tr>
+    <tr><td>1</td><td>0011001</td></tr>
+    <tr><td>2</td><td>0010011</td></tr>
+    <tr><td>3</td><td>0111101</td></tr>
+    <tr><td>4</td><td>0100011</td></tr>
+    <tr><td>5</td><td>0110001</td></tr>
+    <tr><td>6</td><td>0101111</td></tr>
+    <tr><td>7</td><td>0111011</td></tr>
+    <tr><td>8</td><td>0110111</td></tr>
+    <tr><td>9</td><td>0001011</td></tr>
+</table>
+
+<p>Part #1 will be <strong>0011001 0010011 0111101 0100011</strong></p>
+
+<h4>Intermediate</h4>
+
+<p>An intermediate sequence separate the 2 parts : <strong>01010</strong></p>
+
+<h4>Part #2</h4>
+
+<p>The second part is encoded according to the following table :</p>
+
+<table class="binary">
+    <tr><th>digit</th><th>séquence</th></tr>
+    <tr><td>0</td><td>1110010</td></tr>
+    <tr><td>1</td><td>1100110</td></tr>
+    <tr><td>2</td><td>1101100</td></tr>
+    <tr><td>3</td><td>1000010</td></tr>
+    <tr><td>4</td><td>1011100</td></tr>
+    <tr><td>5</td><td>1001110</td></tr>
+    <tr><td>6</td><td>1010000</td></tr>
+    <tr><td>7</td><td>1000100</td></tr>
+    <tr><td>8</td><td>1001000</td></tr>
+    <tr><td>9</td><td>1110100</td></tr>
+</table>
+
+<p>Part #2 will be <strong>1001110 1010000 1000100 1110010</strong></p>
+
+<h4>Stop</h4>
+
+<p>A stop sequence ends the barcode : <strong>101</strong></p>
+
+<h3>Summary of the sequence of the EAN 8</h3>
+<ul>
+    <li>start : 101</li>
+    <li>part #1</li>
+    <li>center : 01010</li>
+    <li>part #2</li>
+    <li>stop : 101</li>
+</ul>
+
+<h2>Graphical representation of the EAN 8 barcode</h2>
+
+<p>Each element of the binary sequence is represented by a space of equal width, it is a "1" or "0". The "1" are represented by spaces filled and "0" with empty spaces.</p>
+
+<img src="../picture/ean13-bar.jpg" class="centered" />
+
+<h2>Online EAN 8 barcode generator</h2>
+<p>Please fill in the code : <input type="text" id="ean8generator" maxlength="7" value="1234567"></p>
+<div id="ean8Target" class="barcodeTarget"></div>

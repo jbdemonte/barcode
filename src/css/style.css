@@ -1,0 +1,403 @@
+*{
+	font-family: Arial,sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+	color: #7F7F7F;
+	margin: 0;
+	padding: 0;
+}
+body{
+	background-color: #C9C9C9;
+}
+#version{
+  height: 160px;
+}
+.lng-en #version.version-php{
+	background:transparent url(../picture/barcode-php-en.jpg) no-repeat scroll right center;
+}
+.lng-fr #version.version-php{
+	background:transparent url(../picture/barcode-php-fr.jpg) no-repeat scroll right center;
+}
+.lng-en #version.version-jquery{
+	background:transparent url(../picture/barcode-jquery-en.jpg) no-repeat scroll right center;
+}
+.lng-fr #version.version-jquery{
+	background:transparent url(../picture/barcode-jquery-fr.jpg) no-repeat scroll right center;
+}
+.lng-en #version.version-prototype{
+	background:transparent url(../picture/barcode-prototype-en.jpg) no-repeat scroll right center;
+}
+.lng-fr #version.version-prototype{
+	background:transparent url(../picture/barcode-prototype-fr.jpg) no-repeat scroll right center;
+}
+.lng-en #version.version-java{
+}
+.lng-fr #version.version-java{
+}
+a{
+	text-decoration: none;
+	color: #5F5F5F;
+}
+a.external{
+	background:transparent url(../picture/external.png) no-repeat scroll right center;
+	padding-right:13px;
+}
+img{
+	border: 0;
+}
+h1{
+	font-size: 16px;
+	font-weight: bold;
+	color: #5F5F5F;
+	margin: 10px;
+	text-transform: uppercase;
+}
+h2{
+	font-size: 15px;
+	font-weight: bold;
+	color: #5F5F5F;
+	margin: 50px 0 30px 50px;
+}
+h3{
+	font-size: 12px;
+	font-weight: bold;
+	margin: 10px 0 10px 70px;
+}
+h4{
+	font-size: 12px;
+	font-style: italic;
+	margin: 10px 0 10px 70px;
+}
+p{
+	font-size: 12px;
+	margin: 10px 90px;
+}
+p strong{
+	font-size: 12px;
+	font-weight: bold;
+}
+ul{
+	margin: 10px 150px;
+}
+li{
+	list-style: circle;
+	font-size: 12px;
+}
+table {
+	border-collapse:collapse;
+	margin: 0 auto 10px auto;
+}
+th, td {
+	border:1px solid #C9C9C9;
+	text-align:center;
+}
+th{
+	background-color: #EFEFEF;
+	font-weight: bold;
+}
+.centered {
+   display: block;
+   margin-left: auto;
+   margin-right: auto 
+}
+#banner{
+	width: 1000px;
+	height: 130px;
+	margin: 5px auto 0 auto;
+}
+.banner-en{
+	background: url(../picture/banner-en.jpg);
+}
+.banner-fr{
+	background: url(../picture/banner-fr.jpg);
+}
+#container{
+	width: 998px;
+	margin: 0 auto 50px auto;
+	background-color: #FFFFFF;
+	overflow: auto;
+	border-top: 0;
+	border-right: 1px solid #A3ADB6;
+	border-bottom: 1px solid #A3ADB6;
+	border-left: 1px solid #A3ADB6;
+	padding-top: 25px;
+}
+#fil{
+	margin: 5px 10px 15px 15px;
+	float: left;
+}
+#fil a{
+	color: #989898;
+}
+#daydate{
+	color: #989898;
+	text-align: right;
+	margin: 5px 5px 5px 0;
+}
+#googleSearch{
+	color:#000000; 
+	float:right;
+	margin:5px;
+}
+#google{
+	width: 730px;
+	margin: 20px 0;
+}
+#google2{
+	width: 730px;
+	margin: 20px auto;
+}
+#googleRight {
+  position: absolute;
+  top: 0;
+  left: -170px;
+}
+#googleSearch input{
+	color:#000000; 
+}
+#menu{
+	height: 30px;
+	width: 100%;
+	clear: both;
+	border-bottom: 1px solid #A3ADB6;
+}
+#menu .menu-item{
+	float: left;
+	margin: 0 0 0 30px;
+	width: 150px;
+	height: 29px;
+	border-top: 1px solid #A3ADB6;
+	border-left: 1px solid #A3ADB6;
+	border-right: 1px solid #A3ADB6;
+	overflow: auto;
+}
+#menu .menu-item .menu-item-label{
+	margin-top: 6px;
+	cursor:pointer;
+	text-align: center;
+}
+#menu .menu-item .menu-item-label span{
+	font-size: 13px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+.menu-item .hover{
+	background-color: #EFEFEF;
+}
+.menu-item-block{
+	margin-left: -1px;
+	padding: 0;
+	background-color: #FFFFFF;
+	border: 1px solid #A3ADB6;
+	border-bottom: 0;
+	display: block;
+	position: absolute;
+	width: 150px;
+	z-index: 1000;
+	cursor: pointer;
+}
+.menu-item-block-item{
+	height: 20px;
+	border-bottom: 1px dotted;
+	text-align: center;
+	padding: 5px 0 0 0;
+}
+#donate{
+  float: right;
+  margin-right:10px;
+  width: 100px;
+  height: 30px;
+}
+#language{
+  width: 80px;
+  overflow: auto;
+  float: right;
+  margin-top:10px;
+}
+.language{
+  width: 20px;
+	height: 13px;
+  float: left;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.language.en{
+	background: url(../picture/flag-en.jpg) no-repeat;
+}
+.language.fr{
+	background: url(../picture/flag-fr.jpg) no-repeat;
+}
+.language.activated{
+  border:1px solid #00FF00;
+}
+#content{
+	margin: 10px 10px 10px 180px;
+	position: relative;
+}
+.danger{
+	color: #FF0000;
+	font-size: 11px;
+	width: 800px;
+	text-align: center;
+	margin: 20px auto;
+}
+.introduction{
+	font-style: italic;
+	font-size: 12px;
+	text-align: center;
+	margin: 20px 20px 40px 20px;
+}
+.code{
+	background-color:#000000;
+	padding:10px;
+}
+.code .console{
+	color:#00CC00;
+}
+.code .command{
+	color:#C0C0C0;
+}
+.detail_1 {
+	color:#FF5FFF;
+}
+.detail_2 {
+	color:#0085FF;
+}
+.detail_3 {
+	color:#F14949;
+}
+.p-alert{
+	color: #FF0000;
+	font-size: 11px;
+}
+.p-alert strong{
+	color: #FF0000;
+	font-size: 12px;
+	font-weight: bold;
+}
+table.synthese2{
+	width: 600px;
+}
+table.synthese{
+	width: 600px;
+}
+table.synthese th, 
+table.synthese td{
+	width:33%;
+	height: 20px;
+}
+table.binary{
+	width: 400px;
+}
+table.barcode-details{
+	width: 400px;
+}
+table.parameters{
+	width: 800px;
+}
+table.parameters th.label{
+	width:20%;
+}
+table.parameters th.type,
+table.parameters th.default{
+	width:10%;
+}
+table.parameters th.detail{
+	width:40%;
+}
+.barcodeTarget{
+	margin: 0 auto;
+}
+#source-index{
+}
+#source-index h1{
+	margin: 10px 10px 0 10px;
+}
+#source-index h2{
+	margin: 30px 0 0 50px;
+}
+#source-index a{
+	color: #5F8AFF;
+}
+#footer{
+	text-align: center;
+	font-size: 10px;
+	margin-top: 10px;
+}
+#changelog{
+  margin-top: 20px;
+}
+#generator{
+  width: 730px;
+  margin: 0 auto;
+  text-align: center;
+}
+#generator #config{
+  overflow: auto;
+  margin: 10px 0;
+}
+#generator #config .config{
+  float: left;
+  width: 200px;
+  height: 265px;
+  border: 1px solid #000;
+  margin-left: 10px;
+  text-align: left;
+  padding-left: 5px;
+  line-height:20px;
+}
+#generator #config .config:last-child{
+  width: 270px;
+}
+#generator #config .config .title{
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 5px;
+}
+#generator #config .config input + label {
+	margin-left: 5px;
+	display: inline-block;
+	font-size: 12px;
+}
+#generator #config .config input[type=text] {
+	font-size: 12px;
+	display: inline-block;
+}
+#generator #config #bgColor,
+#generator #config #color {
+	width: 70px;
+}
+#generator #config .config .barcode2D,
+#generator #config #miscCanvas{
+  display: none;
+}
+#generator #submit{
+  clear: both;
+}
+#generator #barcodeTarget,
+#generator #canvasTarget{
+  margin: 20px auto;
+}
+#bcTarget, #bcTarget2, #bcTarget3 {
+	width: 100px;
+	border: 1px solid #C0C0C0;
+	margin: 0 auto;
+	text-align: center;
+}
+.dp-highlighter ol li,
+.dp-highlighter ol li.alt{
+	background-color: #FFFFFF;
+}
+.dp-highlighter.nogutter ol{
+	background-color: #FFFFFF;
+	padding: 10px 0;
+	border-left: 1px solid #C9C9C9;
+	border-right: 1px solid #C9C9C9;
+}
+.dp-highlighter{
+	width: 750px;
+	margin: 0 auto ! important;
+}
+.dp-highlighter span{
+	font-size: 11px;
+}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="{% if page.language == 'fr' %}{'fr-fr'}{% else %}{'en-us'}{% endif %}">
+  {% include head.html %}
+  <body>
+    <div id="banner" class="banner-{{ page.language }}"></div>
+    <div id="container">
+      {% if page.language == 'fr' %}{% include menu-fr.html %}{% else %}{% include menu-en.html %}{% endif %}
+
+      <div id="google">
+        <script type="text/javascript"><!--
+        google_ad_client = "pub-0877034056922383";
+        /* 728x90, date de création 23/05/09 */
+        google_ad_slot = "0422500067";
+        google_ad_width = 728;
+        google_ad_height = 90;
+        //-->
+        </script>
+        <script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+      </div>
+
+      <div id="content" class="lng-{{ page.language }}">
+        {{ content }}
+      </div>
+
+      <div id="google2">
+        <script type="text/javascript"><!--
+        google_ad_client = "pub-0877034056922383";
+        /* 728x90, date de création 23/05/09 */
+        google_ad_slot = "0422500067";
+        google_ad_width = 728;
+        google_ad_height = 90;
+        //-->
+        </script>
+        <script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+      </div>
+
+      <div id="googleRight">
+        <script type="text/javascript"><!--
+        google_ad_client = "ca-pub-0877034056922383";
+        /* barcode-coder - right 160 */
+        google_ad_slot = "8777702491";
+        google_ad_width = 160;
+        google_ad_height = 600;
+        //-->
+        </script>
+        <script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+      </div>
+
+      {% if page.language == 'fr' %}{% include footer-fr.html %}{% else %}{% include footer-en.html %}{% endif %}
+    </div>
+    <script type="text/javascript">
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+      try {
+        _gat._getTracker("UA-6491890-3")._trackPageview();
+      } catch(err) {}
+    </script>
+  </body>
+</html>

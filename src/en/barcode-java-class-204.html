@@ -1,0 +1,129 @@
+---
+layout: default
+title: "BARCODE : JAVA CLASSES TO CREATE BARCODE IN GD OR IN PDF"
+description: "Barcode : Java classes to create barcode : data matrix, ean 8, ean 13, code 128, 2 of 5 interleaved and standard, code 11, code 39, code 93, codabar, msi"
+language: en
+highlight: true
+---
+<h1>Java Classes: barcode</h1>
+<p id="version" class="version-java">
+    Version : {{site.data.releases.java.version}}<br />
+    Licence : GPL / Cecill<br />
+    Date : {{site.data.releases.java.date}}<br />
+    Author: HOUREZ Jonathan, DEMONTE Jean-Baptiste<br /><br />
+    <a href="/download/{{site.data.releases.java.file}}">Download Java Barcode {{site.data.releases.java.version}}</a>
+</p>
+
+<h2>Installing Java classes Barcode</h2>
+
+<p>There are several options for installing Java classes: place the compiled files or JAR to the project root or in a folder accessible via the CLASSPATH. To use them, you must import via the command:
+</p>
+
+<pre class="php:nocontrols:nogutter">
+  import com.barcode_coder.java_barcode.*;
+</pre>
+
+<p>It will define the classes of barcodes:</p>
+<ul>
+    <li>Barcode11</li>
+    <li>Barcode128</li>
+    <li>Barcode2of5</li>
+    <li>Barcode39</li>
+    <li>Barcode93</li>
+    <li>BarcodeCodabar</li>
+    <li>BarcodeDatamatrix</li>
+    <li>BarcodeEAN</li>
+    <li>BarcodeMSI</li>
+</ul>
+
+<p>To these are added the following classes:</p>
+<ul>
+    <li>Bar</li>
+    <li>Barcode</li>
+    <li>Barcode1D</li>
+    <li>BarcodeFactory</li>
+    <li>BarcodeType</li>
+</ul>
+
+
+<h2>Using the Java Barcode</h2>
+
+<p>To use these classes, a factory was set up with two static methods for creating barcodes.</p>
+
+<pre class="php:nocontrols:nogutter">
+  public static Barcode createBarcode(BarcodeType barcodeType, String code)
+  public static Barcode createBarcode(BarcodeType barcodeType, String code, boolean crc)
+</pre>
+
+<h4>barcodeType</h4>
+<p>BarcodeType<br /><br />Le type de code-barres souhaité.</p>
+<p>Valeurs possibles :</p>
+<ul>
+    <li>BarcodeType.Codabar</li>
+    <li>BarcodeType.Code11</li>
+    <li>BarcodeType.Code39</li>
+    <li>BarcodeType.Code93</li>
+    <li>BarcodeType.Code128</li>
+    <li>BarcodeType.EAN8</li>
+    <li>BarcodeType.EAN13</li>
+    <li>BarcodeType.Standard2of5</li>
+    <li>BarcodeType.Interleaved2of5</li>
+    <li>BarcodeType.MSI</li>
+    <li>BarcodeType.Datamatrix</li>
+</ul>
+
+
+<h4>code</h4>
+<p>String<br /><br />Barcode value (dependent on the type of barcode).</p>
+
+<h4>crc</h4>
+<p>boolean<br /><br />Presence correcting code required or not</p>
+
+<h4>&lt;&lt; Return &gt;&gt;</h4>
+<p>Both methods return a Barcode.</p>
+
+
+
+
+<br /><br /><br />
+<p>Then the class Barcode provides, among other, a function to export barcode into image format desired.</p>
+
+<pre class="php:nocontrols:nogutter">
+  public boolean export(String res, int width, int height, boolean hri, String file)
+</pre>
+
+<h4>res</h4>
+<p>String<br /><br />Image type : "png", "jpg" or "gif" </p>
+
+<h4>width, height</h4>
+<p>int<br /><br />Width and height of a module. For 2D barcodes (Datamatrix), height will be set from width.</p>
+
+<h4>hri</h4>
+<p>boolean<br /><br />display text (HRI : Human readable Interpretation).</p>
+
+<h4>file</h4>
+<p>String<br /><br />The location where the image should be saved.</p>
+
+<h4>&lt;&lt; Return &gt;&gt;</h4>
+<p>Returns a boolean indicating if the export is successful or not.</p>
+
+
+
+
+<br /><br /><br />
+<p>Example 1 :</p>
+
+<pre class="php:nocontrols:nogutter">
+	Barcode b = BarcodeFactory.createBarcode(BarcodeType.Code128,"12345678");
+	b.export("png",1,50,true,"/Users/name/Desktop/image.png");
+</pre>
+
+<p>Example 2 :</p>
+
+<pre class="php:nocontrols:nogutter">
+	Barcode b = BarcodeFactory.createBarcode(BarcodeType.Datamatrix,"barcode-coder");
+	b.export("jpg",10,50,true,"/Users/name/Desktop/image.jpg");
+</pre>
+
+
+

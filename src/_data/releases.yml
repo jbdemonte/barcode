@@ -1,0 +1,19 @@
+jquery:
+  date: 2013-01-06
+  version: 2.0.3
+  file: jquery-barcode-2.0.3.zip
+
+prototype:
+  date: 2013-01-06
+  version: 2.0.3
+  file: prototype-barcode-2.0.3.zip
+
+php:
+  date: 2013-01-06
+  version: 2.0.3
+  file: php-barcode-2.0.3.zip
+
+java:
+  date: 2013-01-06
+  version: 2.0.3
+  file: java-barcode-2.0.3.zip

@@ -1,0 +1,480 @@
+---
+layout: default
+title: "DATA MATRIX: SYMBOLOGY, SPECIFICATION, EXPLANATION"
+description: "DATA MATRIX : online data matrix barcode generator, formula, detailed explications, examples..."
+language: en
+script: datamatrix.js
+---
+<h1>DATA MATRIX BARCODE</h1>
+
+<h2>Format of the DATA MATRIX</h2>
+
+<table class="synthese" width="700px">
+    <tbody>
+    <tr>
+        <th>Length</th>
+        <th>Type</th>
+        <th>Checksum</th>
+    </tr>
+    <tr>
+        <td>from 1 to 3116 digits (variable)</td>
+        <td>numeric, alphanumeric <br/> or byte</td>
+        <td>yes (Reed-Solomon)</td>
+    </tr>
+    </tbody>
+</table>
+
+<p>The encoded data size depends on the type and the length od the data to data to code.</p>
+
+<p>An intermediate structure of 8 bits is used to save each data: the codeword.</p>
+
+<p>A symbol is composed of 3 groups of codewords:</p>
+
+<ul>
+    <li>Data codewords: encoded from the data</li>
+    <li>Stuffing codewords: not mandatory, fill the symbol when data codeword does not complete it</li>
+    <li>Correction codewords: Based on data and stuffing codewords, it's a Reed-Solomon checksum which allows to retrieve each part of the data in case of reading error.</li>
+</ul>
+
+<p>The encoding requires 2 steps:</p>
+
+<ul>
+    <li>High level encoding: consists in the conversion in codewords of the data, adding some stuffing codewords and calculating the checksum one</li>
+    <li>Low level encoding: consists to position these codewords in the data matrix. </li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+<h2>Graphic representation of the DATA MATRIX</h2>
+
+<p>A symbol is composed of black and white rectangular patterns called "cells" or "modules". </p>
+
+<p>A module represent a bit: usually black for the "1" and white for the "0". </p>
+
+<p>The DATA MATRIX can be a square (mostly used) or rectangular.</p>
+
+<p>The symbole can be decomposed into 3 parts:</p>
+
+<ul>
+    <li>The "finder pattern", which forms the shape of the data. There are two adjacent segments representing L, consisting of black modules only to determine the direction and orientation data. The two opposite sides alternate black and white modules to determine the size of a module, and therefore the symbol, but also to delimit the symbol</li>
+    <li>The "quiet zone", which is a white area of at least one module located around the locating units, so that the decoder is not impaired when reading</li>
+    <li>The data matrix which is composed of modules in the form of a matrix and which is in the center of the tracking units.</li>
+</ul>
+
+<img src="../picture/datamatrix-datamatrixparties.png" class="centered" width="300px"/>
+
+<p>When the symbol exceeds a certain size limit, the symbol is divided into data areas, regions, which are defined by internal locating designs. Four types of division into regions exist: 3 for square and 1 rectangular shape.</p>
+
+<img src="../picture/datamatrix-datamatrixparties.png" class="centered" width="300px"/>
+
+
+
+
+
+
+
+
+
+
+<h2>High level encoding</h2>
+
+<p>Six encoding modes coexist: ASCII, Text, C40, X12, EDIFACT and Base 256. The ASCII encoding is the default encoding and the most used. It will be presented here only.</p>
+
+<p>The set of values ​​of the ASCII mode codewords are visible in the following table:</p>
+
+
+<table class="synthese">
+    <tbody>
+    <tr>
+        <th>Codeword value</td>
+        <th>Meaning</td>
+    </tr>
+    <tr>
+        <td>1 - 128</td>
+        <td>ASCII characters (ASCII value + 1)</td>
+    </tr>
+    <tr>
+        <td> 129 </td>
+        <td>first stuffing character</td>
+    </tr>
+    <tr>
+        <td>130 - 229</td>
+        <td> Number between 00 and 99 (numeric value + 130) </td>
+    </tr>
+    <tr>
+        <td>230</td>
+        <td>Begin C40 encoding</td>
+    </tr>
+    <tr>
+        <td>231</td>
+        <td>Begin Base 256 encoding</td>
+    </tr>
+    <tr>
+        <td>232</td>
+        <td>FNC1</td>
+    </tr>
+    <tr>
+        <td>233</td>
+        <td>Structured append. Allows a message to be split across multiple symbols</td>
+    </tr>
+    <tr>
+        <td>234</td>
+        <td>Reader programming</td>
+    </tr>
+    <tr>
+        <td>235</td>
+        <td>Upper Shift - Set high bit of the following character</td>
+    </tr>
+    <tr>
+        <td>236 - 237</td>
+        <td>05 Macro - 06 Macro</td>
+    </tr>
+    <tr>
+        <td>238</td>
+        <td>Begin ANSI X12 encoding</td>
+    </tr>
+    <tr>
+        <td>239</td>
+        <td>Begin Text encoding</td>
+    </tr>
+    <tr>
+        <td>240</td>
+        <td>Begin EDIFACT encoding</td>
+    </tr>
+    <tr>
+        <td>241</td>
+        <td>ECI - Extended Channel Interpretation code</td>
+    </tr>
+    <tr>
+        <td>242 - 255</td>
+        <td>Not used</td>
+    </tr>
+    </tbody>
+</table>
+
+<p>Some of the values will not be explained because not used in the ASCII explanation. </p>
+
+<p>In the ASCII mode, some data are encoded according to three possibilities:</p>
+
+<ul>
+    <li>The value of a non-extended ASCII codeword (from 0 to 127) equals "ASCII value + 1"</li>
+    <li>The value of a non-extended ASCII codeword (from 128 to 255) is encoded with 2 codewords: the first, called Upper Shift, equals "235" and the second equals "ASCII value  - 127" </li>
+    <li>Numbers are encoding in a single codeword by group of 2 figures which is equals to "Numeric value + 130".</li>
+</ul>
+
+<p>When the number of data codewords can completely fill the "data" part of the symbol smaller possible codewords filler are added. The first of these codewords, which indicates the end of data in this case is always "129". Following is calculated using the following algorithm 253-state:</p>
+
+<img src="../picture/datamatrix-253state.png" class="centered" width="300px"/>
+<ul>
+    <li>with "%" the modulo and v<sub>i</sub> the stuffing codeword at position i</li>
+</ul>
+
+<br />
+
+<h3>Calculation of correction codewords</h3>
+
+<br />
+
+<p>The Reed-Solomon codes are used as error correction system. They have a capacity of detection and correction of errors defined in advance, depending on the size of the data matrix.</p>
+
+<p>A body C is a set of elements provided with two closed and called binary operations addition and multiplication. Being closed means that the result of each operation on two elements of the assembly will always be an element of the assembly.</p>
+
+<p>There are many bodies, finite and infinite. It turns out that for any integer prime p and any integer n (>=1), there exists a unique finite n<sup>p</sup> elements, noted GF(n<sub>p</sub>). These bodies are called Galois fields.</p>
+
+<p>We can represent the elements of GF(n<sub>p</sub>) using the basic elements of a : 0, 1, a, a<sup>2</sup>, a<sup>3</sup>, ..., a<sup>(n-1)</sup>. Let's take an example:</p>
+<ul>
+    <li> a<sup>3</sup> + a + 1 </li>
+</ul>
+
+
+<p>Elements can also be represented in different forms: binary, decimal, or even in the form of a polynomial. For the same example as:</p>
+<ul>
+    <li>binary: 1011 (0 indicates no a<sup>2</sup>)</li>
+    <li>decimal: 11 (8+2+1)</li>
+    <li>polynomial: a<sup>3</sup> x<sup>3</sup> + a x + 1</li>
+</ul>
+
+
+<p>For each Galois field, there is at least one primitive polynomial, denoted by p (x), which allows to build the body. Data Matrix storing data of 8 bits (in codewords), and therefore work in the Galois field GF(2<sup>8</sup>). They use the primitive polynomial x<sup>8</sup>+x<sup>5</sup>+x<sup>3</sup>+x<sup>2</sup>+1, which corresponds to the value 301.</p>
+
+<p>The addition and subtraction of two elements is the XOR (exclusive OR) between these two elements. Multiplication and division are calculated by multiplying the corresponding polynomials. This operation is relatively expensive in computation time, an algorithm is used. Since all components are a power of primitive polynomial p, must be sought for each element c, i power as:</p>
+<ul>
+    <li> i = log<sub>p</sub> (c) </li>
+    <li> c = antilog<sub>p</sub> (i) </li>
+</ul>
+
+
+
+<p>From there, we can calculate for two elements c and d:</p>
+<ul>
+    <li> c * d = antilog<sub>p</sub> (log<sub>p</sub>(c) + log<sub>p</sub>(d)) </li>
+    <li> c / d = antilog<sub>p</sub> (log<sub>p</sub>(c) - log<sub>p</sub>(d)) </li>
+</ul>
+
+
+<p>We can get the e antilogs table thanks to this algorithm: </p>
+<img src="../picture/datamatrix-tableauantilog.png" class="centered"  width="200px"/>
+
+<p>A Reed-Solomon code of length n with k data is noted RS(n,k). So there is n-k = 2t check symbols and this code can correct up to t erroneous symbols. The number of control symbols is defined by the size of the Data Matrix.</p>
+
+<p>The equation for encoding a RS(n,k) code is:</p>
+<ul>
+    <li> c(x) = i(x) x<sup>n-k</sup> + [i(x) x<sup>n-k</sup>] modulo g(x) </li>
+</ul>
+
+<p>with</p>
+<ul>
+    <li> c(x) : the final polynomial</li>
+    <li> i(x) : the data polynomial</li>
+    <li> [i(x) x<sup>n-k</sup>] modulo g(x) : the control polynomial</li>
+    <li> g(x) : the generator polynomial</li>
+</ul>
+
+<p>The 2t check symbols are derived from a polynomial power generator 2t, 2t + 1 compound words, which is of the following form:</p>
+<img src="../picture/datamatrix-equation42.png" class="centered" width="240px"/>
+
+<p>There are 16 block lengths of Reed-Solomon possible (see summary table). The coefficients of the generator polynomials can be calculated using the following algorithm:</p>
+<img src="../picture/datamatrix-coeffpolynome.png" class="centered" width="220px"/>
+
+<p>Once the generator polynomial calculated, we simply follow the equation to obtain the control polynomial: it is the rest of the division between the data polynomial and the generator polynomial. Coefficients correspond to codewords control.</p>
+
+<p>For Data Matrix symbols containing a total of less than 255 codewords (all symbols rectangular and square sizes less than 48x48), the codewords correction are calculated directly from the data codewords. For other symbols, the codewords correction are calculated in accordance with a procedure of interleaving: dividing the codewords into several data blocks of same size and correction codewords are computed block by block. Each codeword c is part of the group:</p>
+
+<ul>
+    <li> c modulo n </li>
+</ul>
+
+<p>with n the number of blocks for the symbol</p>
+
+<p>For simplicity, for n blocks, the first group consists of data codewords 1, n +1, 2n +1, 3n +1, ... the second group of data codewords 2, n +2, 2n +2, 3n +2,...</p>
+
+<p>An example of interleaving can be viewed as follows: </p>
+
+<img src="../picture/datamatrix-entrelacement.png" class="centered" width="700px"/>
+
+
+
+
+
+
+
+
+
+
+
+
+<h2>Low level encoding </h2>
+
+<p>Each codeword is represented in the data matrix by a square part of 8 modules, corresponding to 8 bits. Module 1 has the value of the most significant bit (value 128), while the module 8 has the value of the most insignificant bit (value 1).</p>
+
+<img src="../picture/datamatrix-representationcodeword.png" class="centered" width="130px"/>
+
+<p>It is however possible that a codeword can not be contained entirely within the matrix at a certain location. These can then be separated into parts (2 or 3) to be continued on the other side of the symbol.</p>
+
+<img src="../picture/datamatrix-separationhorizontale.png" class="centered"  width="400px"/>
+<p>In addition, in four cases, the codewords placed in the corners can also be placed differently.</p>
+
+<img src="../picture/datamatrix-conditiondecoin.png" class="centered" width="350px" />
+
+<p>Placement in the matrix follows a certain order. The initial codewords are always placed as follows:</p>
+
+<img src="../picture/datamatrix-hautgauche.png" class="centered" width="300px" />
+
+<p>The codewords are then nested in the other, following the oblique lines (45 °) in parallel. The meaning is identical slashes half the time.</p>
+
+<img src="../picture/datamatrix-examplematrice.png" class="centered" width="300px" />
+
+<p>It may, depending on the size of the symbol, the four modules of the lower right corner are empty. Symbols 12x12 example, the data matrix is 10x10, which give 100 modules in 12 codewords can be inserted. Knowing that a codeword full 8 modules, a total of 96 modules will be occupied and the last 4 remain empty. To fill, use of alternating black and white modules as shown below:</p>
+
+<img src="../picture/datamatrix-basdroite.png" class="centered" width="100px" />
+
+<p>It will then add the finder pattern and possibly the main internal finder pattern if the number of regions is greater than 1.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+<h2>Encoding example</h2>
+
+<p>Suppose we want to encode "ENC01." ASCII values ​​of the characters are:</p>
+<table width="300px">
+    <tbody>
+    <tr>
+        <td>E</td>
+        <td>N</td>
+        <td>C</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>69</td>
+        <td>78</td>
+        <td>67</td>
+        <td>48</td>
+        <td>49</td>
+    </tr>
+    </tbody>
+</table>
+
+<p>Depending on how ASCII, the values ​​of codewords will be:</p>
+<table width="600px">
+    <tbody>
+    <tr>
+        <th>Codeword</th>
+        <th>Method</th>
+        <th>Evaluation</th>
+        <th>ASCII value</th>
+        <th>Binary value</th>
+    </tr>
+    <tr>
+        <td>C1</td>
+        <td>ASCII value + 1</td>
+        <td>69 + 1</td>
+        <td>70</td>
+        <td>0100 0110</td>
+    </tr>
+    <tr>
+        <td>C2</td>
+        <td>ASCII value + 1</td>
+        <td>78 + 1</td>
+        <td>79</td>
+        <td>0100 1111</td>
+    </tr>
+    <tr>
+        <td>C3</td>
+        <td>ASCII value + 1</td>
+        <td>67 + 1</td>
+        <td>68</td>
+        <td>0100 0100</td>
+    </tr>
+    <tr>
+        <td>C4</td>
+        <td>Numeric value + 130</td>
+        <td>1 + 130</td>
+        <td>131</td>
+        <td>1000 0011</td>
+    </tr>
+    </tbody>
+</table>
+
+<p>The value of codewords 1, 2 and 3 were calculated simply by using the "ASCII value + 1", while the codeword 4 encodes two digits using "130 + numeric value."</p>
+
+<p>It has four codewords to encode, therefore we choose the minimum size of the symbol to encode: it is the symbol of size 12x12, offering a data matrix of size 10x10 and 12 codewords to encode compounds 5 codewords and data correction codewords 7. Knowing that 5 codewords data are needed and that we do not have that 4, a codeword filling will be added: it is the codeword value "129", which is always the first to indicate the end of data. It is not necessary to calculate other using the 253-state algorithm.</p>
+
+<table width="400px">
+    <tbody>
+    <tr>
+        <th>Codeword</th>
+        <th>ASCII value</th>
+        <th>Binary value</th>
+    </tr>
+    <tr>
+        <td>C5</td>
+        <td>129</td>
+        <td>1000 0001</td>
+    </tr>
+    </tbody>
+</table>
+
+<p>Compared to what we saw earlier, we know that:</p>
+<ul>
+    <li>n = 12, the total number of codewords</li>
+    <li>k = 5, the number of data codewords</li>
+    <li>2t = 7, the number of correction codewords</li>
+    <li>the polynomiali(x) = 70 x<sup>4</sup> + 79 x<sup>3</sup> + 68 x<sup>2</sup> + 131 x + 129 </li>
+    <li>the polynomial i(x) x<sup>n-k</sup> = 70 x<sup>11</sup> + 79 x<sup>10</sup> + 68 x<sup>9</sup> + 131 x<sup>8</sup> + 129 x<sup>7</sup>.</li>
+</ul>
+
+
+
+<p>As a reminder, the operations occur in GF(2<sup>8</sup>). With the algorithms presented above, the generator polynomial was calculated:</p>
+<ul>
+    <li>g(x) = x<sup>7</sup> + 254 x<sup>6</sup> + 92 x<sup>5</sup> + 240 x<sup>4</sup> + 134 x<sup>3</sup> + 144 x<sup>2</sup> + 68 x + 23</li>
+</ul>
+
+
+
+<p>The calculation of the codewords representing polynomial correction is performed like this:</p>
+<ul>
+    <li>(i(x) x<sup>n-k</sup>) = 4 x<sup>6</sup> + 133 x<sup>5</sup> + 98 x<sup>4</sup> + 49 x<sup>3</sup> + 253 x<sup>2</sup> + 53 x + 182</li>
+</ul>
+
+<p>The correction codewords, corresponding to the coefficients of the polynomial are:<p>
+
+<table width="500px">
+    <tbody>
+    <tr>
+        <th>Codeword</th>
+        <th>ASCII value</th>
+        <th>Binary value</th>
+    </tr>
+    <tr>
+        <td>C6</td>
+        <td>4</td>
+        <td>0000 0100</td>
+    </tr>
+    <tr>
+        <td>C7</td>
+        <td>133</td>
+        <td>1000 0101</td>
+    </tr>
+    <tr>
+        <td>C8</td>
+        <td>98</td>
+        <td>0110 0010</td>
+    </tr>
+    <tr>
+        <td>C9</td>
+        <td>49</td>
+        <td>0011 0001</td>
+    </tr>
+    <tr>
+        <td>C10</td>
+        <td>253</td>
+        <td>1111 1101</td>
+    </tr>
+    <tr>
+        <td>C11</td>
+        <td>53</td>
+        <td>0011 0101</td>
+    </tr>
+    <tr>
+        <td>C12</td>
+        <td>182</td>
+        <td>1011 0110</td>
+    </tr>
+    </tbody>
+</table>
+
+
+
+
+<p>Must then place these codewords in the data matrix according to the appropriate algorithm. The order of placement is as follows:</p>
+<img src="../picture/datamatrixex/Image1.png" class="centered" width="600px" />
+
+
+
+
+<h2>Summary table of data Data Matrix</h2>
+
+<img src="../picture/datamatrix-recap.png" class="centered" width="900px" />
+
+
+
+<h2>Barcode Generator Data Matrix Online</h2>
+<p>Please enter the code: <input type="text" id="datamatrixGenerator" maxlength="300" value="1234567"></p>
+<div id="datamatrixTarget" class="barcodeTarget"></div>

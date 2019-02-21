@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+	<loc>http://barcode-coder.com/en/</loc>
+	<priority>0.6</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/fr/</loc>
+	<priority>0.6</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/en/barcode-online-generator-2.html</loc>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/fr/generateur-de-code-barres-en-ligne-2.html</loc>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/en/barcode-specifications-list-100.html</loc>
+	<priority>0.7</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/fr/liste-des-specifications-de-code-barres-100.html</loc>
+	<priority>0.7</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/en/ean-8-specification-101.html</loc>
+	<priority>1</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/fr/specification-ean-8-101.html</loc>
+	<priority>1</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/en/ean-13-specification-102.html</loc>
+	<priority>1</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/fr/specification-ean-13-102.html</loc>
+	<priority>1</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/en/standard-2-of-5-specification-103.html</loc>
+	<priority>1</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/fr/specification-2-parmi-5-103.html</loc>
+	<priority>1</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/en/barcode-source-list-200.html</loc>
+	<priority>0.7</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/fr/code-barre-liste-source-200.html</loc>
+	<priority>0.7</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/en/barcode-jquery-plugin-201.html</loc>
+	<priority>1</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/en/barcode-prototype-plugin-202.html</loc>
+	<priority>1</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/fr/barcode-plugin-jquery-pour-creer-des-code-barres-201.html</loc>
+	<priority>1</priority>
+</url>
+<url>
+	<loc>http://barcode-coder.com/fr/barcode-plugin-prototype-pour-creer-des-code-barres-202.html</loc>
+	<priority>1</priority>
+</url>
+</urlset>

@@ -1,0 +1,5 @@
+# Site settings
+date: 2019
+title: Barcode-Coder
+source: src
+destination: dist

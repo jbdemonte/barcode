@@ -1,0 +1,129 @@
+---
+layout: default
+title: "BARCODE : CLASSES JAVA DE CREATION DE CODE-BARRES"
+description: "Barcode : classes Java de génération de code-barres data matrix, ean 8, ean 13, code 128, 2 parmi 5 entrelace et standard, code 11, code 39, code 93, codabar, msi"
+language: fr
+highlight: true
+---
+<h1>Classes Java : barcode</h1>
+<p id="version" class="version-java">
+    Version : {{site.data.releases.java.version}}<br />
+    Licence : GPL / Cecill<br />
+    Date : {{site.data.releases.java.date}}<br />
+    Auteur: HOUREZ Jonathan, DEMONTE Jean-Baptiste<br /><br />
+    <a href="/download/{{site.data.releases.java.file}}">Télécharger Java Barcode {{site.data.releases.java.version}}</a>
+</p>
+
+<h2>Installation des classes Java Barcode</h2>
+
+<p>Plusieurs solutions s'offrent pour installer les classes Java : placer les fichiers compilés ou le JAR à la racine du projet ou dans un dossier accessible via le CLASSPATH. Pour les utiliser, il faut les importer via la commande :
+</p>
+
+<pre class="php:nocontrols:nogutter">
+  import com.barcode_coder.java_barcode.*;
+</pre>
+
+<p>Elle va définir les classes de codes-barres :</p>
+<ul>
+    <li>Barcode11</li>
+    <li>Barcode128</li>
+    <li>Barcode2of5</li>
+    <li>Barcode39</li>
+    <li>Barcode93</li>
+    <li>BarcodeCodabar</li>
+    <li>BarcodeDatamatrix</li>
+    <li>BarcodeEAN</li>
+    <li>BarcodeMSI</li>
+</ul>
+
+<p>A celles-ci sont ajoutées les classes suivantes :</p>
+<ul>
+    <li>Bar</li>
+    <li>Barcode</li>
+    <li>Barcode1D</li>
+    <li>BarcodeFactory</li>
+    <li>BarcodeType</li>
+</ul>
+
+
+<h2>Utilisation des classes Java Barcode</h2>
+
+<p>Pour utiliser ces classes, une factory a été mise en place avec deux méthodes statiques permettant de créer les codes-barres. </p>
+
+<pre class="php:nocontrols:nogutter">
+  public static Barcode createBarcode(BarcodeType barcodeType, String code)
+  public static Barcode createBarcode(BarcodeType barcodeType, String code, boolean crc)
+</pre>
+
+<h4>barcodeType</h4>
+<p>BarcodeType<br /><br />Le type de code-barres souhaité.</p>
+<p>Valeurs possibles :</p>
+<ul>
+    <li>BarcodeType.Codabar</li>
+    <li>BarcodeType.Code11</li>
+    <li>BarcodeType.Code39</li>
+    <li>BarcodeType.Code93</li>
+    <li>BarcodeType.Code128</li>
+    <li>BarcodeType.EAN8</li>
+    <li>BarcodeType.EAN13</li>
+    <li>BarcodeType.Standard2of5</li>
+    <li>BarcodeType.Interleaved2of5</li>
+    <li>BarcodeType.MSI</li>
+    <li>BarcodeType.Datamatrix</li>
+</ul>
+
+
+<h4>code</h4>
+<p>String<br /><br />Valeur du code barres (dépendante du type de code barres).</p>
+
+<h4>crc</h4>
+<p>boolean<br /><br />Présence d'un code correcteur souhaité ou non</p>
+
+<h4>&lt;&lt; Retour &gt;&gt;</h4>
+<p>Ces deux méthodes retournent un Barcode</p>
+
+
+
+
+<br /><br /><br />
+<p>Ensuite, la classe Barcode fournit, entre-autres, une fonction permettant d'exporter le code-barres dans un format image souhaité. </p>
+
+<pre class="php:nocontrols:nogutter">
+  public boolean export(String res, int width, int height, boolean hri, String file)
+</pre>
+
+<h4>res</h4>
+<p>String<br /><br />Le type d'image : "png", "jpg" ou "gif" </p>
+
+<h4>width, height</h4>
+<p>int<br /><br />Largeur et hauteur d'un module, pour les codes-barres 2D (Datamatrix), height prendra la valeur de width.</p>
+
+<h4>hri</h4>
+<p>boolean<br /><br />Affiche ou non la valeur du code-barres en dessous de la représentation graphique.</p>
+
+<h4>file</h4>
+<p>String<br /><br />L'emplacement où l'image doit être enregistrée.</p>
+
+<h4>&lt;&lt; Retour &gt;&gt;</h4>
+<p>Retourne un boolean indiquant si l'exportation est réussie ou non</p>
+
+
+
+
+<br /><br /><br />
+<p>Exemple 1 :</p>
+
+<pre class="php:nocontrols:nogutter">
+	Barcode b = BarcodeFactory.createBarcode(BarcodeType.Code128,"12345678");
+	b.export("png",1,50,true,"/Users/name/Desktop/image.png");
+</pre>
+
+<p>Exemple 2 :</p>
+
+<pre class="php:nocontrols:nogutter">
+	Barcode b = BarcodeFactory.createBarcode(BarcodeType.Datamatrix,"barcode-coder");
+	b.export("jpg",10,50,true,"/Users/name/Desktop/image.jpg");
+</pre>
+
+
+

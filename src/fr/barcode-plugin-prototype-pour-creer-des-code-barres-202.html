@@ -1,0 +1,126 @@
+---
+layout: default
+title: "BARCODE : PLUGIN PROTOTYPE DE CREATION DE CODE-BARRES EN LIGNE"
+description: "Barcode : plugin prototype de creation de code barres data matrix, ean 8, ean 13, code 128, 2 parmi 5 entrelace et standard, code 11, code 39, code 93, codabar, msi"
+language: fr
+highlight: true
+---
+<h1>Plugin Prototype : barcode</h1>
+<p id="version" class="version-prototype">
+    Version : {{site.data.releases.prototype.version}}<br />
+    Licence : GPL / Cecill<br />
+    Date : {{site.data.releases.prototype.date}}<br />
+    Auteur: DEMONTE Jean-Baptiste<br /><br />
+    <a href="/download/{{site.data.releases.prototype.file}}">Telecharger le plugin Prototype barcode {{site.data.releases.prototype.version}}</a>
+</p>
+
+<h2>Installation du plugin Prototype barcode</h2>
+
+<p>Comme tout plugin, il suffit d'inclure le fichier source <strong>après</strong> avoir inclus celui de Prototype.</p>
+
+<pre class="html:nocontrols:nogutter">
+	&lt;script type=&quot;text/javascript&quot; src=&quot;prototype.min.js&quot;&gt;&lt;/script&gt;  
+	&lt;script type=&quot;text/javascript&quot; src=&quot;prototype-barcode.js&quot;&gt;&lt;/script&gt;
+</pre>
+
+<h2>Utilisation du plugin Prototype barcode</h2>
+
+<p>Pour utiliser ce plugin, il suffit de définir un div qui accueillera le visuel du code barres</p>
+
+<pre class="html:nocontrols:nogutter">
+	&lt;div id=&quot;bcTarget&quot;&gt;&lt;/div&gt; 
+</pre>
+
+<p>Exemple d'appel du plugin</p>
+
+<pre class="js:nocontrols:nogutter">
+	$(&quot;bcTarget&quot;).barcode("1234567890128", &quot;ean13&quot;); 	
+</pre>
+
+<h2>Prototype de la fonction barcode</h2>
+
+<pre class="js:nocontrols:nogutter">
+	barcode: function(element, datas, type, settings)
+</pre>
+
+<h4>element</h4>
+<p>Prototype Element (l'objet en cours, envoyé par Prototype)</p>
+
+<h4>datas</h4>
+<p>string<br /><br />Valeur du code barres (dépendante du type de code barres)<br />Si le type de code barres en inclus, la présence de checksum n'est pas obligatoire, il est automatiquement recalculé</p>
+<p>object<br /><br /></p>
+
+<table class="barcode-details">
+    <tr><th class="label" colspan="2">type : ean8, ean13, code11, code39, code128, codabar</th></tr>
+    <tr><th class="label">member</th><th class="type">Type</th></tr>
+    <tr><td>code</td><td>string</td></tr>
+</table>
+
+<table class="barcode-details">
+    <tr><th class="label" colspan="2">type : std25, int25, code93</th></tr>
+    <tr><th class="label">member</th><th class="type">Type</th></tr>
+    <tr><td>code</td><td>string</td></tr>
+    <tr><td>crc</td><td>boolean</td></tr>
+</table>
+
+<table class="barcode-details">
+    <tr><th class="label" colspan="3">type : msi</th></tr>
+    <tr><th class="label">member</th><th class="type" colspan="2">Type</th></tr>
+    <tr><td>code</td><td colspan="2">string</td></tr>
+    <tr><td rowspan="3">crc</td><td colspan="2">boolean</td></tr>
+    <tr><td rowspan="2">object</td><td>crc1 : string("mod10", "mod11")</td></tr>
+    <tr><td>crc2 : string("mod10", "mod11")</td></tr>
+    </tr>
+</table>
+
+<table class="barcode-details">
+    <tr><th class="label" colspan="2">type : datamatrix</th></tr>
+    <tr><th class="label">member</th><th class="type">Type</th></tr>
+    <tr><td>code</td><td>string</td></tr>
+    <tr><td>rect</td><td>boolean (defaut : false)</td></tr>
+</table>
+
+<h4>type (string)</h4>
+<ul>
+    <li>codabar</li>
+    <li>code11 (code 11)</li>
+    <li>code39 (code 39)</li>
+    <li>code93 (code 93)</li>
+    <li>code128 (code 128)</li>
+    <li>ean8 (ean 8)</li>
+    <li>ean13 (ean 13)</li>
+    <li>std25 (2 parmi 5 standart - industriel)</li>
+    <li>int25 (2 parmi 5 entrelacé)</li>
+    <li>msi</li>
+    <li>datamatrix (ASCII + étendu)</li>
+</ul>
+
+<h4>settings (object)</h4>
+<p>configuration du visuel du code barres</p>
+
+<table class="parameters">
+    <tr><th class="label">Paramètre</th><th class="type">Type</th><th class="default">Valeur par defaut</th><th class="label">Detail</th><th class="detail">Limitation</th></tr>
+    <tr><td>barWidth</td><td>int</td><td>1</td><td>largeur d'une barre</td><td>1D</td></tr>
+    <tr><td>barHeight</td><td>int</td><td>50</td><td>hauteur d'une barre</td><td>1D</td></tr>
+    <tr><td>moduleSize</td><td>int</td><td>5</td><td>largeur / hauteur d'un module</td><td>2D</td></tr>
+    <tr><td>bgColor</td><td>text</td><td>#FFFFFF</td><td>couleur de fond</td><td></td></tr>
+    <tr><td>color</td><td>text</td><td>#000000</td><td>couleur du code barre</td><td></td></tr>
+    <tr><td>showHRI</td><td>bool</td><td>true</td><td>affichage texte (HRI : Human readable Interpretation)</td><td></td></tr>
+    <tr><td>fontSize</td><td>int</td><td>10</td><td>Taille de la police du HRI</td><td></td></tr>
+    <tr><td>output</td><td>text</td><td>css</td><td>type de sortie parmis css, svg et bmp</td><td></td></tr>
+</table>
+
+<table class="parameters">
+    <tr><th class="label" colspan="4">rendu : canvas</th></tr>
+    <tr><th class="label">Paramètre</th><th class="type">Type</th><th class="default">Valeur par defaut</th><th class="detail">Detail</th></tr>
+    <tr><td>posX</td><td>int</td><td>0</td><td>décallage en X</td></tr>
+    <tr><td>posY</td><td>int</td><td>0</td><td>décallage en Y</td></tr>
+</table>
+
+<p>
+    Exemple :
+</p>
+
+<pre class="js:nocontrols:nogutter">
+	&lt;input type=&quot;button&quot; onclick='$(&quot;bcTarget&quot;).barcode(&quot;1234567890128&quot;, &quot;ean13&quot;,{&quot;barWidth&quot;:2, &quot;barHeight&quot;:30});' value=&quot;Test&quot;&gt;
+</pre>
