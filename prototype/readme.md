@@ -1,6 +1,12 @@
 prototype-barcode
 ===============
 
+Limitation
+----------
+
+Are you kidding? You're still using Prototype.js?  
+This plugin is no longer supported.
+
 Presentation
 ------------
 
