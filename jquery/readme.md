@@ -1,20 +1,17 @@
-jquery-barcode
-==============
+# jquery-barcode
 
-Presentation
-------------
+## Presentation
 
 This plugin allows you to display barcodes on your website using jQuery.
 
 [demo on jsfiddle](https://jsfiddle.net/gh/get/jquery/3.0/jbdemonte/barcode/tree/master/jquery/demo)
 
-Licence
--------
+## Licence
+
 [GPL v3](http://www.gnu.org/licenses/gpl.html)
 [CeCILL](http://www.cecill.info/licences/Licence_CeCILL_V2-fr.html)
 
-Features
---------
+## Features
 
 ### Symbologies
  - standard 2 of 5 (std25)
@@ -35,3 +32,10 @@ Features
  - SVG inline (not compatible with IE)
  - BMP inline (not compatible with IE)      
  - CANVAS html 5 (not compatible with IE)
+ 
+## Minification
+
+Minified version is built with [uglify-js](https://www.npmjs.com/package/uglify-js).
+```bash
+uglifyjs --compress --mangle -- jquery-barcode.js > jquery-barcode.min.js
+```

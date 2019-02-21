@@ -32,7 +32,7 @@ Features
   
 ### Languages
 - jQuery (js)
-- prototype (js)
+- prototype (js - deprecated)
 - PHP
 
 
