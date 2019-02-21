@@ -35,7 +35,7 @@
       }        
     </style>
     
-    <script type="text/javascript" src="jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="../jquery-barcode.js"></script>
     <script type="text/javascript">
     
@@ -43,12 +43,7 @@
         var value = $("#barcodeValue").val();
         var btype = $("input[name=btype]:checked").val();
         var renderer = $("input[name=renderer]:checked").val();
-        
-        var quietZone = false;
-        if ($("#quietzone").is(':checked') || $("#quietzone").attr('checked')){
-          quietZone = true;
-        }
-		
+
         var settings = {
           output:renderer,
           bgColor: $("#bgColor").val(),
