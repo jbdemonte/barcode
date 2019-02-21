@@ -6,6 +6,8 @@ Presentation
 
 This plugin allows you to display barcodes on your website using jQuery.
 
+[demo on jsfiddle](https://jsfiddle.net/gh/get/jquery/3.0/jbdemonte/barcode/tree/master/jquery/demo)
+
 Licence
 -------
 [GPL v3](http://www.gnu.org/licenses/gpl.html)
