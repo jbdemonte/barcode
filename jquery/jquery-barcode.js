@@ -1232,10 +1232,6 @@
           fontSize = intval(settings.fontSize);
           height += intval(settings.marginHRI) + fontSize;
         }
-        
-        //correct any hash (#) chars in color settings to prevent breakage in Firefox/IE rendering
-        settings.bgColor = settings.bgColor.replace('#', '%23' );
-        settings.color = settings.color.replace( '#', '%23');
 
         // svg header
         svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + width + '" height="' + height + '">';
@@ -1273,9 +1269,9 @@
         svg += '</svg>';
 
         // create a dom object, flush container and add object to the container
-        object = document.createElement("object");
-        object.setAttribute("type", "image/svg+xml");
-        object.setAttribute("data", "data:image/svg+xml," + svg);
+
+        object = document.createElement('img');
+        object.setAttribute('src', 'data:image/svg+xml;base64,'+ this.base64Encode(svg));
         this.resize($container, width).append(object);
       },
       // svg 1D barcode renderer
