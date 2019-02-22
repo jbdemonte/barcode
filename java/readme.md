@@ -1,16 +1,10 @@
-prototype-barcode
-===============
-
-Limitation
-----------
-
-Are you kidding? You're still using Prototype.js?  
-This plugin is no longer supported.
+java-barcode
+===========
 
 Presentation
 ------------
 
-This plugin allows you to display barcodes on your website using prototype.
+This plugin allows you to create barcodes thanks to java.
 
 Licence
 -------
@@ -33,9 +27,3 @@ Features
  - codabar (codabar)
  - msi (msi)
  - datamatrix (datamatrix)
-  
-### Output : 
- - CSS (compatible with any browser)
- - SVG inline (not compatible with IE)
- - BMP inline (not compatible with IE)      
- - CANVAS html 5 (not compatible with IE)

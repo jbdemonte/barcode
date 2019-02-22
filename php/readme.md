@@ -8,7 +8,7 @@ This plugin allows you to create barcodes thanks to php.
 
 Licence
 -------
-[GPL v3](http://www.gnu.org/licenses/gpl.html)
+[GPL v3](http://www.gnu.org/licenses/gpl.html)  
 [CeCILL](http://www.cecill.info/licences/Licence_CeCILL_V2-fr.html)
 
 Features

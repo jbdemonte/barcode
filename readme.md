@@ -10,7 +10,7 @@ This project is a kit of libraries in few languages to create or display barcode
 
 Licence
 -------
-[GPL v3](http://www.gnu.org/licenses/gpl.html)
+[GPL v3](http://www.gnu.org/licenses/gpl.html)  
 [CeCILL](http://www.cecill.info/licences/Licence_CeCILL_V2-fr.html)
 
 Features
@@ -34,6 +34,7 @@ Features
 - jQuery (js)
 - prototype (js - deprecated)
 - PHP
+- Java
 
 
 [Buy author a beer](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WCUX27CFV79S2)
