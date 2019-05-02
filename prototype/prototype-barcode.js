@@ -976,6 +976,11 @@ var Barcode = {
     $container.update('');
     return $container;
   },
+  // apply antialiasing for CSS rendering only
+  antialiasing: function($container){
+    $container.style.cssText += 'display: flex;flex-flow: row wrap;justify-content: space-around;';
+    return $container;
+  },
   // bmp barcode renderer
   digitToBmpRenderer: function($container, settings, digit, hri, mw, mh){
     var lines = digit.length;
@@ -1072,6 +1077,7 @@ var Barcode = {
     if (settings.showHRI){
       content += "<div style=\"clear:both; width: 100%; background-color: " + settings.bgColor + "; color: " + settings.color + "; text-align: center; font-size: " + settings.fontSize + "px; margin-top: " + settings.marginHRI + "px;\">"+hri+"</div>";
     }
+    this.antialiasing($container);
     this.resize($container, mw * columns).update(content);
   },
   // css 1D barcode renderer
@@ -1098,7 +1104,7 @@ var Barcode = {
     }
 
     // svg header
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + width + '" height="' + height + '">';
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + width + '" height="' + height + '" shape-rendering="crispEdges">';
 
     // background
     svg += '<rect width="' +  width + '" height="' + height + '" x="0" y="0" fill="' + settings.bgColor + '" />';

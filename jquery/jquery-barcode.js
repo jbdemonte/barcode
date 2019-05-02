@@ -1173,6 +1173,15 @@
     return $container;
   }
 
+  // apply antialiasing for CSS rendering only
+  function antialiasing($container){
+    $container
+      .css("display", "flex")
+      .css("flex-flow", "row wrap")
+      .css("justify-content", "space-around");
+    return $container;
+  },
+
   // * * * * * * * * * * * * * * * * * * * * * *
   // Raw Renderer functions
   // * * * * * * * * * * * * * * * * * * * * * *
@@ -1262,6 +1271,7 @@
     if (settings.showHRI) {
       content += "<div style=\"clear:both; width: 100%; background-color: " + settings.bgColor + "; color: " + settings.color + "; text-align: center; font-size: " + settings.fontSize + "px; margin-top: " + settings.marginHRI + "px;\">" + hri + "</div>";
     }
+    antialiasing($container);
     resize($container, mw * columns).html(content);
   }
 
@@ -1279,7 +1289,7 @@
     }
 
     // svg header
-    svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + width + '" height="' + height + '">';
+    svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + width + '" height="' + height + '" shape-rendering="crispEdges">';
 
     // background
     svg += '<rect width="' +  width + '" height="' + height + '" x="0" y="0" fill="' + settings.bgColor + '" />';
