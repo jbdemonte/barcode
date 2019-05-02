@@ -1180,7 +1180,7 @@
       .css("flex-flow", "row wrap")
       .css("justify-content", "space-around");
     return $container;
-  },
+  }
 
   // * * * * * * * * * * * * * * * * * * * * * *
   // Raw Renderer functions
