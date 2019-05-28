@@ -1096,12 +1096,12 @@
     }
     return le;
   }
-  
+
   // return a byte string from rgb values
   function lecCRgb(r, g, b) {
     return String.fromCharCode(b) + String.fromCharCode(g) + String.fromCharCode(r);
   }
-  
+
   // return a byte string from a hex string color
   function lecCHexColor(hex) {
     var g, r,
@@ -1112,7 +1112,7 @@
     r = v >> 8;
     return (lecCRgb(r, g, b));
   }
-  
+
   function hexToRGB(hex) {
     var g, r,
       v = parseInt("0x" + hex.substr(1), 16),
@@ -1122,12 +1122,12 @@
     r = v >> 8;
     return ({r: r, g: g, b: b});
   }
-  
+
   // test if a string is a hexa string color (like #FF0000)
   function isHexColor(value) {
     return value.match(/#[0-91-F]/gi);
   }
-  
+
   // encode data in base64
   function base64Encode(value) {
     var c1, c2, c3, b1, b2, b3, b4,
@@ -1151,7 +1151,7 @@
     }
     return r;
   }
-  
+
   // convert a bit string to an array of array of bit char
   function bitStringTo2DArray(digit) {
     var i,
@@ -1162,7 +1162,7 @@
     }
     return d;
   }
-  
+
   // clear jQuery Target
   function resize($container, w) {
     $container
@@ -1170,6 +1170,15 @@
       .css("overflow", "auto")
       .css("width", w + "px")
       .html("");
+    return $container;
+  }
+
+  // apply antialiasing for CSS rendering only
+  function antialiasing($container){
+    $container
+      .css("display", "flex")
+      .css("flex-flow", "row wrap")
+      .css("justify-content", "space-around");
     return $container;
   }
 
@@ -1262,6 +1271,7 @@
     if (settings.showHRI) {
       content += "<div style=\"clear:both; width: 100%; background-color: " + settings.bgColor + "; color: " + settings.color + "; text-align: center; font-size: " + settings.fontSize + "px; margin-top: " + settings.marginHRI + "px;\">" + hri + "</div>";
     }
+    antialiasing($container);
     resize($container, mw * columns).html(content);
   }
 
@@ -1279,7 +1289,7 @@
     }
 
     // svg header
-    svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + width + '" height="' + height + '">';
+    svg = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + width + '" height="' + height + '" shape-rendering="crispEdges">';
 
     // background
     svg += '<rect width="' +  width + '" height="' + height + '" x="0" y="0" fill="' + settings.bgColor + '" />';
@@ -1375,39 +1385,39 @@
       h = intval(settings.barHeight);
     digitToBmpRenderer($container, settings, bitStringTo2DArray(digit), hri, w, h);
   };
-  
+
   // bmp 2D barcode renderer
   renderer.bmp2 = function ($container, settings, digit, hri) {
     var s = intval(settings.moduleSize);
     digitToBmpRenderer($container, settings, digit, hri, s, s);
   };
-  
+
   // css 1D barcode renderer
   renderer.css = function ($container, settings, digit, hri) {
     var w = intval(settings.barWidth),
       h = intval(settings.barHeight);
     digitToCssRenderer($container, settings, bitStringTo2DArray(digit), hri, w, h);
   };
-  
+
   // css 2D barcode renderer
   renderer.css2 = function ($container, settings, digit, hri) {
     var s = intval(settings.moduleSize);
     digitToCssRenderer($container, settings, digit, hri, s, s);
   };
-  
+
   // svg 1D barcode renderer
   renderer.svg = function ($container, settings, digit, hri) {
     var w = intval(settings.barWidth),
       h = intval(settings.barHeight);
     digitToSvgRenderer($container, settings, bitStringTo2DArray(digit), hri, w, h);
   };
-  
+
   // svg 2D barcode renderer
   renderer.svg2 = function ($container, settings, digit, hri) {
     var s = intval(settings.moduleSize);
     digitToSvgRenderer($container, settings, digit, hri, s, s);
   };
-  
+
   // canvas 1D barcode renderer
   renderer.canvas = function ($container, settings, digit, hri) {
     var w  = intval(settings.barWidth),
@@ -1416,7 +1426,7 @@
       y = intval(settings.posY);
     digitToCanvasRenderer($container, settings, bitStringTo2DArray(digit), hri, x, y, w, h);
   };
-  
+
   // canvas 2D barcode renderer
   renderer.canvas2 = function ($container, settings, digit, hri) {
     var s = intval(settings.moduleSize),
