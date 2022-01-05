@@ -1204,7 +1204,7 @@
     }
 
     padding = (4 - ((mw * columns * 3) % 4)) % 4; // Padding for 4 byte alignment ("* 3" come from "3 byte to color R, G and B")
-    dataLen = (mw * columns + padding) * mh * lines;
+    dataLen = ((mw * columns * 3) + padding) * mh * lines;
 
     for (i = 0; i < padding; i++) {
       pad += '\0';
