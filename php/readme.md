@@ -1,5 +1,17 @@
-php-barcode
+BarCode Coder Library (BCC Library)
+BCCL Version 2.0
 ===========
+Date    : 2013-01-06
+Author  : DEMONTE Jean-Baptiste <jbdemonte@gmail.com>
+          HOUREZ Jonathan
+===========
+Date    : 2013-12-24
+Leszek Boroch <borek@borek.net.pl>
+Modification in class Barcode128 to enable encoding extended characters
+(ASCII above 127). To use barcodes, keypad emulation must be enabled in scanner configuration
+(tested with Motorola/Symbol LS2208).
+===========
+Web site: http://barcode-coder.com/
 
 Presentation
 ------------
