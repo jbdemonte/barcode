@@ -10,7 +10,7 @@
     "license": [ "GPL-3.0-or-later", "CECILL-2.0" ],
     "autoload": {
         "psr-4": {
-            "Jbdemonte\\Barcode\\": "php/"
+            "Jbdemonte\\Barcode\\": "/"
         }
     },
     "authors": [
