@@ -1,9 +1,18 @@
 {
     "name": "jbdemonte/barcode",
     "description": "BarCode Coder Library (BCC Library), GD and FPDF compatible",
-    "keywords": ["barcode","gd","fpdf"],
+    "keywords": [ "barcode", "gd", "fpdf" ],
     "homepage": "https://github.com/jbdemonte/barcode",
-    "license": ["GPL-3.0-or-later","CECILL-2.0"],
+    "type": "library",
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "license": [ "GPL-3.0-or-later", "CECILL-2.0" ],
+    "autoload": {
+        "psr-4": {
+            "Jbdemonte\\Barcode\\": "php/"
+        }
+    },
     "authors": [
         {
             "name": "Jean-Baptiste Demonte",
@@ -13,13 +22,5 @@
             "name": "Jonathan Hourez"
         }
     ],
-    "minimum-stability": "dev",
-    "require": {
-        "php": ">=5.3.0"
-    },
-    "autoload": {
-        "psr-0": {
-            "php": "php/"
-        }
-    }
+    "minimum-stability": "dev"
 }
