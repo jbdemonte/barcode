@@ -3,7 +3,7 @@
     "description": "BarCode Coder Library (BCC Library), GD and FPDF compatible",
     "keywords": ["barcode","gd","fpdf"],
     "homepage": "https://github.com/jbdemonte/barcode",
-    "license": ["GPL-3.0+","CeCILL"],
+    "license": ["GPL-3.0-or-later","CECILL-2.0"],
     "authors": [
         {
             "name": "Jean-Baptiste Demonte",
